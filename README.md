@@ -1,24 +1,85 @@
-## Homework 
+## Homework №3
 
 - **создайте  виртуальную  машину c Ubuntu 20.04 LTS (bionic) в GCE типа e2-medium в default VPC в  любом  регионе  и  зоне, например us-central1-a или  ЯО/VirtualBox**
 
   Создана VM в GCP  
   
-  ![CreateVM](img/сrearteVM_GCP_1.png ) img
+  ![CreateVM](img/сrearteVM_GCP_1.png )
 
   
-- поставьте на нее PostgreSQL 15 через sudo apt
+- **поставьте на нее PostgreSQL 15 через sudo apt**
+
+Добавляен репозиторий с PostreSQL 15
+`gmfcbkaccnt@vmex3:~$ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+gmfcbkaccnt@vmex3:~$ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+OK
+gmfcbkaccnt@vmex3:~$ sudo a-t-get update`
+
+Установлены пакеты PostgreSQL 15
+
+`gmfcbkaccnt@vmex3:~$ sudo apt install postgresql-15 postgresql-client-15 -y
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+E: Unable to locate package postgresql-15`
+
+`apt list --installed | grep postgres postgresql-15/focal-pgdg,now 15.3-1.pgdg20.04+1 amd64 [installed]
+postgresql-client-15/focal-pgdg,now 15.3-1.pgdg20.04+1 amd64 [installed]
+postgresql-client-common/focal-pgdg,now 249.pgdg20.04+1 all [installed,automatic]
+postgresql-common/focal-pgdg,now 249.pgdg20.04+1 all [installed,automatic]`
+
+`gmfcbkaccnt@vmex3:~$ ps -ef|grep postgres
+postgres     625       1  0 19:41 ?        00:00:00 /usr/lib/postgresql/15/bin/postgres -D /var/lib/postgresql/15/main -c config_file=/etc/postgresql/15/main/postgresql.conf
+postgres     634     625  0 19:41 ?        00:00:00 postgres: 15/main: checkpointer 
+postgres     635     625  0 19:41 ?        00:00:00 postgres: 15/main: background writer 
+postgres     637     625  0 19:41 ?        00:00:00 postgres: 15/main: walwriter 
+postgres     638     625  0 19:41 ?        00:00:00 postgres: 15/main: autovacuum launcher 
+postgres     639     625  0 19:41 ?        00:00:00 postgres: 15/main: logical replication launcher 
+gmfcbka+    1032    1004  0 19:43 pts/0    00:00:00 grep --color=auto postgres
+`
 
 
+-**проверьте что кластер запущен через `sudo -u postgres pg_lsclusters`**
 
-- проверьте что кластер запущен через `sudo -u postgres pg_lsclusters`
+`gmfcbkaccnt@vmex3:~$ sudo -u postgres pg_lsclusters
+Ver Cluster Port Status Owner    Data directory              Log file
+15  main    5432 online postgres /var/lib/postgresql/15/main /var/log/postgresql/postgresql-15-main.log`
 
-- зайдите из под пользователя postgres в psql и сделайте произвольную таблицу с произвольным содержимым\
+
+- **зайдите из под пользователя postgres в psql и сделайте произвольную таблицу с произвольным содержимым\
 `postgres=# create table test(c1 text);\
 postgres=# insert into test values('1');\
-\q`
+\q`**
 
-- остановите postgres например через sudo -u postgres pg_ctlcluster 15 main stop
+postgres=# create table test(c1 text);
+postgres=# insert into test values('1');
+\q
+
+gmfcbkaccnt@vmex3:~$ sudo -u postgres psql
+psql (15.3 (Ubuntu 15.3-1.pgdg20.04+1))
+Type "help" for help.
+
+postgres=# create table test(c1 text);
+CREATE TABLE
+postgres=# insert into test values('1');
+INSERT 0 1
+postgres=# commit;
+WARNING:  there is no transaction in progress
+COMMIT
+postgres=# select * from test;
+ c1 
+----
+ 1
+(1 row)
+
+postgres=# \dt
+        List of relations
+ Schema | Name | Type  |  Owner   
+--------+------+-------+----------
+ public | test | table | postgres
+(1 row)
+
+- **остановите postgres например через sudo -u postgres pg_ctlcluster 15 main stop**
 
 - создайте новый standard persistent диск GKE через Compute Engine -> Disks в том же регионе и зоне что GCE инстанс размером например 10GB - или аналог в другом облаке/виртуализации
 

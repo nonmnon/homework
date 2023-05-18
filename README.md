@@ -4,7 +4,7 @@
 
   Создана VM в GCP  
   
-  ![CreateVM](img\сrearteVM_GCP_1.png )
+  ![CreateVM](img/сrearteVM_GCP_1.png ) img
 
   
 - поставьте на нее PostgreSQL 15 через sudo apt

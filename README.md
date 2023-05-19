@@ -685,7 +685,7 @@ Building dependency tree... Done
 
 Reading state information... Done
 
-### *Останавливаю экземпляр*
+#### *Останавливаю экземпляр*
 
 gmfcbkaccnt@vmex3w:~$ `sudo -u postgres pg_ctlcluster 15 main status`
 
@@ -699,10 +699,10 @@ Warning: stopping the cluster using pg_ctlcluster will mark the systemd unit as 
 
   sudo systemctl stop postgresql@15-main
 
-### *Добавляю диск*
+#### *Добавляю диск*
 ![VMADddDisk](img/сrearteVM_GCP_2_addOldDisk.png)
 
-### *Монтирую подключенный диск*
+#### *Монтирую подключенный диск*
 
 gmfcbkaccnt@vmex3w:~$ `sudo mv /var/lib/postgresql /var/lib/postgresql.17052023`
 

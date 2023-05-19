@@ -46,38 +46,35 @@ Ver Cluster Port Status Owner    Data directory              Log file
 15  main    5432 online postgres /var/lib/postgresql/15/main /var/log/postgresql/postgresql-15-main.log`
 
 
-- **зайдите из под пользователя postgres в psql и сделайте произвольную таблицу с произвольным содержимым\
+- зайдите из под пользователя postgres в psql и сделайте произвольную таблицу с произвольным содержимым\
 `postgres=# create table test(c1 text);\
 postgres=# insert into test values('1');\
-\q`**
+\q`
 
-postgres=# create table test(c1 text);
+`postgres=# create table test(c1 text);
 postgres=# insert into test values('1');
-\q
+\q`
 
-gmfcbkaccnt@vmex3:~$ sudo -u postgres psql
-psql (15.3 (Ubuntu 15.3-1.pgdg20.04+1))
-Type "help" for help.
-
-postgres=# create table test(c1 text);
+`postgres=# create table test(c1 text);
 CREATE TABLE
 postgres=# insert into test values('1');
 INSERT 0 1
 postgres=# commit;
 WARNING:  there is no transaction in progress
 COMMIT
-postgres=# select * from test;
+postgres=# select * from test;`
  c1 
 ----
  1
 (1 row)
+
 
 postgres=# \dt
         List of relations
  Schema | Name | Type  |  Owner   
 --------+------+-------+----------
  public | test | table | postgres
-(1 row)
+(1 row)`
 
 - **остановите postgres например через sudo -u postgres pg_ctlcluster 15 main stop**
 

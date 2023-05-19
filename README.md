@@ -722,4 +722,4 @@ gmfcbkaccnt@vmex3w:~$ sudo -u postgres pg_ctlcluster 15 main status
 pg_ctl: server is running (PID: 5617)
 /usr/lib/postgresql/15/bin/postgres "-D" "/var/lib/postgresql/15/main" "-c" "config_file=/etc/postgresql/15/main/postgresql.conf"
 
-### * Conclusion:  Запуск стал воззможным по причиен монтирования устройства /dev/sdb1 в ожидаемы  каталог /var/lib/postgresql  а также совппдения id УЗ в ОС от предыдушего и настоящего хоста, некорапнутости данных диска =- штатного shatdow БД на хосте доноре.*
+### *Conclusion:  Запуск БД стал возможным по причине монтирования устройства /dev/sdb1 (диска с хоста донор) в ожидаемый конфигурацией по умолчанию установленного кластера БД PostgreSQL d  каталог /var/lib/postgresq, а также выполненных условий -совппдения id УЗ в ОС от хоста доноора и текущего хоста, "некорапнутости" данных диска - штатного shatdown БД на хосте доноре.*

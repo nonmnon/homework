@@ -712,13 +712,17 @@ gmfcbkaccnt@vmex3w:~$ `sudo mkdir /var/lib/postgresql `
 
 gmfcbkaccnt@vmex3:~$ `sudo mount -o defaults /dev/sdb1 /var/lib/postgresql`
 
+--start
 
-gmfcbkaccnt@vmex3w:~$ sudo -u postgres pg_ctlcluster 15 main status
+gmfcbkaccnt@vmex3w:~$ `sudo -u postgres pg_ctlcluster 15 main status`
+
 pg_ctl: no server running
-gmfcbkaccnt@vmex3w:~$ sudo -u postgres pg_ctlcluster 15 main start
+gmfcbkaccnt@vmex3w:~$ `sudo -u postgres pg_ctlcluster 15 main start`
+
 Warning: the cluster will not be running as a systemd service. Consider using systemctl:
   sudo systemctl start postgresql@15-main
-gmfcbkaccnt@vmex3w:~$ sudo -u postgres pg_ctlcluster 15 main status
+gmfcbkaccnt@vmex3w:~$ `sudo -u postgres pg_ctlcluster 15 main status`
+
 pg_ctl: server is running (PID: 5617)
 /usr/lib/postgresql/15/bin/postgres "-D" "/var/lib/postgresql/15/main" "-c" "config_file=/etc/postgresql/15/main/postgresql.conf"
 

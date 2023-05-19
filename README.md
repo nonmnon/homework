@@ -2,14 +2,14 @@
 
 - **создайте  виртуальную  машину c Ubuntu 20.04 LTS (bionic) в GCE типа e2-medium в default VPC в  любом  регионе  и  зоне, например us-central1-a или  ЯО/VirtualBox**
 
- ### *Создана VM в GCP*
+ #### *Создана VM в GCP*
   
   ![CreateVM](img/сrearteVM_GCP_1.png )
 
   
 - **поставьте на нее PostgreSQL 15 через sudo apt**
 
-### *Добавляен репозиторий с PostreSQL 15*
+#### *Добавляен репозиторий с PostreSQL 15*
 
 gmfcbkaccnt@vmex3:~$ `sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $
 (lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'`
@@ -66,7 +66,7 @@ Ver Cluster Port Status Owner    Data directory              Log file
 
 15  main    5432 online postgres /var/lib/postgresql/15/main /var/log/postgresql/postgresql-15-main.log`
 
-- зайдите из под пользователя postgres в psql и сделайте произвольную таблицу с произвольным содержимым
+- **зайдите из под пользователя postgres в psql и сделайте произвольную таблицу с произвольным содержимым**
   
 postgres=# `create table test(c1 text);\`
 
@@ -117,14 +117,14 @@ Warning: stopping the cluster using pg_ctlcluster will mark the systemd unit as 
 
 - **проинициализируйте диск согласно инструкции и подмонтировать файловую систему, только не забывайте менять имя диска на актуальное, в вашем случае это скорее всего будет /dev/sdb - <https://www.digitalocean.com/community/tutorials/how-to-partition-and-format-storage-devices-in-linux>**
 
-### *Проверяем наличие утилиты parted*
+#### *Проверяем наличие утилиты parted*
 
 gmfcbkaccnt@vmex3:~$ `which parted`
 
 /usr/sbin/parted
 
 
-### *Определяем новый диск в системе*
+#### *Определяем новый диск в системе*
 
 gmfcbkaccnt@vmex3:~$ `lsblk`
 
@@ -190,7 +190,7 @@ sda15   8:15   0   106M  0 part /boot/efi
 
 sdb     8:16   0    10G  0 disk
 
-### *Создаем новый раздел*
+#### *Создаем новый раздел*
 
 gmfcbkaccnt@vmex3:~$ `sudo parted /dev/sdb mklabel gpt`
 
@@ -232,7 +232,7 @@ sdb     8:16   0    10G  0 disk
 
 sdb1    8:17   0    10G  0 part
 
-### *Создаем файловую систему на новом разделе*
+#### *Создаем файловую систему на новом разделе*
 
 fcbkaccnt@vmex3:~$ `sudo mkfs.ext4 -L extdisk1 /dev/sdb1`
 
@@ -288,7 +288,7 @@ sdb     8:16   0    10G  0 disk
 
 sdb1    8:17   0    10G  0 part
 
-### *Смонтируем новую файловую систему*
+#### *Смонтируем новую файловую систему*
 
 gmfcbkaccnt@vmex3:~$ `sudo mkdir -p /mnt/data`
 
@@ -382,7 +382,7 @@ LABEL=UEFI      /boot/efi       vfat    umask=0077      0 1
 
 UUID=ee0459ed-2bbd-41a1-a047-96f9a9af15bd /mnt/data ext4 defaults 0 2
 
-### *Проверяем доступность диска*
+#### *Проверяем доступность диска*
 
 mfcbkaccnt@vmex3:~$ `echo "success" | sudo tee /mnt/data/test_file`
 
@@ -447,7 +447,7 @@ drwxr-xr-x 3 postgres postgres 4096 May 16 20:37 /mnt/data/
 
 - **перенесите содержимое /var/lib/postgresql/15 в /mnt/data - mv /var/lib/postgresql/15 /mnt/data**
 
-### *Смотрим состояние статуса БД после перезагрузки*
+#### *Смотрим состояние статуса БД после перезагрузки*
 
 gmfcbkaccnt@vmex3:~$ `sudo -u postgres pg_ctlcluster 15 main status`
 

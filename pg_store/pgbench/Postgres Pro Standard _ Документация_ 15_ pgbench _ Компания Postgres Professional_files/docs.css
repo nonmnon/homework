@@ -1,0 +1,975 @@
+body {
+	--color-doc: black;
+	--bgcolor-doc: white;
+
+	--color-h: #164281;	
+	--color-red: #EC5800;
+	--color-code: #525f6c; 
+	--color-warningtd-c2: #495057;
+	--color-table: black;  
+	
+	--bgcolor-code: #FFF;
+	--bgcolor-blockquote: #EEEEDD; 
+	--bgcolor-table: #E0ECEF; 
+	--bgcolor-table-thead: #E0ECEF; 
+	--bgcolor-table-hover: #EFEFEF;
+	--bgcolor-table-td: #FFF;
+    --bgcolor-table-caution: #F5F5DC;
+	--bgcolor-table-warning: #FFD7D7; 
+	--bgcolor-table-tr-hover: #EFEFEF; 
+	--bgcolor-pre: #f8f9fa; 
+	--bgcolor-table-table: #e0ecef; 
+	--bgcolor-table-table-td: #FFF; 
+	--bgcolor-caution: #fff3cd; 
+	--bgcolor-note: #d1ecf1; 
+	--bgcolor-tip: #e8f7e6; 
+	--bgcolor-warning: #df421e; 
+	--bgcolor-warning-td-c2: #fbeded; 
+    --bgcolor-txtCommentsContent: #F5F5F5;  
+
+	--brdcolor-txtCommentsWrap: #F5F5F5;  
+	--brdcolor-pre: #CFCFCF;
+	--brdcolor-blockquote: #DBDBCC;
+	--brdcolor-table:  #A7C6DF;
+	--brdcolor-table-td:  #A7C6DF;
+	--brdcolor-table-caution: #DEDFA7;
+	--brdcolor-table-warning: #DF421E;
+	--brdcolor-table-caution-dt: #F3E4D5;
+	--brdcolor-table-warning-dt: #FFD7D7;
+    --brdcolor-td-c: #FFEFEF;
+	--brdcolor-table-thead: #000;
+	--brdcolor-table-docs-compare: #999;
+	--brdcolor-table-docs-compare-td: #DDD;
+	--brdcolor-sidebar: #FFF; 
+	--brdcolor-table-table: #dee2e6; 
+	--brdcolor-caution: #e2b21f; 
+	--brdcolor-note: #ced4da;
+	--brdcolor-tip: #84c578;
+	--brdcolor-warning: #df421e; 
+	--brdcolor-warning-td-c2: #bd4147; 
+   
+	--shdcolor-pre:  #DFDFDF;
+}
+  
+body {
+	color: var(--color-doc);
+	background-color: var(--bgcolor-doc);
+}
+
+
+
+
+/* ../media/css/docs.css */
+.navheader th { text-align: center; } /* anti-bootstrap */
+
+.navheader tbody tr:nth-child(1) th {  /* временно убрать ненужную строчку */
+	display: none;
+}
+
+h1.TITLE { display: none; }
+	.CORPAUTHOR { display: none; }
+	.breadcrumb-shift { margin-left:-15px; }
+	
+	
+
+/* PostgreSQL.org Documentation Style */
+
+.docs div.NAVHEADER table {
+  margin-left: 0;
+}
+
+.docs div.NAVHEADER th {
+    text-align: center;
+}
+
+.content.docs {
+	font-size: 16px !important;
+}
+
+/* Heading Definitions */
+.navheader {
+	margin-bottom: 2em;
+}
+.navheader a[accesskey="n"]::after,
+.navfooter a[accesskey="n"]::after {
+	content: "→";
+	margin-left: 0.5em;
+}
+.navheader a[accesskey="p"]::before,
+.navfooter a[accesskey="p"]::before {
+	content: "←";
+	margin-right: 0.5em;
+}
+.navheader a[accesskey="u"]::after,
+.navfooter a[accesskey="u"]::after {
+	content: "↑";
+	position: relative;
+	top: -0.5em;
+	left: 0.2em;
+}
+.navheader th {font-weight:400;}
+
+.docs h1, 
+.docs h2, 
+.docs h3 {
+  font-weight: bold;
+  margin-top: 2ex;
+}
+.docs h2, 
+.docs h3 {
+  text-align: left;
+}
+
+.docs h1 a,
+.docs h2 a,
+.docs h3 a,
+.docs h4 a
+ {
+  color: var(--color-red);
+}
+
+/* EKa --> */
+.docs h1 {
+  font-size: 1.4em;
+}
+
+.docs h2 {
+  font-size: 1.25em;
+}
+
+.docs h3 {
+  font-size: 1.2em;
+}
+
+.docs h4 {
+  font-size: 1.15em;
+}
+
+.docs h5 {
+  font-size: 1.1em;
+}
+
+.docs h6 {
+  font-size: 1.0em;
+}
+/* <-- EKa */
+
+.docs h1 a:hover {
+/*  color: #EC5800; */
+  text-decoration: none;
+}
+
+.docs h2 a:hover,
+.docs h3 a:hover,
+.docs h4 a:hover {
+/*  color: #666666; */
+  text-decoration: none;
+}
+
+.docs .navheader  a,
+.docs .navfooter  a {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+
+.docs .navheader  a:hover,
+.docs .navfooter  a:hover {
+	text-decoration: none;
+}
+
+.docs a {
+	color: rgb(10, 167, 245);
+} 
+
+/* Text Styles */
+
+.docs div.SECT2 {
+  margin-top: 4ex;
+}
+
+.docs div.SECT3 {
+  margin-top: 3ex;
+  margin-left: 3ex;
+}
+
+.docs .txtCurrentLocation {
+  font-weight: bold;
+}
+
+.docs p, 
+.docs ol, 
+.docs ul, 
+.docs li {
+  line-height: 1.5em;
+}
+
+.docs code {
+	font-size: 1em;
+	padding: 0px;
+	color: var(--color-code);
+	background-color: var(--bgcolor-code);
+	border-radius: 0px;
+}
+
+.docs code, kbd, pre, samp {
+	font-family: monospace,monospace;	
+}
+
+.docs .txtCommentsWrap {
+  border: 2px solid var(--brdcolor-txtCommentsWrap);
+  width: 100%;
+}
+
+.docs .txtCommentsContent {
+  background: var(--bgcolor-txtCommentsContent);
+  padding: 3px;
+}
+
+.docs .txtCommentsPoster {
+  float: left;
+}
+
+.docs .txtCommentsDate {
+  float: right;
+}
+
+.docs .txtCommentsComment {
+  padding: 3px;
+}
+
+.docs #docContainer pre code,
+.docs #docContainer pre tt,
+.docs #docContainer pre pre,
+.docs #docContainer tt tt,
+.docs #docContainer tt code,
+.docs #docContainer tt pre {
+  font-size: 1em;
+}
+
+.docs pre.LITERALLAYOUT,
+.docs .SCREEN,
+.docs .SYNOPSIS,
+.docs .PROGRAMLISTING,
+.docs .REFSYNOPSISDIV p,
+.docs table.CAUTION,
+.docs table.WARNING,
+.docs blockquote.NOTE,
+.docs blockquote.TIP,
+.docs div.note,
+.docs div.tip,
+.docs div.important,
+.docs table.CALSTABLE {
+  -moz-box-shadow: 3px 3px 5px var(--shdcolor-pre);
+  -webkit-box-shadow: 3px 3px 5px var(--shdcolor-pre);
+  -khtml-box-shadow: 3px 3px 5px var(--shdcolor-pre);
+  -o-box-shadow: 3px 3px 5px var(--shdcolor-pre);
+  box-shadow: 3px 3px 5px var(--shdcolor-pre);
+}
+
+.docs pre.LITERALLAYOUT,
+.docs .SCREEN,
+.docs .SYNOPSIS,
+.docs .PROGRAMLISTING,
+.docs .REFSYNOPSISDIV p,
+.docs table.CAUTION,
+.docs table.WARNING,
+.docs blockquote.NOTE,
+.docs blockquote.TIP 
+.docs div.note,
+.docs div.important,
+.docs div.tip {
+  color: var(--color-doc);
+  border-width: 1px;
+  border-style: solid;
+  padding: 2ex;
+  margin: 2ex 0 2ex 2ex;
+  overflow: auto;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+}
+
+.docs div.note,
+.docs div.important,
+.docs div.tip {
+  -moz-border-radius: 8px !important;
+  -webkit-border-radius: 8px !important;
+  -khtml-border-radius: 8px !important;
+  border-radius: 8px !important;
+} 
+
+
+.docs pre.LITERALLAYOUT,
+.docs pre.SYNOPSIS,
+.docs pre.PROGRAMLISTING,
+.docs .REFSYNOPSISDIV p,
+.docs .SCREEN {
+  border-color: var(--brdcolor-pre);
+  background-color: var(--bgcolor-pre);
+}
+
+.docs blockquote.NOTE,
+.docs blockquote.TIP,
+.docs div.note,
+.docs div.important,
+.docs div.tip {
+  border-color: var(--brdcolor-blockquote);
+  background-color: var(--bgcolor-blockquote);
+  padding: 14px;
+  width: 572px;
+/*  font-size: 12px; */
+}
+
+.docs blockquote.NOTE,
+.docs blockquote.TIP,
+.docs table.CAUTION,
+.docs table.WARNING {
+  margin: 4ex auto;
+}
+
+.docs div.note,
+.docs div.important,
+.docs div.tip {
+  margin: 4ex auto  !important;
+}
+
+
+.docs blockquote.NOTE p,
+.docs blockquote.TIP p,
+.docs div.note p,
+.docs div.important,
+.docs div.tip p {
+  margin: 0;
+}
+
+.docs blockquote.NOTE pre,
+.docs blockquote.NOTE code,
+.docs div.note pre,
+.docs div.note code,
+.docs blockquote.TIP pre,
+.docs blockquote.TIP code,
+.docs div.tip pre,
+.docs div.important,
+.docs div.tio code {
+  margin-left: 0;
+  margin-right: 0;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -khtml-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
+}
+
+.docs .emphasis,
+.docs .c2 {
+  font-weight: bold;
+}
+
+.docs .REPLACEABLE {
+  font-style: italic;
+}
+
+/* Table Styles */
+
+.docs  table {
+  margin-left: 2ex;
+}
+.docs .navheader table {
+  margin-left: 0;
+}
+
+.docs table.CALSTABLE td,
+.docs table.CALSTABLE th,
+.docs table.CAUTION td,
+.docs table.CAUTION th,
+.docs table.WARNING td,
+.docs table.WARNING th {
+  border-style: solid;
+}
+
+.docs table.CALSTABLE,
+.docs table.CAUTION,
+.docs table.WARNING {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.docs table.CALSTABLE
+{
+  margin: 2ex 0 2ex 2ex;
+  background-color: var(--bgcolor-table);
+  border: 2px solid var(--brdcolor-table);
+}
+
+.docs table.CALSTABLE tr:hover td
+{
+  background-color: var(--bgcolor-table-hover);
+}
+
+.docs table.CALSTABLE td {
+  background-color: var(--bgcolor-table-td);
+}
+
+.docs table.CALSTABLE td,
+.docs table.CALSTABLE th {
+  border: 1px solid var(--brdcolor-table-td);
+  padding: 0.5ex 0.5ex;
+}
+
+.docs table.CAUTION,
+.docs table.WARNING {
+  border-collapse: separate;
+  display: block;
+  padding: 0;
+  max-width: 600px;
+}
+
+.docs table.CAUTION {
+  background-color: var(--bgcolor-table-caution);
+  border-color: var(--brdcolor-table-caution);
+}
+
+.docs table.WARNING {
+  background-color: var(--bgcolor-table-warning);
+  border-color: var(--brdcolor-table-warning);
+}
+
+.docs table.CAUTION td,
+.docs table.CAUTION th,
+.docs table.WARNING td,
+.docs table.WARNING th {
+  border-width: 0;
+  padding-left: 2ex;
+  padding-right: 2ex;
+}
+
+.docs table.CAUTION td,
+.docs table.CAUTION th {
+  border-color: var(--brdcolor-table-caution-dt); 
+  
+}
+
+.docs table.WARNING td,
+.docs table.WARNING th {
+  border-color: var(--brdcolor-table-warning-dt); 
+}
+
+.docs td.c1,
+.docs td.c2,
+.docs td.c3,
+.docs td.c4,
+.docs td.c5,
+.docs td.c6 {
+  font-size: 1.1em;
+  font-weight: bold;
+  border-bottom: 0px solid var(--brdcolor-td-c);
+  padding: 1ex 2ex 0;
+}
+
+#docContent-wrapper-ppg .table,
+.docs .table {
+	color: var(--color-table);
+}
+
+.docs .table  thead {
+	background: var(--bgcolor-table-thead);
+	border-bottom: 1px solid var(--brdcolor-table-thead);
+}
+
+.docs td, th {
+	padding: 0.1ex 0.5ex; 
+}
+
+.docs .book table tr:hover td {
+	background-color: var(--bgcolor-table-tr-hover);
+}
+
+/* Link Styles */
+
+.docs #docNav a {
+  font-weight: bold;
+}
+
+.docs code.FUNCTION tt {
+  font-size: 1em;
+}
+
+.docs table.docs-compare {
+	text-align: center;
+	width: 90%;
+	border: 2px solid var(--brdcolor-table-docs-compare);
+	
+	 
+	border-collapse: collapse;
+}
+
+.docs table.docs-compare td  { 
+	padding: 12px;
+	border: 1px solid var(--brdcolor-table-docs-compare-td);
+}
+
+.docs dd {
+	margin-left: 40px;
+}
+
+
+.docs .sidebar {
+    padding: 8px;
+    background: var(--brdcolor-sidebar);
+    width: auto;
+}
+
+
+
+
+
+/* DOCUMENTATION */
+/*
+ * The documentation classes are divided up by newer/older version of the docs
+ * Newer version of the docs are "lowercase" classed
+ * Older version of the docs are "UPPERCASE" classed
+ * Also, newer styles will be in classes vs. older ones that have i
+ */
+
+/**
+ * docContent-wrapper-ppg represents the main "box" where the documentation is rendered.
+ * We namespace everything to ensure these styles do not interfere across the
+ * rest of the site
+ */
+
+/* For code, order matters here.
+ * For instance, we don't want to have any any padding on code blocks that
+ * are within the "screen" element
+ * This is also higher up as some inherited rules affected the display of the
+ * code in certain areas
+ */
+
+#docContent-wrapper-ppg .col-11,
+#docContent-wrapper-ppg .col-10 {
+	max-width: initial;	
+	padding-right: 0;
+	padding-left: 0;
+}
+
+#docContent-wrapper-ppg br.table-break {
+  display: none;
+}
+
+#docContent-wrapper-ppg pre {
+  padding: 0.8rem;
+}
+
+pre,
+code,
+#docContent-wrapper-ppg kbd {
+  font-size: 0.9rem !important;
+  color: inherit !important;
+  background-color: var(--bgcolor-pre);
+  border-radius: .25rem;
+  margin: .6rem 0;
+  font-weight: 300;
+}
+
+.title code {
+  font-weight: inherit;
+}
+
+#docContent-wrapper-ppg .note pre,
+#docContent-wrapper-ppg .note code,
+#docContent-wrapper-ppg .note kbd,
+#docContent-wrapper-ppg .warning pre,
+#docContent-wrapper-ppg .warning code,
+#docContent-wrapper-ppg .warning kbd,
+#docContent-wrapper-ppg .tip pre,
+#docContent-wrapper-ppg .tip code,
+#docContent-wrapper-ppg .tip kbd,
+#docContent-wrapper-ppg .caution pre,
+#docContent-wrapper-ppg .caution code,
+#docContent-wrapper-ppg .caution kbd {
+  background-color: transparent !important;
+  border: none;
+  padding: 0 !important;
+}
+
+#docContent-wrapper-ppg .screen code {
+  padding: 0;
+}
+
+#docContent-wrapper-ppg .userinput > code {
+  font-weight: bolder;
+}
+
+#docContent-wrapper-ppg .replaceable {
+  font-weight: 900;
+  font-style: italic;
+}
+
+#docContent-wrapper-ppg .replaceable > code {
+  font-weight: 900;
+}
+
+/* на хроме display: block-inline косячит */
+#docContent-wrapper-ppg .figure {
+	display: initial;
+}
+
+/**
+ * Documentation Tables
+ */
+ 
+ #docContent-wrapper-ppg table.table,
+ #docContent-wrapper-ppg table.informaltable {
+   background-color: var(--bgcolor-table-table);
+   border: 2px solid var(--brdcolor-table-table);
+   border-spacing: 0;
+   border-collapse: collapse;
+   width: initial;
+   margin: 2ex 0;
+ }
+
+#docContent-wrapper-ppg table.table th,
+#docContent-wrapper-ppg table.informaltable th {
+  padding: 0.5ex 0.5ex;
+}
+
+#docContent-wrapper-ppg table.table th[align="left"],
+#docContent-wrapper-ppg table.table td[align="left"] {
+  text-align: left;
+}
+
+#docContent-wrapper-ppg table.table th[align="center"],
+#docContent-wrapper-ppg table.table td[align="center"] {
+  text-align: center;
+}
+
+#docContent-wrapper-ppg table.table th[align="right"],
+#docContent-wrapper-ppg table.table td[align="right"] {
+  text-align: right;
+}
+
+#docContent-wrapper-ppg table.table th[valign="top"],
+#docContent-wrapper-ppg table.table td[valign="top"] {
+  vertical-align: top;
+}
+
+#docContent-wrapper-ppg table.table th[valign="middle"],
+#docContent-wrapper-ppg table.table td[valign="middle"] {
+  vertical-align: middle;
+}
+
+#docContent-wrapper-ppg table.table th[valign="bottom"],
+#docContent-wrapper-ppg table.table td[valign="bottom"] {
+  vertical-align: top;
+}
+
+#docContent-wrapper-ppg table.table td,
+#docContent-wrapper-ppg table.informaltable td {
+  background-color: var(--bgcolor-table-table-td);
+  padding: 0.5ex 0.5ex;
+}
+
+/** We use some overrides for code in tables, which makes it more readable */
+#docContent-wrapper-ppg table.table tt,
+#docContent-wrapper-ppg table.informaltable tt,
+#docContent-wrapper-ppg table.table code,
+#docContent-wrapper-ppg table.informaltable code {
+  background-color: inherit !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  margin: 0;
+  padding: 0;
+  word-break: unset;
+}
+
+#docContent-wrapper-ppg table.table th.func_table_entry p,
+#docContent-wrapper-ppg table.table td.func_table_entry p {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+  padding-left: 4em;
+  text-align: left;
+}
+
+/** Formatting for entries in tables of catalog/view columns **/
+#docContent-wrapper-ppg table.table th.catalog_table_entry p,
+#docContent-wrapper-ppg table.table td.catalog_table_entry p {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+  padding-left: 4em;
+  text-align: left;
+}
+
+#docContent-wrapper-ppg table.table th.catalog_table_entry p.column_definition {
+  text-indent: -3.5em;
+  word-spacing: 0.25em;
+}
+
+#docContent-wrapper-ppg table.table td.catalog_table_entry p.column_definition {
+  text-indent: -3.5em;
+}
+
+#docContent-wrapper-ppg table.table p.column_definition code.type {
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+#docContent-wrapper-ppg table.table td.catalog_table_entry pre.programlisting {
+  background-color: inherit;
+  border: 0;
+  margin-bottom: 0.1em;
+  margin-top: 0.1em;
+  padding: 0;
+  padding-left: 4em;
+}
+
+#docContent-wrapper-ppg table.table p.func_signature {
+  text-indent: -3.5em;
+}
+
+#docContent-wrapper-ppg table.table td.func_table_entry pre.programlisting {
+  background-color: inherit;
+  border: 0;
+  margin-bottom: 0.1em;
+  margin-top: 0.1em;
+  padding: 0;
+  padding-left: 4em;
+}
+
+/**
+ * Titles, Navigation
+ */
+/* tau
+#docContent-wrapper-ppg .title {
+  display: block;
+}
+
+#docContent-wrapper-ppg .title:after {
+  display: none;
+}
+*/
+
+#docContent-wrapper-ppg .title code {
+  background-color: inherit !important;
+  color: inherit !important;
+  font-size: inherit !important;
+}
+
+#docContent-wrapper-ppg .navheader table th {
+  text-align: center;
+}
+
+/**
+ * Table of contents
+ */
+#docContent-wrapper-ppg .toc {
+  margin-bottom: 1rem;
+}
+
+#docContent-wrapper-ppg div.toc > dl > dd {
+  margin-left: 2rem;
+}
+
+#docContent-wrapper-ppg div.toc > dl > dt.c2 {
+  margin-bottom: 1rem;
+}
+
+/* tau
+#docContent-wrapper-ppg .toc tt, #docContent-wrapper-ppg .toc dt a {
+  font-weight: 300!important;
+}
+*/
+
+#docContent-wrapper-ppg .toc dd, #docContent-wrapper-ppg .toc dl {
+  margin: 0;
+}
+
+#docContent-wrapper-ppg .toc span.refpurpose {
+  font-weight: normal;
+}
+
+/** Do not show any highlighting on code literals in TOC */
+#docContent-wrapper-ppg .toc code {
+  background-color: inherit !important;
+  color: inherit !important;
+}
+
+/**
+  * Various callout boxes for docs, including warning, caution, note, tip
+  */
+#docContent-wrapper-ppg .caution, #docContent-wrapper-ppg .note, #docContent-wrapper-ppg .tip, #docContent-wrapper-ppg .warning
+{
+  border-width: 1px;
+  border-style: solid;
+  font-style: initial;
+  margin: 4ex auto;
+  max-width: 40rem;
+  padding: 1rem;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+}
+
+#docContent-wrapper-ppg .caution p, #docContent-wrapper-ppg .note p, #docContent-wrapper-ppg .tip p, #docContent-wrapper-ppg .warning p
+{
+  margin-bottom: 0 !important;
+}
+
+#docContent-wrapper-ppg .caution {
+  border-color: var(--brdcolor-caution);
+  background-color: var(--bgcolor-caution);
+}
+
+#docContent-wrapper-ppg .note {
+  border-color: var(--brdcolor-note);
+  background-color: var(--bgcolor-note);
+}
+
+#docContent-wrapper-ppg .tip {
+  border-color: var(--brdcolor-tip);
+  background-color: var(--bgcolor-tip);
+}
+
+#docContent-wrapper-ppg .warning {
+  background-color: var(--bgcolor-warning);
+  border-color: var(--brdcolor-warning);
+}
+
+#docContent-wrapper-ppg .tip h3, #docContent-wrapper-ppg .note h3, #docContent-wrapper-ppg .caution h3, #docContent-wrapper-ppg .warning h3 {
+  text-align: center;
+  margin: 0.25rem 0 0.5rem 0;
+  color: initial;
+}
+
+#docContent-wrapper-ppg .warning td.c2 {
+  color: var(--color-warningtd-c2);
+  background-color: var(--bgcolor-warning-td-c2);
+}
+
+#docContent-wrapper-ppg .warning td.c2, #docContent-wrapper-ppg .warning td {
+  border: 1px solid var(--brdcolor-warning-td-c2);
+}
+
+/**
+ * Listing out variables
+ */
+#docContent-wrapper-ppg .variablelist dt {
+  font-family: monospace;
+  font-weight: 300;
+}
+
+#docContent-wrapper-ppg .variablelist dt {
+  font-family: monospace;
+  font-weight: 300;
+}
+
+#docContent-wrapper-ppg .variablelist dd {
+  margin-top: 1rem;
+}
+
+#docContent-wrapper-ppg .variablelist dd {
+  margin-inline-start: 2rem;
+}
+
+#docContent-wrapper-ppg ul.itemizedlist {
+  margin-left: 2.5rem;
+}
+
+#docContent-wrapper-ppg ul.itemizedlist > li > p {
+  margin-left: 0 !important;
+}
+
+#docContent-wrapper-ppg .variablelist p,
+#docContent-wrapper-ppg .variablelist pre {
+  margin: 1rem 0 1rem 2rem !important;;
+}
+
+
+/* "Тёмная тема" */
+.transition {
+	transition: .4s;	
+}
+.transition * {
+	transition: color .4s;	
+	transition: background-color .4s;	
+}
+
+.dark-theme h1, .dark-theme .h1, .dark-theme h2, .dark-theme .h2, .dark-theme h3, .dark-theme .h3, .dark-theme h4, .dark-theme .h4, .dark-theme h5, .dark-theme .h5, .dark-theme h6, .dark-theme .h6 {
+	color: var(--color-h);	
+}
+
+.dark-theme #docContent-wrapper-ppg .tip h3, .dark-theme #docContent-wrapper-ppg .note h3, .dark-theme #docContent-wrapper-ppg .caution h3, .dark-theme #docContent-wrapper-ppg .warning h3 {
+	color: white;
+}
+
+.dark-theme .modal-content {
+	background-color: var(--bgcolor-note);
+}
+	
+.dark-theme body  {
+/*	--color-doc: white;  */
+	--color-doc: #ccc;
+	--bgcolor-doc: #0c0c0c;
+	--color-red: #BF4700;
+	--color-code: #8ca1b7;
+	--color-warningtd-c2: #acbccc;
+
+	--color-h: #a4bee3;
+
+	--color-table: white;  
+	--bgcolor-table: #2D3031;
+	--bgcolor-table-thead: #434748;
+	--bgcolor-table-hover: #3C3C3C;
+	--bgcolor-table-td: #0c0c0c;
+	--bgcolor-table-caution: #55554B;
+	--bgcolor-table-warning: #554545;
+	--bgcolor-table-tr-hover: #464646;
+	--bgcolor-blockquote: #4D4D45;
+	--bgcolor-pre: #424242;
+	--bgcolor-table-table: #535859;		
+	--bgcolor-table-table-td: #0c0c0c; 
+	
+	--bgcolor-code: #0c0c0c;
+	--bgcolor-caution: #423e33;
+	--bgcolor-note: #4b5759;
+	--bgcolor-tip: #50574f;
+	--bgcolor-warning: #882812;
+	--bgcolor-warning-td-c2: #716666;
+	--bgcolor-txtCommentsContent: #4F4F4F;
+	
+	--brdcolor-txtCommentsWrap: #202020;
+	--brdcolor-pre: #5E5E5E;
+	--brdcolor-blockquote: #5B5B53;
+	--brdcolor-table: #4B5A66;
+	--brdcolor-table-td: #4A5864;
+	--brdcolor-table-caution: #68684C;
+	--brdcolor-table-warning: #8E2A13;
+	--brdcolor-table-caution-dt: #403B36;
+	--brdcolor-table-warning-dt: #443838;
+	--brdcolor-td-c: #3E3939;
+	--brdcolor-table-thead: white;
+	--brdcolor-table-docs-compare: #999;
+	--brdcolor-table-docs-compare-td: #535353;
+	--brdcolor-sidebar: #0c0c0c; 
+	
+	--brdcolor-table-table: #555759;
+	--brdcolor-caution: #644f0d;
+	--brdcolor-note: #545659;
+	--brdcolor-tip: #527b4b;
+	--brdcolor-warning: #802511;
+	--brdcolor-warning-td-c2: #842d31;
+	
+	--shdcolor-pre: #4F4F4F;	
+}
+
+.dark-theme header,
+.dark-theme footer {
+	opacity: 0.4;
+	transition: opacity .4s;	
+}
+.dark-theme header:hover {
+	opacity: 0.75;
+}
+
+

@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<!-- saved from url=(0114)https://www.8host.com/blog/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench/ -->
+<html dir="ltr" lang="ru-RU" prefix="og: https://ogp.me/ns#" class="global"><script type="text/javascript" id="id-vkontakte" async="" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/openapi.js.Без названия"></script><script type="text/javascript" async="" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/js"></script><script src="chrome-extension://mjnbclmflcpookeapghfhapeffmpodij/injected_content.js"></script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="user-scalable=yes,width=device-width,initial-scale=1"><style type="text/css">html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}table{border-collapse:collapse;border-spacing:0}body{-webkit-text-size-adjust:none}</style><style type="text/css">*,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}</style><meta name="viewport" content="initial-scale=1">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="apple-touch-icon-precomposed" href="https://www.8host.com/blog/wp-content/themes/wp-8host-new/images/favicon/favicon-152.png">
+	
+	
+	<link href="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/css" rel="stylesheet" type="text/css">
+	<link rel="preload" href="https://www.8host.com/blog/wp-content/themes/wp-8host-new/css/skel.css" as="style">
+	<link rel="preload" href="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/style.css" as="style">
+	<link rel="preload" href="https://www.8host.com/blog/wp-content/themes/wp-8host-new/css/style-xlarge.css" as="style">
+	<link rel="preload" href="https://www.8host.com/blog/wp-content/themes/wp-8host-new/css/font-awesome.min.css" as="style">
+	<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+	<script>
+		var templateUrl = 'https://www.8host.com/blog/wp-content/themes/wp-8host-new';
+	</script>
+	<script src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/main.js.Без названия"></script>
+	
+		<!-- All in One SEO 4.2.5.1 - aioseo.com -->
+		<title>Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench | 8HOST.COM</title>
+		<meta name="description" content="Управляемые базы данных позволяют масштабировать БД PostgreSQL несколькими способами. Одним из них является встроенный преобразователь подключений, который позволяет эффективно обрабатывать большое количество клиентских подключений и уменьшить использование их ЦП и памяти. Используя пул соединений и распределяя фиксированный набор перерабатываемых соединений, вы можете обрабатывать значительно больше одновременных клиентских соединений и повысить производительность вашей базы данных PostgreSQL.">
+		<meta name="robots" content="max-image-preview:large">
+		<link rel="canonical" href="https://www.8host.com/blog/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench/">
+		<meta name="generator" content="All in One SEO (AIOSEO) 4.2.5.1 ">
+		<meta property="og:locale" content="ru_RU">
+		<meta property="og:site_name" content="Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench | 8HOST.COM">
+		<meta property="og:type" content="article">
+		<meta property="og:title" content="Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench | 8HOST.COM">
+		<meta property="og:description" content="Управляемые базы данных позволяют масштабировать БД PostgreSQL несколькими способами. Одним из них является встроенный преобразователь подключений, который позволяет эффективно обрабатывать большое количество клиентских подключений и уменьшить использование их ЦП и памяти. Используя пул соединений и распределяя фиксированный набор перерабатываемых соединений, вы можете обрабатывать значительно больше одновременных клиентских соединений и повысить производительность вашей базы данных PostgreSQL.">
+		<meta property="og:url" content="https://www.8host.com/blog/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench/">
+		<meta property="og:image" content="https://www.8host.com/blog/wp-content/uploads//2020/03/240x240_1.jpg">
+		<meta property="og:image:secure_url" content="https://www.8host.com/blog/wp-content/uploads//2020/03/240x240_1.jpg">
+		<meta property="og:image:width" content="240">
+		<meta property="og:image:height" content="240">
+		<meta property="article:published_time" content="2019-03-20T12:10:14+00:00">
+		<meta property="article:modified_time" content="2019-03-06T22:15:05+00:00">
+		<meta property="article:publisher" content="https://www.facebook.com/8host.social">
+		<script type="application/ld+json" class="aioseo-schema">
+			{"@context":"https:\/\/schema.org","@graph":[{"@type":"BreadcrumbList","@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#breadcrumblist","itemListElement":[{"@type":"ListItem","@id":"https:\/\/www.8host.com\/blog\/#listItem","position":1,"item":{"@type":"WebPage","@id":"https:\/\/www.8host.com\/blog\/","name":"\u0413\u043b\u0430\u0432\u043d\u0430\u044f","description":"\u041f\u0440\u043e\u0444\u0435\u0441\u0441\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0439 \u043e\u0431\u043b\u0430\u0447\u043d\u044b\u0439 \u0445\u043e\u0441\u0442\u0438\u043d\u0433 VPS\/VDS. \u0413\u043e\u0442\u043e\u0432\u044b\u0435 CMS. \u0427\u0430\u0441\u0442\u043d\u043e\u0435 \u043e\u0431\u043b\u0430\u043a\u043e \u0432 \u041d\u0438\u0434\u0435\u0440\u043b\u0430\u043d\u0434\u0430\u0445 | 8host.com","url":"https:\/\/www.8host.com\/blog\/"},"nextItem":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#listItem"},{"@type":"ListItem","@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#listItem","position":2,"item":{"@type":"WebPage","@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/","name":"\u0422\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u043e\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e pgbench","description":"\u0423\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u044b\u0435 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u044e\u0442 \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0411\u0414 PostgreSQL \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u0438\u043c\u0438 \u0441\u043f\u043e\u0441\u043e\u0431\u0430\u043c\u0438. \u041e\u0434\u043d\u0438\u043c \u0438\u0437 \u043d\u0438\u0445 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0439 \u043f\u0440\u0435\u043e\u0431\u0440\u0430\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c \u0431\u043e\u043b\u044c\u0448\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439 \u0438 \u0443\u043c\u0435\u043d\u044c\u0448\u0438\u0442\u044c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 \u0438\u0445 \u0426\u041f \u0438 \u043f\u0430\u043c\u044f\u0442\u0438. \u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044f \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u0440\u0430\u0441\u043f\u0440\u0435\u0434\u0435\u043b\u044f\u044f \u0444\u0438\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u043d\u0430\u0431\u043e\u0440 \u043f\u0435\u0440\u0435\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u043c\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u0432\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c \u0437\u043d\u0430\u0447\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0431\u043e\u043b\u044c\u0448\u0435 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u043f\u043e\u0432\u044b\u0441\u0438\u0442\u044c \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0432\u0430\u0448\u0435\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL.","url":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/"},"previousItem":"https:\/\/www.8host.com\/blog\/#listItem"}]},{"@type":"Organization","@id":"https:\/\/www.8host.com\/blog\/#organization","name":"8HOST.com","url":"https:\/\/www.8host.com\/blog\/","logo":{"@type":"ImageObject","url":"https:\/\/www.8host.com\/blog\/wp-content\/themes\/wp-8host-new\/img\/logo.svg","@id":"https:\/\/www.8host.com\/blog\/#organizationLogo"},"image":{"@id":"https:\/\/www.8host.com\/blog\/#organizationLogo"},"sameAs":["https:\/\/www.facebook.com\/8host.social","https:\/\/twitter.com\/8Host_social","https:\/\/www.instagram.com\/8host.social\/"],"contactPoint":{"@type":"ContactPoint","telephone":"+441312141062","contactType":"Customer Support"}},{"@type":"WebSite","@id":"https:\/\/www.8host.com\/blog\/#website","url":"https:\/\/www.8host.com\/blog\/","name":"8HOST.COM","description":"8HOST.COM \u2013 \u041d\u0430\u0434\u0435\u0436\u043d\u044b\u0439 \u043e\u0431\u043b\u0430\u0447\u043d\u044b\u0439 \u0445\u043e\u0441\u0442\u0438\u043d\u0433 VPS\/VDS \u0438 CMS. \u0420\u0430\u0437\u043c\u0435\u0449\u0430\u0435\u043c CMS Joomla, Drupal, Magento, Zencart, Opencart, Redmine, LAMP, LEMP. \u0411\u0435\u0437\u043b\u0438\u043c\u0438\u0442\u043d\u044b\u0439 \u0442\u0440\u0430\u0444\u0438\u043a. \u0412\u0441\u0435 \u0432\u0438\u0434\u044b \u043e\u043f\u043b\u0430\u0442\u044b: \u0431\u0430\u043d\u043a\u043e\u0432\u0441\u043a\u0438\u0439 \u043f\u0435\u0440\u0435\u0432\u043e\u0434, \u043a\u0430\u0440\u0442\u0430, bitcoin, litecoin. \u0420\u0430\u0431\u043e\u0442\u0430\u0435\u043c \u0441 \u044e\u0440\u043b\u0438\u0446\u0430\u043c\u0438 \u0438 \u0444\u0438\u0437\u043b\u0438\u0446\u0430\u043c\u0438. \u0420\u0443\u0441\u0441\u043a\u043e\u044f\u0437\u044b\u0447\u043d\u0430\u044f \u0442\u0435\u0445\u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0430.","inLanguage":"ru-RU","publisher":{"@id":"https:\/\/www.8host.com\/blog\/#organization"}},{"@type":"Article","@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#article","name":"\u0422\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u043e\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e pgbench | 8HOST.COM","headline":"\u0422\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u043e\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e pgbench","description":"\u0423\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u044b\u0435 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u044e\u0442 \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0411\u0414 PostgreSQL \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u0438\u043c\u0438 \u0441\u043f\u043e\u0441\u043e\u0431\u0430\u043c\u0438. \u041e\u0434\u043d\u0438\u043c \u0438\u0437 \u043d\u0438\u0445 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0439 \u043f\u0440\u0435\u043e\u0431\u0440\u0430\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c \u0431\u043e\u043b\u044c\u0448\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439 \u0438 \u0443\u043c\u0435\u043d\u044c\u0448\u0438\u0442\u044c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 \u0438\u0445 \u0426\u041f \u0438 \u043f\u0430\u043c\u044f\u0442\u0438. \u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044f \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u0440\u0430\u0441\u043f\u0440\u0435\u0434\u0435\u043b\u044f\u044f \u0444\u0438\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u043d\u0430\u0431\u043e\u0440 \u043f\u0435\u0440\u0435\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u043c\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u0432\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c \u0437\u043d\u0430\u0447\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0431\u043e\u043b\u044c\u0448\u0435 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u043f\u043e\u0432\u044b\u0441\u0438\u0442\u044c \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0432\u0430\u0448\u0435\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL.","author":{"@id":"https:\/\/www.8host.com\/blog\/author\/amber\/#author"},"publisher":{"@id":"https:\/\/www.8host.com\/blog\/#organization"},"image":{"@type":"ImageObject","url":"https:\/\/www.8host.com\/blog\/wp-content\/themes\/wp-8host-new\/img\/logo.svg","@id":"https:\/\/www.8host.com\/blog\/#articleImage"},"datePublished":"2019-03-20T12:10:14+01:00","dateModified":"2019-03-20T12:10:14+01:00","inLanguage":"ru-RU","mainEntityOfPage":{"@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#webpage"},"isPartOf":{"@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#webpage"},"articleSection":"Cloud Server, VPS, pgbench, PostgreSQL, SQL"},{"@type":"WebPage","@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#webpage","url":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/","name":"\u0422\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u043e\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e pgbench | 8HOST.COM","description":"\u0423\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u044b\u0435 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u044e\u0442 \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0411\u0414 PostgreSQL \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u0438\u043c\u0438 \u0441\u043f\u043e\u0441\u043e\u0431\u0430\u043c\u0438. \u041e\u0434\u043d\u0438\u043c \u0438\u0437 \u043d\u0438\u0445 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0439 \u043f\u0440\u0435\u043e\u0431\u0440\u0430\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c \u0431\u043e\u043b\u044c\u0448\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439 \u0438 \u0443\u043c\u0435\u043d\u044c\u0448\u0438\u0442\u044c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 \u0438\u0445 \u0426\u041f \u0438 \u043f\u0430\u043c\u044f\u0442\u0438. \u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044f \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u0440\u0430\u0441\u043f\u0440\u0435\u0434\u0435\u043b\u044f\u044f \u0444\u0438\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u043d\u0430\u0431\u043e\u0440 \u043f\u0435\u0440\u0435\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u043c\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u0432\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c \u0437\u043d\u0430\u0447\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0431\u043e\u043b\u044c\u0448\u0435 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u043f\u043e\u0432\u044b\u0441\u0438\u0442\u044c \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0432\u0430\u0448\u0435\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL.","inLanguage":"ru-RU","isPartOf":{"@id":"https:\/\/www.8host.com\/blog\/#website"},"breadcrumb":{"@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#breadcrumblist"},"author":"https:\/\/www.8host.com\/blog\/author\/amber\/#author","creator":"https:\/\/www.8host.com\/blog\/author\/amber\/#author","datePublished":"2019-03-20T12:10:14+01:00","dateModified":"2019-03-06T22:15:05+01:00"}]}
+		</script>
+		<!-- All in One SEO -->
+
+<link rel="dns-prefetch" href="https://s.w.org/">
+<script type="text/javascript">
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.8host.com\/blog\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.0.2"}};
+/*! This file is auto-generated */
+!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode,e=(p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0),i.toDataURL());return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([129777,127995,8205,129778,127999],[129777,127995,8203,129778,127999])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(e=t.source||{}).concatemoji?c(e.concatemoji):e.wpemoji&&e.twemoji&&(c(e.twemoji),c(e.wpemoji)))}(window,document,window._wpemojiSettings);
+</script><script src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/wp-emoji-release.min.js.Без названия" type="text/javascript" defer=""></script>
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<!-- <link rel='stylesheet' id='social-likes-classic-css'  href='https://www.8host.com/blog/wp-content/plugins/easy-vkontakte-connect/css/social-likes_classic.css?ver=6.0.2' media='all' /> -->
+<link rel="stylesheet" type="text/css" href="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/8ifas.css" media="all">
+<style id="global-styles-inline-css" type="text/css">
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--duotone--dark-grayscale: url('#wp-duotone-dark-grayscale');--wp--preset--duotone--grayscale: url('#wp-duotone-grayscale');--wp--preset--duotone--purple-yellow: url('#wp-duotone-purple-yellow');--wp--preset--duotone--blue-red: url('#wp-duotone-blue-red');--wp--preset--duotone--midnight: url('#wp-duotone-midnight');--wp--preset--duotone--magenta-yellow: url('#wp-duotone-magenta-yellow');--wp--preset--duotone--purple-green: url('#wp-duotone-purple-green');--wp--preset--duotone--blue-orange: url('#wp-duotone-blue-orange');--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+</style>
+<!-- <link rel='stylesheet' id='wp-pagenavi-css'  href='https://www.8host.com/blog/wp-content/plugins/wp-pagenavi/pagenavi-css.css?ver=2.70' media='all' /> -->
+<!-- <link rel='stylesheet' id='evc-share-style-css'  href='https://www.8host.com/blog/wp-content/plugins/easy-vkontakte-connect/css/style-share.css?ver=6.0.2' media='all' /> -->
+<!-- <link rel='stylesheet' id='dashicons-css'  href='https://www.8host.com/blog/wp-includes/css/dashicons.min.css?ver=6.0.2' media='all' /> -->
+<link rel="stylesheet" type="text/css" href="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/8ifas(1).css" media="all">
+<script type="text/javascript" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/jquery.min.js.Без названия" id="jquery-core-js"></script>
+<script type="text/javascript" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/jquery-migrate.min.js.Без названия" id="jquery-migrate-js"></script>
+<script type="text/javascript" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/jquery.cookie.js.Без названия" id="jquery.cookie-js"></script>
+<script type="text/javascript" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/skel.min.js.Без названия" id="skel.min-js"></script>
+<script type="text/javascript" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/skel-layers.min.js.Без названия" id="skel-layers.min-js"></script>
+<script type="text/javascript" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/init.js.Без названия" id="init-js"></script><style type="text/css">.row{border-bottom:solid 1px transparent}.row>*{float:left}.row:after,.row:before{content:"";display:block;clear:both;height:0}.row.uniform>*>:first-child{margin-top:0}.row.uniform>*>:last-child{margin-bottom:0}.\31 2u,.\31 2u\24{width:100%;clear:none;margin-left:0}.\31 1u,.\31 1u\24{width:91.6666666667%;clear:none;margin-left:0}.\31 0u,.\31 0u\24{width:83.3333333333%;clear:none;margin-left:0}.\39 u,.\39 u\24{width:75%;clear:none;margin-left:0}.\38 u,.\38 u\24{width:66.6666666667%;clear:none;margin-left:0}.\37 u,.\37 u\24{width:58.3333333333%;clear:none;margin-left:0}.\36 u,.\36 u\24{width:50%;clear:none;margin-left:0}.\35 u,.\35 u\24{width:41.6666666667%;clear:none;margin-left:0}.\34 u,.\34 u\24{width:33.3333333333%;clear:none;margin-left:0}.\33 u,.\33 u\24{width:25%;clear:none;margin-left:0}.\32 u,.\32 u\24{width:16.6666666667%;clear:none;margin-left:0}.\31 u,.\31 u\24{width:8.3333333333%;clear:none;margin-left:0}.\31 2u\24+*,.\31 1u\24+*,.\31 0u\24+*,.\39 u\24+*,.\38 u\24+*,.\37 u\24+*,.\36 u\24+*,.\35 u\24+*,.\34 u\24+*,.\33 u\24+*,.\32 u\24+*,.\31 u\24+*{clear:left;}.\-11u{margin-left:91.6666666667%}.\-10u{margin-left:83.3333333333%}.\-9u{margin-left:75%}.\-8u{margin-left:66.6666666667%}.\-7u{margin-left:58.3333333333%}.\-6u{margin-left:50%}.\-5u{margin-left:41.6666666667%}.\-4u{margin-left:33.3333333333%}.\-3u{margin-left:25%}.\-2u{margin-left:16.6666666667%}.\-1u{margin-left:8.3333333333%}</style><style type="text/css">.container{margin-left:auto;margin-right:auto;width:1400px}.container.\31 25\25{width:100%;max-width:1750px;min-width:1400px}.container.\37 5\25{width:1050px}.container.\35 0\25{width:700px}.container.\32 5\25{width:350px}</style><style type="text/css">.row>*{padding:0px 0 0 2em}.row{margin:0px 0 -1px -2em}.row.uniform>*{padding:2em 0 0 2em}.row.uniform{margin:-2em 0 -1px -2em}.row.\32 00\25>*{padding:0px 0 0 4em}.row.\32 00\25{margin:0px 0 -1px -4em}.row.uniform.\32 00\25>*{padding:4em 0 0 4em}.row.uniform.\32 00\25{margin:-4em 0 -1px -4em}.row.\31 50\25>*{padding:0px 0 0 3em}.row.\31 50\25{margin:0px 0 -1px -3em}.row.uniform.\31 50\25>*{padding:3em 0 0 3em}.row.uniform.\31 50\25{margin:-3em 0 -1px -3em}.row.\35 0\25>*{padding:0px 0 0 1em}.row.\35 0\25{margin:0px 0 -1px -1em}.row.uniform.\35 0\25>*{padding:1em 0 0 1em}.row.uniform.\35 0\25{margin:-1em 0 -1px -1em}.row.\32 5\25>*{padding:0px 0 0 0.5em}.row.\32 5\25{margin:0px 0 -1px -0.5em}.row.uniform.\32 5\25>*{padding:0.5em 0 0 0.5em}.row.uniform.\32 5\25{margin:-0.5em 0 -1px -0.5em}.row.\30 \25>*{padding:0}.row.\30 \25{margin:0 0 -1px 0}</style><style type="text/css">.\31 2u\28 global\29,.\31 2u\24\28 global\29{width:100%;clear:none;margin-left:0}.\31 1u\28 global\29,.\31 1u\24\28 global\29{width:91.6666666667%;clear:none;margin-left:0}.\31 0u\28 global\29,.\31 0u\24\28 global\29{width:83.3333333333%;clear:none;margin-left:0}.\39 u\28 global\29,.\39 u\24\28 global\29{width:75%;clear:none;margin-left:0}.\38 u\28 global\29,.\38 u\24\28 global\29{width:66.6666666667%;clear:none;margin-left:0}.\37 u\28 global\29,.\37 u\24\28 global\29{width:58.3333333333%;clear:none;margin-left:0}.\36 u\28 global\29,.\36 u\24\28 global\29{width:50%;clear:none;margin-left:0}.\35 u\28 global\29,.\35 u\24\28 global\29{width:41.6666666667%;clear:none;margin-left:0}.\34 u\28 global\29,.\34 u\24\28 global\29{width:33.3333333333%;clear:none;margin-left:0}.\33 u\28 global\29,.\33 u\24\28 global\29{width:25%;clear:none;margin-left:0}.\32 u\28 global\29,.\32 u\24\28 global\29{width:16.6666666667%;clear:none;margin-left:0}.\31 u\28 global\29,.\31 u\24\28 global\29{width:8.3333333333%;clear:none;margin-left:0}.\31 2u\24\28 global\29+*,.\31 1u\24\28 global\29+*,.\31 0u\24\28 global\29+*,.\39 u\24\28 global\29+*,.\38 u\24\28 global\29+*,.\37 u\24\28 global\29+*,.\36 u\24\28 global\29+*,.\35 u\24\28 global\29+*,.\34 u\24\28 global\29+*,.\33 u\24\28 global\29+*,.\32 u\24\28 global\29+*,.\31 u\24\28 global\29+*{clear:left;}.\-11u\28 global\29{margin-left:91.6666666667%}.\-10u\28 global\29{margin-left:83.3333333333%}.\-9u\28 global\29{margin-left:75%}.\-8u\28 global\29{margin-left:66.6666666667%}.\-7u\28 global\29{margin-left:58.3333333333%}.\-6u\28 global\29{margin-left:50%}.\-5u\28 global\29{margin-left:41.6666666667%}.\-4u\28 global\29{margin-left:33.3333333333%}.\-3u\28 global\29{margin-left:25%}.\-2u\28 global\29{margin-left:16.6666666667%}.\-1u\28 global\29{margin-left:8.3333333333%}</style><style type="text/css">.not-global{display:none!important}.only-xlarge,.only-large,.only-medium,.only-small,.only-xsmall{display:none!important}</style><link rel="stylesheet" type="text/css" href="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/style.css">
+<link rel="https://api.w.org/" href="https://www.8host.com/blog/wp-json/"><link rel="alternate" type="application/json" href="https://www.8host.com/blog/wp-json/wp/v2/posts/4458"><link rel="alternate" type="application/json+oembed" href="https://www.8host.com/blog/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.8host.com%2Fblog%2Ftestirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench%2F">
+<link rel="alternate" type="text/xml+oembed" href="https://www.8host.com/blog/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.8host.com%2Fblog%2Ftestirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench%2F&amp;format=xml">
+
+<!-- Schema & Structured Data For WP v1.9.89 - -->
+<script type="application/ld+json" class="saswp-schema-markup-output">
+[{"@context":"https:\/\/schema.org","@type":"BreadcrumbList","@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/www.8host.com\/blog","name":"8HOST.COM"}},{"@type":"ListItem","position":2,"item":{"@id":"https:\/\/www.8host.com\/blog\/category\/cloud-server\/","name":"Cloud Server"}},{"@type":"ListItem","position":3,"item":{"@id":"https:\/\/www.8host.com\/blog\/category\/vps\/","name":"VPS"}},{"@type":"ListItem","position":4,"item":{"@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/","name":"\u0422\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u043e\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 ..."}}]},
+
+{"@context":"https:\/\/schema.org","@type":"BlogPosting","@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#BlogPosting","url":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/","inLanguage":"ru-RU","mainEntityOfPage":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/","headline":"\u0422\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u043e\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 ...","description":"\u0423\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u044b\u0435 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u044e\u0442 \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0411\u0414 PostgreSQL \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u0438\u043c\u0438 \u0441\u043f\u043e\u0441\u043e\u0431\u0430\u043c\u0438. \u041e\u0434\u043d\u0438\u043c \u0438\u0437 \u043d\u0438\u0445 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0439 \u043f\u0440\u0435\u043e\u0431\u0440\u0430\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c \u0431\u043e\u043b\u044c\u0448\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439 \u0438 \u0443\u043c\u0435\u043d\u044c\u0448\u0438\u0442\u044c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 \u0438\u0445 \u0426\u041f \u0438 \u043f\u0430\u043c\u044f\u0442\u0438. \u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044f \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u0440\u0430\u0441\u043f\u0440\u0435\u0434\u0435\u043b\u044f\u044f \u0444\u0438\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u043d\u0430\u0431\u043e\u0440 \u043f\u0435\u0440\u0435\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u043c\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u0432\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c \u0437\u043d\u0430\u0447\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0431\u043e\u043b\u044c\u0448\u0435 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u043f\u043e\u0432\u044b\u0441\u0438\u0442\u044c \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0432\u0430\u0448\u0435\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL.","articleBody":"\u0423\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u044b\u0435 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u044e\u0442 \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0411\u0414 PostgreSQL \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u0438\u043c\u0438 \u0441\u043f\u043e\u0441\u043e\u0431\u0430\u043c\u0438. \u041e\u0434\u043d\u0438\u043c \u0438\u0437 \u043d\u0438\u0445 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0439 \u043f\u0440\u0435\u043e\u0431\u0440\u0430\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c \u0431\u043e\u043b\u044c\u0448\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439 \u0438 \u0443\u043c\u0435\u043d\u044c\u0448\u0438\u0442\u044c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 \u0438\u0445 \u0426\u041f \u0438 \u043f\u0430\u043c\u044f\u0442\u0438. \u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044f \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u0440\u0430\u0441\u043f\u0440\u0435\u0434\u0435\u043b\u044f\u044f \u0444\u0438\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u043d\u0430\u0431\u043e\u0440 \u043f\u0435\u0440\u0435\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u043c\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u0432\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0442\u044c \u0437\u043d\u0430\u0447\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0431\u043e\u043b\u044c\u0448\u0435 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u043f\u043e\u0432\u044b\u0441\u0438\u0442\u044c \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0432\u0430\u0448\u0435\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL.    \u0412 \u044d\u0442\u043e\u043c \u043c\u0430\u043d\u0443\u0430\u043b\u0435 \u0432\u044b \u043d\u0430\u0443\u0447\u0438\u0442\u0435\u0441\u044c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c pgbench, \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0439 \u0432 PostgreSQL \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442 \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438, \u0434\u043b\u044f \u0437\u0430\u043f\u0443\u0441\u043a\u0430 \u043d\u0430\u0433\u0440\u0443\u0437\u043e\u0447\u043d\u044b\u0445 \u0442\u0435\u0441\u0442\u043e\u0432 \u0432 \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u043e\u0439 \u0431\u0430\u0437\u0435 \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL. \u041c\u044b \u0440\u0430\u0441\u0441\u043a\u0430\u0436\u0435\u043c \u0432\u0430\u043c \u043f\u0440\u043e \u043f\u0443\u043b\u044b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u043e\u043f\u0438\u0448\u0435\u043c, \u043a\u0430\u043a \u043e\u043d\u0438 \u0440\u0430\u0431\u043e\u0442\u0430\u044e\u0442, \u0438 \u043f\u043e\u043a\u0430\u0436\u0435\u043c, \u043a\u0430\u043a \u0438\u0445 \u0441\u043e\u0437\u0434\u0430\u0432\u0430\u0442\u044c. \u041f\u043e \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0430\u043c \u0442\u0435\u0441\u0442\u043e\u0432 pgbench \u0432\u044b \u0443\u0432\u0438\u0434\u0438\u0442\u0435, \u0447\u0442\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u043c\u043e\u0436\u0435\u0442 \u0441\u0442\u0430\u0442\u044c \u043d\u0435\u0434\u043e\u0440\u043e\u0433\u0438\u043c \u0441\u0440\u0435\u0434\u0441\u0442\u0432\u043e\u043c \u0443\u0432\u0435\u043b\u0438\u0447\u0435\u043d\u0438\u044f \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u043e\u0439 \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u0438 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445.  \u0422\u0440\u0435\u0431\u043e\u0432\u0430\u043d\u0438\u044f     \t\u0423\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u0430\u044f \u0411\u0414 PostgreSQL.   \t\u041a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 \u0441 \u044d\u043a\u0437\u0435\u043c\u043f\u043b\u044f\u0440\u043e\u043c PostgreSQL. \u041f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430 PostgreSQL \u0441\u043e\u0434\u0435\u0440\u0436\u0438\u0442 \u0443\u0442\u0438\u043b\u0438\u0442\u0443 \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438 pgbench \u0438 \u043a\u043b\u0438\u0435\u043d\u0442 psql, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u043c\u044b \u0431\u0443\u0434\u0435\u043c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0432 \u044d\u0442\u043e\u043c \u043c\u0430\u043d\u0443\u0430\u043b\u0435. \u0427\u0442\u043e\u0431\u044b \u0443\u0437\u043d\u0430\u0442\u044c, \u043a\u0430\u043a \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c PostgreSQL, \u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u043c\u0430\u043d\u0443\u0430\u043b \u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430 \u0438 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 PostgreSQL \u0432 Ubuntu 18.04.    1: \u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0438 \u0438\u043d\u0438\u0446\u0438\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u044f \u0411\u0414 benchmark  \u041f\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043c \u0441\u043e\u0437\u0434\u0430\u0442\u044c \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0434\u043b\u044f \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445, \u0441\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u0431\u0430\u0437\u0443 \u0434\u0430\u043d\u043d\u044b\u0445 benchmark \u0432 \u0432\u0430\u0448\u0435\u043c \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0435 PostgreSQL \u0438 \u0437\u0430\u043f\u043e\u043b\u043d\u0438\u0442\u0435 \u0435\u0435 \u0444\u0438\u043a\u0442\u0438\u0432\u043d\u044b\u043c\u0438 \u0434\u0430\u043d\u043d\u044b\u043c\u0438, \u043d\u0430 \u043a\u043e\u0442\u043e\u0440\u044b\u0445 pgbench \u0431\u0443\u0434\u0435\u0442 \u0432\u044b\u043f\u043e\u043b\u043d\u044f\u0442\u044c \u0441\u0432\u043e\u0438 \u0442\u0435\u0441\u0442\u044b. \u0423\u0442\u0438\u043b\u0438\u0442\u0430 pgbench \u043c\u043d\u043e\u0433\u043e\u043a\u0440\u0430\u0442\u043d\u043e \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 \u0441\u0435\u0440\u0438\u044e \u0438\u0437 \u043f\u044f\u0442\u0438 SQL \u043a\u043e\u043c\u0430\u043d\u0434 (\u0432\u043a\u043b\u044e\u0447\u0430\u044f \u0437\u0430\u043f\u0440\u043e\u0441\u044b SELECT, UPDATE \u0438 INSERT), \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044f \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u043e \u043f\u043e\u0442\u043e\u043a\u043e\u0432 \u0438 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432, \u0438 \u0432\u044b\u0447\u0438\u0441\u043b\u044f\u0435\u0442 \u043f\u043e\u043a\u0430\u0437\u0430\u0442\u0435\u043b\u044c \u043f\u043e\u043b\u0435\u0437\u043d\u043e\u0439 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u043f\u043e\u0434 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435\u043c \u00ab\u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0438 \u0432 \u0441\u0435\u043a\u0443\u043d\u0434\u0443\u00bb (TPS, transactions per second). TPS - \u044d\u0442\u043e \u043f\u043e\u043a\u0430\u0437\u0430\u0442\u0435\u043b\u044c \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u043e\u0439 \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u0438 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0439, \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u0430\u043d\u043d\u044b\u0445 \u0431\u0430\u0437\u043e\u0439 \u0434\u0430\u043d\u043d\u044b\u0445 \u0437\u0430 \u043e\u0434\u043d\u0443 \u0441\u0435\u043a\u0443\u043d\u0434\u0443. \u0427\u0442\u043e\u0431\u044b \u0443\u0437\u043d\u0430\u0442\u044c \u0431\u043e\u043b\u044c\u0448\u0435 \u043e \u043a\u043e\u043c\u0430\u043d\u0434\u0430\u0445, \u0432\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u043c\u044b\u0445 pgbench, \u043e\u0431\u0440\u0430\u0442\u0438\u0442\u0435\u0441\u044c \u043a \u043e\u0444\u0438\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0439 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u0446\u0438\u0438 pgbench.    \u0418\u0442\u0430\u043a, \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0438\u0442\u0435\u0441\u044c \u043a \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0443 PostgreSQL \u0438 \u0441\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u0411\u0414 benchmark.    \u041f\u0440\u043e\u0446\u0435\u0441\u0441 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u0431\u0443\u0434\u0435\u0442 \u0437\u0430\u0432\u0438\u0441\u0435\u0442\u044c \u043e\u0442 \u0432\u0430\u0448\u0435\u0433\u043e \u043f\u0440\u043e\u0432\u0430\u0439\u0434\u0435\u0440\u0430.    \u041f\u0440\u0438 \u044d\u0442\u043e\u043c \u0432\u0430\u043c \u043f\u043e\u043d\u0430\u0434\u043e\u0431\u044f\u0442\u0441\u044f \u0442\u0430\u043a\u0438\u0435 \u0434\u0430\u043d\u043d\u044b\u0435 (\u043c\u044b \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u043c \u0443\u0441\u043b\u043e\u0432\u043d\u044b\u0435 \u0434\u0430\u043d\u043d\u044b\u0435, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u0432\u044b \u0434\u043e\u043b\u0436\u043d\u044b \u0437\u0430\u043c\u0435\u043d\u0438\u0442\u044c):     \t\u0418\u043c\u044f \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440\u0430: myadmin   \tyour_password   \t\u041f\u0430\u0440\u043e\u043b\u044c: your_password   \t\u041a\u043e\u043d\u0435\u0447\u043d\u0430\u044f \u0442\u043e\u0447\u043a\u0430 \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0430: \u0443\u043a\u0430\u0436\u0438\u0442\u0435 \u0441\u0432\u043e\u044e \u0442\u043e\u0447\u043a\u0443   \t\u041f\u043e\u0440\u0442: 25060   \t\u0411\u0430\u0437\u0430 \u0434\u0430\u043d\u043d\u044b\u0445: defaultdb   \t\u0420\u0435\u0436\u0438\u043c SSL: require (\u0447\u0442\u043e\u0431\u044b \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0437\u0430\u0448\u0438\u0444\u0440\u043e\u0432\u0430\u043d\u043d\u043e\u0435 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0435 SSL)    \u042d\u0442\u0438 \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u0432\u0430\u043c \u043f\u043e\u043d\u0430\u0434\u043e\u0431\u044f\u0442\u0441\u044f \u0432 \u0434\u0430\u043b\u044c\u043d\u0435\u0439\u0448\u0435\u0439 \u0440\u0430\u0431\u043e\u0442\u0435 \u0441 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u043c psql \u0438 \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u043e\u043c pgbench, \u043f\u043e\u0442\u043e\u043c\u0443 \u0437\u0430\u043f\u043e\u043c\u043d\u0438\u0442\u0435 \u0438\u043b\u0438 \u0437\u0430\u043f\u0438\u0448\u0438\u0442\u0435 \u0438\u0445.    \u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0438\u0442\u0435\u0441\u044c \u043a \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0443 \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e \u043a\u043b\u0438\u0435\u043d\u0442\u0430 psql (\u0434\u043b\u044f \u044d\u0442\u043e\u0433\u043e \u0432\u0430\u043c \u043c\u043e\u0436\u0435\u0442 \u043f\u043e\u043d\u0430\u0434\u043e\u0431\u0438\u0442\u044c\u0441\u044f \u0441\u0442\u0440\u043e\u043a\u0430 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f).    \u0412\u044b \u043f\u043e\u043f\u0430\u0434\u0435\u0442\u0435 \u0432 \u043a\u043e\u043c\u0430\u043d\u0434\u043d\u0443\u044e \u0441\u0442\u0440\u043e\u043a\u0443 \u043a\u043b\u0438\u0435\u043d\u0442\u0430 PostgreSQL, \u0435\u0441\u043b\u0438 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u0431\u0443\u0434\u0435\u0442 \u0443\u0434\u0430\u0447\u043d\u043e \u0441\u043e\u0437\u0434\u0430\u043d\u043e.    psql (10.6 (Ubuntu 10.6-0ubuntu0.18.04.1))  SSL connection (protocol: TLSv1.2, cipher: ECDHE-RSA-AES256-GCM-SHA384, bits: 256, compression: off)  Type \"help\" for help.  defaultdb&gt;    \u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u0411\u0414 benchmark:    CREATE DATABASE benchmark;  CREATE DATABASE    \u0412\u044b\u0439\u0434\u0438\u0442\u0435 \u0438\u0437 \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0430:    \\q    \u041f\u0435\u0440\u0435\u0434 \u0437\u0430\u043f\u0443\u0441\u043a\u043e\u043c \u0442\u0435\u0441\u0442\u043e\u0432 pgbench \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u043e \u0437\u0430\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u044d\u0442\u0443 \u0442\u0435\u0441\u0442\u043e\u0432\u0443\u044e \u0431\u0430\u0437\u0443 \u0434\u0430\u043d\u043d\u044b\u0445 \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u0438\u043c\u0438 \u0442\u0430\u0431\u043b\u0438\u0446\u0430\u043c\u0438 \u0438 \u0444\u0438\u043a\u0442\u0438\u0432\u043d\u044b\u043c\u0438 \u0434\u0430\u043d\u043d\u044b\u043c\u0438.    \u0414\u043b\u044f \u044d\u0442\u043e\u0433\u043e \u043c\u044b \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u043c pgbench \u0441\u043e \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u043c\u0438 \u0444\u043b\u0430\u0433\u0430\u043c\u0438:     \t-h: \u043a\u043e\u043d\u0435\u0447\u043d\u0430\u044f \u0442\u043e\u0447\u043a\u0430 \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0430 PostgreSQL   \t-p: \u043f\u043e\u0440\u0442 \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0430 PostgreSQL   \t-U: \u0438\u043c\u044f \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445   \t-i: \u0438\u043d\u0438\u0446\u0438\u0430\u043b\u0438\u0437\u0438\u0440\u0443\u0435\u0442 \u0431\u0430\u0437\u0443 \u0434\u0430\u043d\u043d\u044b\u0445 benchmark \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e \u0442\u0430\u0431\u043b\u0438\u0446 \u0438 \u0438\u0445 \u0444\u0438\u043a\u0442\u0438\u0432\u043d\u044b\u0445 \u0434\u0430\u043d\u043d\u044b\u0445.   \t-s: \u0443\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u0442 \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u043d\u044b\u0439 \u043a\u043e\u044d\u0444\u0444\u0438\u0446\u0438\u0435\u043d\u0442 150, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u0443\u043c\u043d\u043e\u0436\u0438\u0442 \u0440\u0430\u0437\u043c\u0435\u0440\u044b \u0442\u0430\u0431\u043b\u0438\u0446\u044b \u043d\u0430 150. \u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u043d\u044b\u0439 \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u043d\u044b\u0439 \u043a\u043e\u044d\u0444\u0444\u0438\u0446\u0438\u0435\u043d\u0442 1 \u0441\u043e\u0437\u0434\u0430\u0435\u0442 \u0442\u0430\u0431\u043b\u0438\u0446\u0443 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0445 \u0440\u0430\u0437\u043c\u0435\u0440\u043e\u0432:    table\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 # of rows  ---------------------------------  pgbench_branches\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 1  pgbench_tellers\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 \u00a0\u00a010  pgbench_accounts\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 100000  pgbench_history\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 0    \u041c\u0430\u0441\u0448\u0442\u0430\u0431\u043d\u044b\u0439 \u043a\u043e\u044d\u0444\u0444\u0438\u0446\u0438\u0435\u043d\u0442 150 \u0441\u043e\u0437\u0434\u0430\u0441\u0442 \u0442\u0430\u0431\u043b\u0438\u0446\u0443 pgbench_accounts \u0432 15\u00a0000\u00a0000 \u0441\u0442\u0440\u043e\u043a.  \u041f\u0440\u0438\u043c\u0435\u0447\u0430\u043d\u0438\u0435: \u0427\u0442\u043e\u0431\u044b \u0438\u0437\u0431\u0435\u0436\u0430\u0442\u044c \u0447\u0440\u0435\u0437\u043c\u0435\u0440\u043d\u043e\u0433\u043e \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u0430 \u0437\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0445 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0439, \u0443\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044c, \u0447\u0442\u043e \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u043d\u043e\u0433\u043e \u043a\u043e\u044d\u0444\u0444\u0438\u0446\u0438\u0435\u043d\u0442\u0430 \u043a\u0430\u043a \u043c\u0438\u043d\u0438\u043c\u0443\u043c \u0440\u0430\u0432\u043d\u043e \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u0443 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u0440\u0430\u0431\u043e\u0442\u0430\u044e\u0449\u0438\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044e\u0442\u0441\u044f \u0432 \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0438. \u0412 \u044d\u0442\u043e\u043c \u043c\u0430\u043d\u0443\u0430\u043b\u0435 \u043c\u044b \u043f\u0440\u043e\u0442\u0435\u0441\u0442\u0438\u0440\u0443\u0435\u043c \u043c\u0430\u043a\u0441\u0438\u043c\u0443\u043c 150 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432, \u043f\u043e\u044d\u0442\u043e\u043c\u0443 \u043c\u044b \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u043b\u0438 \u0437\u0434\u0435\u0441\u044c \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435 -s 150. \u0427\u0442\u043e\u0431\u044b \u0443\u0437\u043d\u0430\u0442\u044c \u0431\u043e\u043b\u044c\u0448\u0435, \u043e\u0437\u043d\u0430\u043a\u043e\u043c\u044c\u0442\u0435\u0441\u044c \u0441 \u044d\u0442\u0438\u043c\u0438 \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0438\u044f\u043c\u0438 \u0438\u0437 \u043e\u0444\u0438\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0439 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u0446\u0438\u0438 pgbench.  \u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0435 \u043a\u043e\u043c\u0430\u043d\u0434\u0443 pgbench:    pgbench -h your_cluster_endpoint -p 25060 -U myadmin -i -s 150 benchmark    \u041f\u043e\u0441\u043b\u0435 \u044d\u0442\u043e\u0433\u043e \u0432\u0430\u043c \u0431\u0443\u0434\u0435\u0442 \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u043e \u0432\u0432\u0435\u0441\u0442\u0438 \u043f\u0430\u0440\u043e\u043b\u044c \u0443\u043a\u0430\u0437\u0430\u043d\u043d\u043e\u0433\u043e \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f \u0411\u0414. \u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043f\u0430\u0440\u043e\u043b\u044c \u0438 \u043d\u0430\u0436\u043c\u0438\u0442\u0435 Enter.    dropping old tables...  NOTICE:\u00a0 table \"pgbench_accounts\" does not exist, skipping  NOTICE:\u00a0 table \"pgbench_branches\" does not exist, skipping  NOTICE:\u00a0 table \"pgbench_history\" does not exist, skipping  NOTICE:\u00a0 table \"pgbench_tellers\" does not exist, skipping  creating tables...  generating data...  100000 of 15000000 tuples (0%) done (elapsed 0.19 s, remaining 27.93 s)  200000 of 15000000 tuples (1%) done (elapsed 0.85 s, remaining 62.62 s)  300000 of 15000000 tuples (2%) done (elapsed 1.21 s, remaining 59.23 s)  400000 of 15000000 tuples (2%) done (elapsed 1.63 s, remaining 59.44 s)  500000 of 15000000 tuples (3%) done (elapsed 2.05 s, remaining 59.51 s)  . . .  14700000 of 15000000 tuples (98%) done (elapsed 70.87 s, remaining 1.45 s)  14800000 of 15000000 tuples (98%) done (elapsed 71.39 s, remaining 0.96 s)  14900000 of 15000000 tuples (99%) done (elapsed 71.91 s, remaining 0.48 s)  15000000 of 15000000 tuples (100%) done (elapsed 72.42 s, remaining 0.00 s)  vacuuming...  creating primary keys...  done.    \u041d\u0430 \u0434\u0430\u043d\u043d\u044b\u0439 \u043c\u043e\u043c\u0435\u043d\u0442 \u0443 \u0432\u0430\u0441 \u0435\u0441\u0442\u044c \u0431\u0430\u0437\u0430 \u0434\u0430\u043d\u043d\u044b\u0445 benchmark, \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0442\u0430\u0431\u043b\u0438\u0446\u0430\u043c\u0438 \u0438 \u0434\u0430\u043d\u043d\u044b\u043c\u0438, \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u044b\u043c\u0438 \u0434\u043b\u044f \u0437\u0430\u043f\u0443\u0441\u043a\u0430 \u0442\u0435\u0441\u0442\u043e\u0432 pgbench. \u0422\u0435\u043f\u0435\u0440\u044c \u043c\u043e\u0436\u043d\u043e \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u0431\u0430\u0437\u043e\u0432\u044b\u0439 \u0442\u0435\u0441\u0442, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u043f\u043e\u0437\u0432\u043e\u043b\u0438\u0442 \u043d\u0430\u043c \u0441\u0440\u0430\u0432\u043d\u0438\u0442\u044c \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0434\u043e \u0438 \u043f\u043e\u0441\u043b\u0435 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439.  2: \u0417\u0430\u043f\u0443\u0441\u043a \u0431\u0430\u0437\u043e\u0432\u043e\u0433\u043e \u0442\u0435\u0441\u0442\u0430 pgbench  \u041f\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043c \u043d\u0430\u0447\u0430\u0442\u044c \u043f\u0435\u0440\u0432\u044b\u0439 \u0442\u0435\u0441\u0442, \u0441\u0442\u043e\u0438\u0442 \u043e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c\u0441\u044f \u043d\u0430 \u0442\u043e\u043c, \u0447\u0442\u043e \u0438\u043c\u0435\u043d\u043d\u043e \u043c\u044b \u043f\u044b\u0442\u0430\u0435\u043c\u0441\u044f \u043e\u043f\u0442\u0438\u043c\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e \u043f\u0443\u043b\u043e\u0432 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439.    \u041e\u0431\u044b\u0447\u043d\u043e, \u043a\u043e\u0433\u0434\u0430 \u043a\u043b\u0438\u0435\u043d\u0442 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0430\u0435\u0442\u0441\u044f \u043a \u0411\u0414 PostgreSQL, \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u043f\u0440\u043e\u0446\u0435\u0441\u0441 PostgreSQL \u043f\u0435\u0440\u0435\u0445\u043e\u0434\u0438\u0442 \u0432 \u0434\u043e\u0447\u0435\u0440\u043d\u0438\u0439 \u043f\u0440\u043e\u0446\u0435\u0441\u0441, \u0441\u043e\u043e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044e\u0449\u0438\u0439 \u044d\u0442\u043e\u043c\u0443 \u043d\u043e\u0432\u043e\u043c\u0443 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044e. \u0415\u0441\u043b\u0438 \u0443 \u0432\u0430\u0441 \u0442\u043e\u043b\u044c\u043a\u043e \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u043e \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u044d\u0442\u043e \u043d\u0435 \u0432\u044b\u0437\u043e\u0432\u0435\u0442 \u043f\u0440\u043e\u0431\u043b\u0435\u043c. \u041e\u0434\u043d\u0430\u043a\u043e \u043f\u043e \u043c\u0435\u0440\u0435 \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432 \u0438 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0440\u0430\u0441\u0445\u043e\u0434\u044b \u0440\u0435\u0441\u0443\u0440\u0441\u043e\u0432 \u043f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440\u0430 \u0438 \u043f\u0430\u043c\u044f\u0442\u0438 \u043d\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0438 \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0430\u043d\u0438\u0435 \u044d\u0442\u0438\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u043d\u0430\u0447\u0438\u043d\u0430\u044e\u0442 \u043d\u0430\u043a\u043b\u0430\u0434\u044b\u0432\u0430\u0442\u044c\u0441\u044f, \u043e\u0441\u043e\u0431\u0435\u043d\u043d\u043e \u0435\u0441\u043b\u0438 \u0440\u0430\u0441\u0441\u043c\u0430\u0442\u0440\u0438\u0432\u0430\u0435\u043c\u043e\u0435 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u043d\u0435\u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f \u0441 \u0411\u0414. \u041a\u0440\u043e\u043c\u0435 \u0442\u043e\u0433\u043e, \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440 PostgreSQL max_connections \u043c\u043e\u0436\u0435\u0442 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0438\u0432\u0430\u0442\u044c \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439, \u0432 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0435 \u0447\u0435\u0433\u043e \u043f\u043e\u0441\u043b\u0435 \u043f\u0440\u0435\u0432\u044b\u0448\u0435\u043d\u0438\u044f \u044d\u0442\u043e\u0433\u043e \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u044f \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f \u0431\u0443\u0434\u0443\u0442 \u043e\u0442\u043a\u043b\u043e\u043d\u0435\u043d\u044b \u0438\u043b\u0438 \u0441\u0431\u0440\u043e\u0448\u0435\u043d\u044b.    \u041f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u0435\u0442 \u043e\u0442\u043a\u0440\u044b\u0442\u044b\u043c \u0444\u0438\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0441 \u0431\u0430\u0437\u043e\u0439 \u0434\u0430\u043d\u043d\u044b\u0445 (\u044d\u0442\u043e \u0440\u0430\u0437\u043c\u0435\u0440 \u043f\u0443\u043b\u0430, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u043e\u043d \u0437\u0430\u0442\u0435\u043c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u0434\u043b\u044f \u0440\u0430\u0441\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u0438\u044f \u0438 \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u0437\u0430\u043f\u0440\u043e\u0441\u043e\u0432). \u042d\u0442\u043e \u043e\u0437\u043d\u0430\u0447\u0430\u0435\u0442, \u0447\u0442\u043e \u0432\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u043e\u0431\u0441\u043b\u0443\u0436\u0438\u0442\u044c \u0433\u043e\u0440\u0430\u0437\u0434\u043e \u0431\u043e\u043b\u044c\u0448\u0435 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u0430\u0442\u044c \u043d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0445 \u0438\u043b\u0438 \u0437\u0430\u0441\u0442\u043e\u0439\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432, \u0430 \u0442\u0430\u043a\u0436\u0435 \u043f\u043e\u0441\u0442\u0430\u0432\u0438\u0442\u044c \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0435 \u0437\u0430\u043f\u0440\u043e\u0441\u044b \u0432 \u043e\u0447\u0435\u0440\u0435\u0434\u044c \u0432\u043e \u0432\u0440\u0435\u043c\u044f \u0432\u0441\u043f\u043b\u0435\u0441\u043a\u043e\u0432 \u0442\u0440\u0430\u0444\u0438\u043a\u0430 (\u0432\u043c\u0435\u0441\u0442\u043e \u0442\u043e\u0433\u043e \u0447\u0442\u043e\u0431\u044b \u043e\u0442\u043a\u043b\u043e\u043d\u044f\u0442\u044c \u0438\u0445). \u041f\u043e\u0432\u0442\u043e\u0440\u043d\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044f \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f, \u0432\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u0431\u043e\u043b\u0435\u0435 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e \u043f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c \u0440\u0435\u0441\u0443\u0440\u0441\u044b \u0432\u0430\u0448\u0435\u0433\u043e \u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440\u0430 \u0432 \u0441\u0440\u0435\u0434\u0435 \u0441 \u0431\u043e\u043b\u044c\u0448\u0438\u043c \u043e\u0431\u044a\u0435\u043c\u043e\u043c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439 \u0438 \u043e\u043f\u0442\u0438\u043c\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0411\u0414.    \u041f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u043c\u043e\u0436\u043d\u043e \u0440\u0435\u0430\u043b\u0438\u0437\u043e\u0432\u0430\u0442\u044c \u043b\u0438\u0431\u043e \u043d\u0430 \u0441\u0442\u043e\u0440\u043e\u043d\u0435 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f, \u043b\u0438\u0431\u043e \u0432 \u043a\u0430\u0447\u0435\u0441\u0442\u0432\u0435 \u043f\u0440\u043e\u043c\u0435\u0436\u0443\u0442\u043e\u0447\u043d\u043e\u0433\u043e \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u043d\u043e\u0433\u043e \u043e\u0431\u0435\u0441\u043f\u0435\u0447\u0435\u043d\u0438\u044f \u043c\u0435\u0436\u0434\u0443 \u0411\u0414 \u0438 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435\u043c. \u041f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0434\u043b\u044f \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u044b\u0445 \u0431\u0430\u0437 \u0434\u0430\u043d\u043d\u044b\u0445 \u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u0430\u043d \u043d\u0430 \u043e\u0441\u043d\u043e\u0432\u0435 pgBouncer (\u044d\u0442\u043e \u043b\u0435\u0433\u043a\u0438\u0439 \u043f\u0440\u043e\u043c\u0435\u0436\u0443\u0442\u043e\u0447\u043d\u044b\u0439 \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0441 \u043e\u0442\u043a\u0440\u044b\u0442\u044b\u043c \u0438\u0441\u0445\u043e\u0434\u043d\u044b\u043c \u043a\u043e\u0434\u043e\u043c \u0434\u043b\u044f PostgreSQL).    \u041e\u0442\u043a\u0440\u043e\u0439\u0442\u0435 \u043f\u0430\u043d\u0435\u043b\u044c \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u0441\u0432\u043e\u0438\u043c\u0438 \u0431\u0430\u0437\u0430\u043c\u0438 \u0434\u0430\u043d\u043d\u044b\u0445. \u0432 \u043c\u0435\u043d\u044e \u043d\u0430\u0439\u0434\u0438\u0442\u0435 \u043e\u043f\u0446\u0438\u044e \u0442\u0438\u043f\u0430 Connection Pools \u0438 \u0441\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439.    \u0414\u043b\u044f \u044d\u0442\u043e\u0433\u043e \u0432\u0430\u043c \u043f\u043e\u043d\u0430\u0434\u043e\u0431\u044f\u0442\u0441\u044f \u0442\u0430\u043a\u0438\u0435 \u0434\u0430\u043d\u043d\u044b\u0435:     \tPool Name: \u0443\u043d\u0438\u043a\u0430\u043b\u044c\u043d\u043e\u0435 \u0438\u043c\u044f \u0432\u0430\u0448\u0435\u0433\u043e \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439.   \tDatabase: \u0411\u0430\u0437\u0430 \u0434\u0430\u043d\u043d\u044b\u0445, \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f \u043a\u043e\u0442\u043e\u0440\u043e\u0439 \u0432\u044b \u0445\u043e\u0442\u0438\u0442\u0435 \u043e\u0431\u044a\u0435\u0434\u0438\u043d\u0438\u0442\u044c \u0432 \u043f\u0443\u043b.   \tUser: \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c PostgreSQL, \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e \u043a\u043e\u0442\u043e\u0440\u043e\u0433\u043e \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0431\u0443\u0434\u0435\u0442 \u0430\u0443\u0442\u0435\u043d\u0442\u0438\u0444\u0438\u0446\u0438\u0440\u043e\u0432\u0430\u0442\u044c\u0441\u044f   \tMode: \u0440\u0435\u0436\u0438\u043c. \u042d\u0442\u0430 \u043e\u043f\u0446\u0438\u044f \u043a\u043e\u043d\u0442\u0440\u043e\u043b\u0438\u0440\u0443\u0435\u0442, \u043a\u0430\u043a \u0434\u043e\u043b\u0433\u043e \u043f\u0443\u043b \u043d\u0430\u0437\u043d\u0430\u0447\u0430\u0435\u0442 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u043e\u043c\u0443 \u0441\u0435\u0440\u0432\u0435\u0440\u0443 \u0431\u044d\u043a\u044d\u043d\u0434-\u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0435.       \t     \tSession: \u041a\u043b\u0438\u0435\u043d\u0442 \u0443\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0435 \u0434\u043e \u0442\u0435\u0445 \u043f\u043e\u0440, \u043f\u043e\u043a\u0430 \u043e\u043d\u043e \u044f\u0432\u043d\u043e \u043d\u0435 \u043e\u0442\u043a\u043b\u044e\u0447\u0438\u0442\u0441\u044f.   \tTransaction: \u041a\u043b\u0438\u0435\u043d\u0442 \u043f\u043e\u043b\u0443\u0447\u0430\u0435\u0442 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0435 \u0434\u043e \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u044f \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0438, \u043f\u043e\u0441\u043b\u0435 \u0447\u0435\u0433\u043e \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0435 \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442\u0441\u044f \u0432 \u043f\u0443\u043b.   \tStatement: \u041f\u0443\u043b \u0430\u0433\u0440\u0435\u0441\u0441\u0438\u0432\u043d\u043e \u043f\u0435\u0440\u0435\u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f \u043f\u043e\u0441\u043b\u0435 \u043a\u0430\u0436\u0434\u043e\u0433\u043e \u043e\u043f\u0435\u0440\u0430\u0442\u043e\u0440\u0430 \u043a\u043b\u0438\u0435\u043d\u0442\u0430. \u0412 \u044d\u0442\u043e\u043c \u0440\u0435\u0436\u0438\u043c\u0435 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0438 \u0441 \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u0438\u043c\u0438 \u043e\u043f\u0435\u0440\u0430\u0442\u043e\u0440\u0430\u043c\u0438 \u043d\u0435 \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044e\u0442\u0441\u044f.           \tPool Size: \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u043f\u0443\u043b \u0431\u0443\u0434\u0435\u0442 \u0434\u0435\u0440\u0436\u0430\u0442\u044c \u043e\u0442\u043a\u0440\u044b\u0442\u044b\u043c \u043c\u0435\u0436\u0434\u0443 \u0441\u043e\u0431\u043e\u0439 \u0438 \u0431\u0430\u0437\u043e\u0439 \u0434\u0430\u043d\u043d\u044b\u0445.    \u041f\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043c \u0441\u043e\u0437\u0434\u0430\u0442\u044c \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u043c \u0431\u0430\u0437\u043e\u0432\u044b\u0439 \u0442\u0435\u0441\u0442, \u0441 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0430\u043c\u0438 \u043a\u043e\u0442\u043e\u0440\u043e\u0433\u043e \u0432\u044b \u0441\u043c\u043e\u0436\u0435\u0442\u0435 \u0441\u0440\u0430\u0432\u043d\u0438\u0442\u044c \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u0434\u043e \u0438 \u043f\u043e\u0441\u043b\u0435 \u0432\u043d\u0435\u0434\u0440\u0435\u043d\u0438\u044f \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439.    \u0412 \u044d\u0442\u043e\u043c \u043c\u0430\u043d\u0443\u0430\u043b\u0435 \u043c\u044b \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u043c 4 \u0413\u0411 RAM, 2 vCPU, 80 \u0413\u0411 \u0434\u0438\u0441\u043a\u043e\u0432\u043e\u0433\u043e \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u0430, \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u0443\u044e \u0431\u0430\u0437\u0443 \u0434\u0430\u043d\u043d\u044b\u0445 (\u0442\u043e\u043b\u044c\u043a\u043e \u0432\u0435\u0434\u0443\u0449\u0430\u044f \u043d\u043e\u0434\u0430). \u0412\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u0442\u0435\u0441\u0442\u0430 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0432 \u0441\u043e\u043e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0438 \u0441 \u0432\u0430\u0448\u0438\u043c\u0438 \u0441\u043f\u0435\u0446\u0438\u0444\u0438\u043a\u0430\u0446\u0438\u044f\u043c\u0438 \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0430 PostgreSQL.    \u0418\u0442\u0430\u043a, \u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u043c \u043f\u0435\u0440\u0432\u044b\u0439 \u0442\u0435\u0441\u0442 pgbench.    \u0412\u043e\u0439\u0434\u0438\u0442\u0435 \u043d\u0430 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0443\u044e \u043c\u0430\u0448\u0438\u043d\u0443. \u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0435 pgbench, \u0443\u043a\u0430\u0437\u0430\u0432 \u043a\u043e\u043d\u0435\u0447\u043d\u0443\u044e \u0442\u043e\u0447\u043a\u0443, \u043f\u043e\u0440\u0442 \u0438 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f. \u0422\u0430\u043a\u0436\u0435 \u043d\u0443\u0436\u043d\u043e \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u044d\u0442\u0438 \u043e\u043f\u0446\u0438\u0438:     \t-c: \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432 \u0438\u043b\u0438 \u0441\u0435\u0430\u043d\u0441\u043e\u0432 \u0411\u0414, \u043a\u043e\u0442\u043e\u0440\u043e\u0435 \u043d\u0443\u0436\u043d\u043e \u0441\u0438\u043c\u0443\u043b\u0438\u0440\u043e\u0432\u0430\u0442\u044c. \u041c\u044b \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u043c \u0437\u0434\u0435\u0441\u044c 50, \u0447\u0442\u043e\u0431\u044b \u0438\u043c\u0438\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u043c\u0435\u043d\u044c\u0448\u0435\u0435, \u0447\u0435\u043c \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440 max_connections \u0434\u0430\u043d\u043d\u043e\u0433\u043e \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0430 PostgreSQL.   \t-j: \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0440\u0430\u0431\u043e\u0447\u0438\u0445 \u043f\u043e\u0442\u043e\u043a\u043e\u0432, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 pgbench \u0431\u0443\u0434\u0435\u0442 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0432\u043e \u0432\u0440\u0435\u043c\u044f \u0442\u0435\u0441\u0442\u0430. \u0415\u0441\u043b\u0438 \u0432\u044b \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442\u0435 \u043c\u043d\u043e\u0433\u043e\u043f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440\u043d\u0443\u044e \u043c\u0430\u0448\u0438\u043d\u0443, \u0432\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u0443\u0432\u0435\u043b\u0438\u0447\u0438\u0442\u044c \u0437\u0442\u043e \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435, \u0447\u0442\u043e\u0431 \u0440\u0430\u0441\u043f\u0440\u0435\u0434\u0435\u043b\u0438\u0442\u044c \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432 \u043f\u043e \u043f\u043e\u0442\u043e\u043a\u0430\u043c. \u041d\u0430 \u0434\u0432\u0443\u0445\u044a\u044f\u0434\u0435\u0440\u043d\u043e\u043c \u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440\u0435 \u043d\u0443\u0436\u043d\u043e \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435 2.   \t-P: \u043e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0435\u0442 \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 \u0438 \u043c\u0435\u0442\u0440\u0438\u043a\u0438 \u043a\u0430\u0436\u0434\u044b\u0435 60 \u0441\u0435\u043a\u0443\u043d\u0434.   \t-T: \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442 \u0442\u0435\u0441\u0442 \u043d\u0430 600 \u0441\u0435\u043a\u0443\u043d\u0434 (10 \u043c\u0438\u043d\u0443\u0442). \u0427\u0442\u043e\u0431\u044b \u043f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0441\u043e\u0433\u043b\u0430\u0441\u043e\u0432\u0430\u043d\u043d\u044b\u0435, \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u043c\u044b\u0435 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b, \u0432\u0430\u0436\u043d\u043e, \u0447\u0442\u043e\u0431\u044b \u0442\u0435\u0441\u0442 \u0434\u043b\u0438\u043b\u0441\u044f \u0432 \u0442\u0435\u0447\u0435\u043d\u0438\u0435 \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u0438\u0445 \u043c\u0438\u043d\u0443\u0442 \u0438\u043b\u0438 \u043e\u0434\u0438\u043d \u0446\u0438\u043a\u043b \u043a\u043e\u043d\u0442\u0440\u043e\u043b\u044c\u043d\u044b\u0445 \u0442\u043e\u0447\u0435\u043a.    \u0422\u0430\u043a\u0436\u0435 \u043d\u0443\u0436\u043d\u043e \u0443\u043a\u0430\u0437\u0430\u0442\u044c, \u0447\u0442\u043e \u0442\u0435\u0441\u0442 \u043d\u0443\u0436\u043d\u043e \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u0432 \u0411\u0414 benchmark.    \u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0435 \u044d\u0442\u0443 \u043a\u043e\u043c\u0430\u043d\u0434\u0443:    pgbench -h your_db_endpoint -p 25060 -U myadmin -c 50 -j 2 -P 60 -T 600 benchmark    \u041d\u0430\u0436\u043c\u0438\u0442\u0435 \u043a\u043b\u0430\u0432\u0438\u0448\u0443 Enter \u0438 \u0432\u0432\u0435\u0434\u0438\u0442\u0435 \u043f\u0430\u0440\u043e\u043b\u044c \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f myadmin, \u0447\u0442\u043e\u0431\u044b \u043d\u0430\u0447\u0430\u0442\u044c \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435 \u0442\u0435\u0441\u0442\u0430. \u0412\u044b \u0434\u043e\u043b\u0436\u043d\u044b \u0443\u0432\u0438\u0434\u0435\u0442\u044c \u043f\u043e\u0434\u043e\u0431\u043d\u044b\u0439 \u0432\u044b\u0432\u043e\u0434 (\u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b \u0431\u0443\u0434\u0443\u0442 \u0437\u0430\u0432\u0438\u0441\u0435\u0442\u044c \u043e\u0442 \u0445\u0430\u0440\u0430\u043a\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043a \u0432\u0430\u0448\u0435\u0433\u043e \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0430 PostgreSQL):    starting vacuum...end.  progress: 60.0 s, 157.4 tps, lat 282.988 ms stddev 40.261  progress: 120.0 s, 176.2 tps, lat 283.726 ms stddev 38.722  progress: 180.0 s, 167.4 tps, lat 298.663 ms stddev 238.124  progress: 240.0 s, 178.9 tps, lat 279.564 ms stddev 43.619  progress: 300.0 s, 178.5 tps, lat 280.016 ms stddev 43.235  progress: 360.0 s, 178.8 tps, lat 279.737 ms stddev 43.307  progress: 420.0 s, 179.3 tps, lat 278.837 ms stddev 43.783  progress: 480.0 s, 178.5 tps, lat 280.203 ms stddev 43.921  progress: 540.0 s, 180.0 tps, lat 277.816 ms stddev 43.742  progress: 600.0 s, 178.5 tps, lat 280.044 ms stddev 43.705  transaction type: &lt;builtin: TPC-B (sort of)&gt;  scaling factor: 150  query mode: simple  number of clients: 50  number of threads: 2  duration: 600 s  number of transactions actually processed: 105256  latency average  282.039 ms  latency stddev  84.244 ms  tps  175.329321 (including connections establishing)  tps  175.404174 (excluding connections establishing)    \u0417\u0434\u0435\u0441\u044c \u043c\u043e\u0436\u043d\u043e \u0432\u0438\u0434\u0435\u0442\u044c, \u0447\u0442\u043e \u0437\u0430 10 \u043c\u0438\u043d\u0443\u0442 \u0440\u0430\u0431\u043e\u0442\u044b \u0441 50 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u043c\u0438 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f\u043c\u0438 \u043a\u043b\u0430\u0441\u0442\u0435\u0440 \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u0430\u043b 105 256 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0439 \u0441 \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u043e\u0439 \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c\u044e \u043f\u0440\u0438\u043c\u0435\u0440\u043d\u043e 175 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0439 \u0432 \u0441\u0435\u043a\u0443\u043d\u0434\u0443.    \u0422\u0435\u043f\u0435\u0440\u044c \u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u043c \u0442\u043e\u0442 \u0436\u0435 \u0442\u0435\u0441\u0442, \u043d\u043e \u043d\u0430 \u044d\u0442\u043e\u0442 \u0440\u0430\u0437 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u043c 150 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432. \u042d\u0442\u043e \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u0432\u044b\u0448\u0435, \u0447\u0435\u043c max_connections \u0434\u043b\u044f \u044d\u0442\u043e\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445, \u044d\u0442\u043e \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u0441\u0438\u043c\u0443\u043b\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043c\u0430\u0441\u0441\u043e\u0432\u044b\u0439 \u043f\u0440\u0438\u0442\u043e\u043a \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438\u0445 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439:    pgbench -h your_db_endpoint -p 25060 -U myadmin -c 150 -j 2 -P 60 -T 600 benchmark    \u0412\u044b \u043f\u043e\u043b\u0443\u0447\u0438\u0442\u0435 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442:    starting vacuum...end.  connection to database \"pgbench\" failed:  FATAL:\u00a0 remaining connection slots are reserved for non-replication superuser connections  progress: 60.0 s, 182.6 tps, lat 280.069 ms stddev 42.009  progress: 120.0 s, 253.8 tps, lat 295.612 ms stddev 237.448  progress: 180.0 s, 271.3 tps, lat 276.411 ms stddev 40.643  progress: 240.0 s, 273.0 tps, lat 274.653 ms stddev 40.942  progress: 300.0 s, 272.8 tps, lat 274.977 ms stddev 41.660  progress: 360.0 s, 250.0 tps, lat 300.033 ms stddev 282.712  progress: 420.0 s, 272.1 tps, lat 275.614 ms stddev 42.901  progress: 480.0 s, 261.1 tps, lat 287.226 ms stddev 112.499  progress: 540.0 s, 272.5 tps, lat 275.309 ms stddev 41.740  progress: 600.0 s, 271.2 tps, lat 276.585 ms stddev 41.221  transaction type: &lt;builtin: TPC-B (sort of)&gt;  scaling factor: 150  query mode: simple  number of clients: 150  number of threads: 2  duration: 600 s  number of transactions actually processed: 154892  latency average  281.421 ms  latency stddev  125.929 ms  tps  257.994941 (including connections establishing)  tps  258.049251 (excluding connections establishing)    \u041e\u0431\u0440\u0430\u0442\u0438\u0442\u0435 \u0432\u043d\u0438\u043c\u0430\u043d\u0438\u0435 \u043d\u0430 \u043e\u0448\u0438\u0431\u043a\u0443 FATAL \u2013 \u043e\u043d\u0430 \u0443\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442 \u043d\u0430 \u0442\u043e, \u0447\u0442\u043e pgbench \u0434\u043e\u0441\u0442\u0438\u0433 \u043f\u043e\u0440\u043e\u0433\u043e\u0432\u043e\u0433\u043e \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u044f \u0432 100 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 (max_connections), \u0447\u0442\u043e \u043f\u0440\u0438\u0432\u0435\u043b\u043e \u043a \u043e\u0442\u043a\u0430\u0437\u0443 \u0432 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0438. \u0418 \u0432\u0441\u0435 \u0436\u0435 pgbench\u00a0 \u0441\u043c\u043e\u0433 \u0437\u0430\u043a\u043e\u043d\u0447\u0438\u0442\u044c \u0442\u0435\u0441\u0442 \u0441 TPS \u043f\u0440\u0438\u043c\u0435\u0440\u043d\u043e \u0432 257.    \u041d\u0430 \u044d\u0442\u043e\u043c \u044d\u0442\u0430\u043f\u0435 \u0432\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0438\u0442\u044c, \u043a\u0430\u043a \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u043f\u043e\u0442\u0435\u043d\u0446\u0438\u0430\u043b\u044c\u043d\u043e \u043c\u043e\u0436\u0435\u0442 \u0443\u043b\u0443\u0447\u0448\u0438\u0442\u044c \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u0443\u044e \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445.  3: \u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0438 \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439  \u0422\u0435\u043f\u0435\u0440\u044c \u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u0441\u043e\u0437\u0434\u0430\u0434\u0438\u043c \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u043c \u043f\u0440\u0435\u0434\u044b\u0434\u0443\u0449\u0438\u0439 \u0442\u0435\u0441\u0442 pgbench, \u0447\u0442\u043e\u0431\u044b \u043f\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c, \u0441\u043c\u043e\u0436\u0435\u0442 \u043b\u0438 \u044d\u0442\u043e \u0443\u043b\u0443\u0447\u0448\u0438\u0442\u044c \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u0443\u044e \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445.    \u0412 \u043e\u0431\u0449\u0435\u043c, \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 max_connections \u0438 \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u043f\u043e\u0434\u043d\u0438\u043c\u0430\u044e\u0442\u0441\u044f \u0432\u043c\u0435\u0441\u0442\u0435, \u0447\u0442\u043e\u0431\u044b \u043c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e \u0443\u0432\u0435\u043b\u0438\u0447\u0438\u0442\u044c \u043d\u0430\u0433\u0440\u0443\u0437\u043a\u0443 \u043d\u0430 \u0431\u0430\u0437\u0443 \u0434\u0430\u043d\u043d\u044b\u0445. \u041e\u0434\u043d\u0430\u043a\u043e \u0435\u0441\u043b\u0438 \u0432\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u043d\u0430\u0441\u0442\u0440\u043e\u0438\u0442\u044c max_connections \u0432 \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u044b\u0445 \u0431\u0430\u0437\u0430\u0445 \u0434\u0430\u043d\u043d\u044b\u0445, \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0439\u0442\u0435 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u0440\u0435\u0436\u0438\u043c\u0430 \u0438 \u0440\u0430\u0437\u043c\u0435\u0440\u0430 \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439.    \u0414\u043b\u044f \u043d\u0430\u0447\u0430\u043b\u0430 \u043d\u0443\u0436\u043d\u043e \u0441\u043e\u0437\u0434\u0430\u0442\u044c \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0432 \u0440\u0435\u0436\u0438\u043c\u0435 Transaction, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u0435\u0442 \u043e\u0442\u043a\u0440\u044b\u0442\u044b\u043c\u0438 \u0432\u0441\u0435 \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0435 \u0432\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u0438\u0435 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f.    \u041f\u0435\u0440\u0435\u0439\u0434\u0438\u0442\u0435 \u043f\u0430\u043d\u0435\u043b\u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u043e\u0442\u043a\u0440\u043e\u0439\u0442\u0435 \u043c\u0435\u043d\u044e \u0431\u0430\u0437 \u0434\u0430\u043d\u043d\u044b\u0445, \u0430 \u0437\u0430\u0442\u0435\u043c \u043a\u043b\u0438\u043a\u043d\u0438\u0442\u0435 \u043f\u043e \u043a\u043b\u0430\u0441\u0442\u0435\u0440\u0443 PostgreSQL. \u041e\u0442\u043a\u0440\u043e\u0439\u0442\u0435 \u043c\u0435\u043d\u044e \u043f\u0443\u043b\u043e\u0432 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u0438 \u0441\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u0442\u0430\u043a\u043e\u0439 \u043f\u0443\u043b.    \u0412 \u043f\u043e\u044f\u0432\u0438\u0432\u0448\u0435\u043c\u0441\u044f \u043e\u043a\u043d\u0435 \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0438 \u0437\u0430\u043f\u043e\u043b\u043d\u0438\u0442\u0435 \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u043d\u044b\u0435 \u043f\u043e\u043b\u044f \u0438 \u043d\u0430\u0436\u043c\u0438\u0442\u0435 \u0421\u043e\u0437\u0434\u0430\u0442\u044c.    \u0421\u043a\u043e\u043f\u0438\u0440\u0443\u0439\u0442\u0435 \u043f\u043e\u044f\u0432\u0438\u0432\u0448\u0438\u0439\u0441\u044f URI.    \u0412\u044b \u0434\u043e\u043b\u0436\u043d\u044b \u0437\u0430\u043c\u0435\u0442\u0438\u0442\u044c, \u0447\u0442\u043e \u0432 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0435 \u0432 URI \u0431\u0443\u0434\u0435\u0442 \u0434\u0440\u0443\u0433\u043e\u0439 \u043f\u043e\u0440\u0442 \u0438, \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e, \u0434\u0440\u0443\u0433\u0430\u044f \u043a\u043e\u043d\u0435\u0447\u043d\u0430\u044f \u0442\u043e\u0447\u043a\u0430 \u0438 \u0438\u043c\u044f \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445, \u0441\u043e\u043e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044e\u0449\u0435\u0435 \u0438\u043c\u0435\u043d\u0438 \u043f\u0443\u043b\u0430 (\u0432 \u0434\u0430\u043d\u043d\u043e\u043c \u0441\u043b\u0443\u0447\u0430\u0435 test-pool).    \u0422\u0435\u043f\u0435\u0440\u044c, \u043a\u043e\u0433\u0434\u0430 \u043c\u044b \u0441\u043e\u0437\u0434\u0430\u043b\u0438 \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 test-pool, \u043c\u044b \u043c\u043e\u0436\u0435\u043c \u0441\u043d\u043e\u0432\u0430 \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u0442\u0435\u0441\u0442 pgbench, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u043c\u044b \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u043b\u0438 \u0440\u0430\u043d\u0435\u0435.  \u041f\u043e\u0432\u0442\u043e\u0440\u043d\u044b\u0439 \u0437\u0430\u043f\u0443\u0441\u043a pgbench  \u041d\u0430 \u0441\u0432\u043e\u0435\u043c \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u043e\u043c \u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440\u0435 \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u0435 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0443\u044e \u043a\u043e\u043c\u0430\u043d\u0434\u0443 pgbench (\u0443\u043a\u0430\u0436\u0438\u0442\u0435 150 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432), \u0443\u0431\u0435\u0434\u0438\u0432\u0448\u0438\u0441\u044c, \u0447\u0442\u043e \u0432\u044b\u0434\u0435\u043b\u0435\u043d\u043d\u044b\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u044f \u0437\u0430\u043c\u0435\u043d\u0435\u043d\u044b \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u044f\u043c\u0438 \u0432 URI \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439:    pgbench -h pool_endpoint -p pool_port -U myadmin -c 150 -j 2 -P 60 -T 600 test-pool    \u0417\u0434\u0435\u0441\u044c \u043c\u044b \u0441\u043d\u043e\u0432\u0430 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u043c 150 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432, \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u044f \u0442\u0435\u0441\u0442 \u0432 \u0434\u0432\u0443\u0445 \u043f\u043e\u0442\u043e\u043a\u0430\u0445. \u041a\u043e\u043c\u0430\u043d\u0434\u0430 \u0431\u0443\u0434\u0435\u0442 \u043e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0442\u044c \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 \u043a\u0430\u0436\u0434\u044b\u0435 60 \u0441\u0435\u043a\u0443\u043d\u0434, \u0442\u0435\u0441\u0442 \u0431\u0443\u0434\u0435\u0442 \u043f\u0440\u043e\u0434\u043e\u043b\u0436\u0430\u0442\u044c\u0441\u044f \u0432 \u0442\u0435\u0447\u0435\u043d\u0438\u0435 600 \u0441\u0435\u043a\u0443\u043d\u0434. \u0418\u043c\u044f \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u0434\u043e\u043b\u0436\u043d\u043e \u0431\u044b\u0442\u044c \u00a0test-pool, \u043a\u0430\u043a \u0438 \u0438\u043c\u044f \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439.    \u041f\u043e\u0441\u043b\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u044f \u0442\u0435\u0441\u0442\u0430 \u0432\u044b \u0434\u043e\u043b\u0436\u043d\u044b \u0443\u0432\u0438\u0434\u0435\u0442\u044c \u043f\u043e\u0434\u043e\u0431\u043d\u044b\u0439 \u0432\u044b\u0432\u043e\u0434 (\u043e\u0431\u0440\u0430\u0442\u0438\u0442\u0435 \u0432\u043d\u0438\u043c\u0430\u043d\u0438\u0435, \u0447\u0442\u043e \u044d\u0442\u0438 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b \u0431\u0443\u0434\u0443\u0442 \u043e\u0442\u043b\u0438\u0447\u0430\u0442\u044c\u0441\u044f \u0432 \u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438 \u043e\u0442 \u0445\u0430\u0440\u0430\u043a\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043a \u0432\u0430\u0448\u0435\u0439 \u043d\u043e\u0434\u044b \u0411\u0414).    starting vacuum...end.  progress: 60.0 s, 240.0 tps, lat 425.251 ms stddev 59.773  progress: 120.0 s, 350.0 tps, lat 428.647 ms stddev 57.084  progress: 180.0 s, 340.3 tps, lat 440.680 ms stddev 313.631  progress: 240.0 s, 364.9 tps, lat 411.083 ms stddev 61.106  progress: 300.0 s, 366.5 tps, lat 409.367 ms stddev 60.165  progress: 360.0 s, 362.5 tps, lat 413.750 ms stddev 59.005  progress: 420.0 s, 359.5 tps, lat 417.292 ms stddev 60.395  progress: 480.0 s, 363.8 tps, lat 412.130 ms stddev 60.361  progress: 540.0 s, 351.6 tps, lat 426.661 ms stddev 62.960  progress: 600.0 s, 344.5 tps, lat 435.516 ms stddev 65.182  transaction type: &lt;builtin: TPC-B (sort of)&gt;  scaling factor: 150  query mode: simple  number of clients: 150  number of threads: 2  duration: 600 s  number of transactions actually processed: 206768  latency average  421.719 ms  latency stddev  114.676 ms  tps  344.240797 (including connections establishing)  tps  344.385646 (excluding connections establishing)    \u041e\u0431\u0440\u0430\u0442\u0438\u0442\u0435 \u0432\u043d\u0438\u043c\u0430\u043d\u0438\u0435, \u043c\u044b \u0441\u043c\u043e\u0433\u043b\u0438 \u0443\u0432\u0435\u043b\u0438\u0447\u0438\u0442\u044c \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u0443\u044e \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u0441 257 TPS \u0434\u043e 344 TPS \u043f\u0440\u0438 150 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f\u0445 (\u044d\u0442\u043e \u0443\u0432\u0435\u043b\u0438\u0447\u0435\u043d\u0438\u0435 \u043d\u0430 33%) \u0438 \u043d\u0435 \u0441\u0442\u043e\u043b\u043a\u043d\u0443\u043b\u0438\u0441\u044c \u0441 \u043f\u0440\u0435\u0432\u044b\u0448\u0435\u043d\u0438\u0435\u043c max_connections, \u043a\u0430\u043a \u0431\u044b\u043b\u043e \u0431\u0435\u0437 \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439. \u041f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u0438\u0437\u0431\u0435\u0436\u0430\u0442\u044c \u0440\u0430\u0437\u0440\u044b\u0432\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0438 \u0437\u043d\u0430\u0447\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0443\u0432\u0435\u043b\u0438\u0447\u0438\u0442\u044c \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u0443\u044e \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u0432 \u0441\u0440\u0435\u0434\u0435 \u0441 \u0431\u043e\u043b\u044c\u0448\u0438\u043c \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e\u043c \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439.    \u0415\u0441\u043b\u0438 \u0432\u044b \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0435 \u044d\u0442\u043e\u0442 \u0436\u0435 \u0442\u0435\u0441\u0442, \u043d\u043e \u0441\u043e \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435\u043c -c 50 (\u0443\u043c\u0435\u043d\u044c\u0448\u0438\u0432 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432), \u043f\u043b\u044e\u0441\u044b \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u044f \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0441\u0442\u0430\u043d\u0443\u0442 \u0433\u043e\u0440\u0430\u0437\u0434\u043e \u043c\u0435\u043d\u0435\u0435 \u043e\u0447\u0435\u0432\u0438\u0434\u043d\u044b\u043c\u0438:    starting vacuum...end.  progress: 60.0 s, 154.0 tps, lat 290.592 ms stddev 35.530  progress: 120.0 s, 162.7 tps, lat 307.168 ms stddev 241.003  progress: 180.0 s, 172.0 tps, lat 290.678 ms stddev 36.225  progress: 240.0 s, 172.4 tps, lat 290.169 ms stddev 37.603  progress: 300.0 s, 177.8 tps, lat 281.214 ms stddev 35.365  progress: 360.0 s, 177.7 tps, lat 281.402 ms stddev 35.227  progress: 420.0 s, 174.5 tps, lat 286.404 ms stddev 34.797  progress: 480.0 s, 176.1 tps, lat 284.107 ms stddev 36.540  progress: 540.0 s, 173.1 tps, lat 288.771 ms stddev 38.059  progress: 600.0 s, 174.5 tps, lat 286.508 ms stddev 59.941  transaction type: &lt;builtin: TPC-B (sort of)&gt;  scaling factor: 150  query mode: simple  number of clients: 50  number of threads: 2  duration: 600 s  number of transactions actually processed: 102938  latency average  288.509 ms  latency stddev  83.503 ms  tps  171.482966 (including connections establishing)  tps  171.553434 (excluding connections establishing)    \u042d\u0442\u043e\u0442 \u0432\u044b\u0432\u043e\u0434 \u0433\u043e\u0432\u043e\u0440\u0438\u0442, \u0447\u0442\u043e \u0432\u044b \u043d\u0435 \u0441\u043c\u043e\u0433\u043b\u0438 \u0443\u0432\u0435\u043b\u0438\u0447\u0438\u0442\u044c \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u0443\u044e \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439. \u041f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u0430\u044f \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c \u0441\u043d\u0438\u0437\u0438\u043b\u0430\u0441\u044c \u0434\u043e 171 TPS \u0441\u043e 175 TPS.    \u0412 \u044d\u0442\u043e\u043c \u043c\u0430\u043d\u0443\u0430\u043b\u0435 \u043c\u044b \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u043c pgbench \u0441 \u0444\u0438\u043a\u0442\u0438\u0432\u043d\u043e\u0439 \u0411\u0414 benchmark. \u041d\u043e \u0447\u0442\u043e\u0431\u044b \u043b\u0443\u0447\u0448\u0435 \u043f\u043e\u043d\u044f\u0442\u044c, \u0441\u043b\u0435\u0434\u0443\u0435\u0442 \u043b\u0438 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439, \u0432\u044b \u0434\u043e\u043b\u0436\u043d\u044b \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u00a0\u043d\u0430\u0433\u0440\u0443\u0437\u043a\u0443, \u043a\u043e\u0442\u043e\u0440\u0430\u044f \u0442\u043e\u0447\u043d\u043e \u043e\u0442\u0440\u0430\u0436\u0430\u0435\u0442 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0441\u0442\u0432\u0435\u043d\u043d\u0443\u044e \u043d\u0430\u0433\u0440\u0443\u0437\u043a\u0443 \u043d\u0430 \u0411\u0414. \u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u0441\u043a\u0438\u0445 \u0441\u0446\u0435\u043d\u0430\u0440\u0438\u0435\u0432 \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f \u0438 \u0434\u0430\u043d\u043d\u044b\u0445 \u0432\u044b\u0445\u043e\u0434\u0438\u0442 \u0437\u0430 \u0440\u0430\u043c\u043a\u0438 \u044d\u0442\u043e\u0433\u043e \u043c\u0430\u043d\u0443\u0430\u043b\u0430, \u043d\u043e \u0434\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u0443\u044e \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e \u0432\u044b \u043c\u043e\u0436\u0435\u0442\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0432 \u043e\u0444\u0438\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0439 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u0446\u0438\u0438 pgbench.  \u041f\u0440\u0438\u043c\u0435\u0447\u0430\u043d\u0438\u0435: \u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430 \u0440\u0430\u0437\u043c\u0435\u0440\u0430 \u043f\u0443\u043b\u0430 \u0441\u0438\u043b\u044c\u043d\u043e \u0437\u0430\u0432\u0438\u0441\u0438\u0442 \u043e\u0442 \u0440\u0430\u0431\u043e\u0447\u0435\u0439 \u043d\u0430\u0433\u0440\u0443\u0437\u043a\u0438. \u0412 \u044d\u0442\u043e\u043c \u043c\u0430\u043d\u0443\u0430\u043b\u0435 \u043c\u044b \u043d\u0430\u0441\u0442\u0440\u043e\u0438\u043b\u0438 \u043f\u0443\u043b \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u0434\u043b\u044f \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u044f \u0432\u0441\u0435\u0445 \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0445 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439 \u043a \u0431\u0430\u0437\u0435 \u0434\u0430\u043d\u043d\u044b\u0445. \u042d\u0442\u043e \u0441\u0432\u044f\u0437\u0430\u043d\u043e \u0441 \u0442\u0435\u043c, \u0447\u0442\u043e \u043d\u0430 \u043f\u0440\u043e\u0442\u044f\u0436\u0435\u043d\u0438\u0438 \u0432\u0441\u0435\u0433\u043e \u0442\u0435\u0441\u0442\u0430 \u0431\u0430\u0437\u0430 \u0434\u0430\u043d\u043d\u044b\u0445 \u0440\u0435\u0434\u043a\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043b\u0430\u0441\u044c \u043f\u043e \u043c\u0430\u043a\u0441\u0438\u043c\u0443\u043c\u0443. \u0412 \u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438 \u043e\u0442 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u0432\u0430\u0448\u0435\u0439 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445, \u044d\u0442\u043e \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u0430 \u043c\u043e\u0436\u0435\u0442 \u0431\u044b\u0442\u044c \u043d\u0435 \u043e\u043f\u0442\u0438\u043c\u0430\u043b\u044c\u043d\u044b\u043c. \u041f\u0440\u0438 \u043f\u043e\u0441\u0442\u043e\u044f\u043d\u043d\u043e\u0439 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0435 \u0411\u0414 \u0441\u043e\u043a\u0440\u0430\u0449\u0435\u043d\u0438\u0435 \u043f\u0443\u043b\u0430 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0439 \u043c\u043e\u0436\u0435\u0442 \u0443\u0432\u0435\u043b\u0438\u0447\u0438\u0442\u044c \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u0443\u044e \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c \u0438 \u043f\u043e\u0432\u044b\u0441\u0438\u0442\u044c \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c: \u0434\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0435 \u0437\u0430\u043f\u0440\u043e\u0441\u044b \u043f\u043e\u043f\u0430\u0434\u0443\u0442 \u0432 \u043e\u0447\u0435\u0440\u0435\u0434\u044c \u0432\u043c\u0435\u0441\u0442\u043e \u0442\u043e\u0433\u043e, \u0411\u0414 \u043d\u0435 \u0431\u0443\u0434\u0435\u0442 \u043f\u044b\u0442\u0430\u0442\u044c\u0441\u044f \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0438\u0445 \u0432\u0441\u0435 \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u043d\u0430 \u0443\u0436\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d\u043d\u043e\u043c \u0441\u0435\u0440\u0432\u0435\u0440\u0435.    \u0417\u0430\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435  \u0412 \u044d\u0442\u043e\u043c \u043c\u0430\u043d\u0443\u0430\u043b\u0435 \u0432\u044b \u043d\u0430\u0443\u0447\u0438\u043b\u0438\u0441\u044c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0439 \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442 PostgreSQL pgbench \u0434\u043b\u044f \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f \u0432\u0430\u0448\u0435\u0439 \u0411\u0414. \u0412 \u043b\u044e\u0431\u043e\u043c \u0441\u0446\u0435\u043d\u0430\u0440\u0438\u0438 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0441\u0442\u0432\u0430 \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u043e \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043d\u0430\u0433\u0440\u0443\u0437\u043a\u0443, \u0438 \u0447\u0435\u043c \u0431\u043b\u0438\u0436\u0435 \u043e\u043d\u0430 \u043a \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438, \u0442\u0435\u043c \u043b\u0443\u0447\u0448\u0435 \u2013 \u0442\u0430\u043a \u0432\u044b \u0441\u043c\u043e\u0436\u0435\u0442\u0435 \u043d\u0430\u0441\u0442\u0440\u043e\u0438\u0442\u044c \u0432\u0430\u0448\u0443 \u0411\u0414 \u043f\u043e\u0434 \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u044b\u0435 \u0443\u0441\u043b\u043e\u0432\u0438\u044f \u0440\u0430\u0431\u043e\u0442\u044b.    \u0421\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044e\u0442 \u0438 \u0434\u0440\u0443\u0433\u0438\u0435 \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u044b \u0434\u043b\u044f \u043d\u0430\u0433\u0440\u0443\u0437\u043e\u0447\u043d\u043e\u0433\u043e \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445. \u041e\u0434\u043d\u0438\u043c \u0438\u0437 \u0442\u0430\u043a\u0438\u0445 \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u043e\u0432 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f sysbench-tpcc, \u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u0430\u043d\u043d\u044b\u0439 Percona. \u0415\u0449\u0435 \u0435\u0441\u0442\u044c Apache JMeter, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u043c\u043e\u0436\u0435\u0442 \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0442\u044c \u0442\u0435\u0441\u0442\u043e\u0432\u044b\u0435 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u0438 \u0432\u0435\u0431-\u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f.  \u0427\u0438\u0442\u0430\u0439\u0442\u0435 \u0442\u0430\u043a\u0436\u0435:       \t\u0423\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c\u044b\u0435 \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445: \u043f\u0440\u0435\u0438\u043c\u0443\u0449\u0435\u0441\u0442\u0432\u0430, \u0443\u0437\u043a\u0438\u0435 \u043c\u0435\u0441\u0442\u0430, \u043f\u0440\u0430\u043a\u0442\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0438\u0438   \t\u0424\u0440\u0430\u0433\u043c\u0435\u043d\u0442\u0430\u0446\u0438\u044f \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445: \u043e\u0441\u043d\u043e\u0432\u043d\u044b\u0435 \u043c\u0435\u0442\u043e\u0434\u044b \u0438 \u0441\u043b\u0443\u0447\u0430\u0438 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u044f   \t\u041e\u0444\u0438\u0446\u0438\u0430\u043b\u044c\u043d\u0430\u044f \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u0446\u0438\u044f pgbench","keywords":"pgbench, PostgreSQL, SQL, ","datePublished":"2019-03-20T12:10:14+01:00","dateModified":"2019-03-06T22:15:05+01:00","author":{"@type":"Person","name":"Amber","description":"","url":"https:\/\/www.8host.com\/blog\/author\/amber\/","sameAs":[],"image":{"@type":"ImageObject","url":"https:\/\/secure.gravatar.com\/avatar\/73f96373db7f31d8281045cbc4e670fe?s=96&d=mm&r=g","height":96,"width":96}},"editor":{"@type":"Person","name":"Amber","description":"","url":"https:\/\/www.8host.com\/blog\/author\/amber\/","sameAs":[],"image":{"@type":"ImageObject","url":"https:\/\/secure.gravatar.com\/avatar\/73f96373db7f31d8281045cbc4e670fe?s=96&d=mm&r=g","height":96,"width":96}},"publisher":{"@type":"Organization","name":"8HOST.COM","url":"https:\/\/www.8host.com\/blog","logo":{"@type":"ImageObject","url":"http:\/\/www.8host.com\/blog\/wp-content\/uploads\/\/8host-logo.png","width":"800","height":"600"}},"image":{"@type":"ImageObject","@id":"https:\/\/www.8host.com\/blog\/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench\/#primaryimage","url":"http:\/\/www.8host.com\/blog\/wp-content\/uploads\/\/8host-logo.png","width":"800","height":"600"}}]
+</script>
+
+<link rel="amphtml" href="https://www.8host.com/blog/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench/amp/"><link rel="icon" href="https://www.8host.com/blog/wp-content/uploads//cropped-8host-logo-32x32.png" sizes="32x32">
+<link rel="icon" href="https://www.8host.com/blog/wp-content/uploads//cropped-8host-logo-192x192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="https://www.8host.com/blog/wp-content/uploads//cropped-8host-logo-180x180.png">
+<meta name="msapplication-TileImage" content="https://www.8host.com/blog/wp-content/uploads//cropped-8host-logo-270x270.png">
+<style type="text/css">
+    #overlay-sidebar {
+      width: 380px;
+      margin: 0 0 0 -190px;
+    }
+    #slide-sidebar {
+      width: 380px;
+      right:-423px; // width + 43px
+      bottom: 20px;
+    }
+  </style><script type="text/javascript">
+    var VKWidgetsGroup = [];
+    var VKWidgetsComments = [];
+    var VKWidgetsPolls = [];
+    var VKWidgetsSubscribe = [];
+    var VKWidgetsContactUs = [];
+    var VKWidgetsCommunityMessages = [];
+    var VKWidgets = [];
+    
+    var vkUnLock = [];
+    var subscribeCookieExpires = 1;
+    
+    if (typeof ajaxurl == "undefined")
+      ajaxurl = "https://www.8host.com/blog/wp-admin/admin-ajax.php";
+  
+    oTimeout = 5000;
+    oScreens = 0.75;
+    oCookieExpires = 365;
+    oAction = "timeout";
+    oSensitivity = 20;
+    oTop = "40px";
+
+    sTimeout = 5000;
+    sScreens = 0.75;
+    sCookieExpires = 365;
+    sAction = "scroll";
+    sSensitivity = 20;
+    sSpeed = 800;
+        
+  </script><script type="text/javascript">evc_post_id = 4458;</script><!-- Google tag (gtag.js) -->
+<script async="" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/js(1)"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q2XYZ97NMF');
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async="" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/js(2)"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HYXT3L4ZMV');
+</script>
+</head><script>document.documentElement.style.display = '' </script>
+<body class="" data-new-gr-c-s-check-loaded="14.1110.0" data-gr-ext-installed=""><div id="skel-layers-wrapper" style="position: relative; left: 0px; right: 0px; top: 0px; backface-visibility: hidden; transition: -webkit-transform 0.5s ease 0s, opacity 0.5s ease 0s;">
+	<!-- Header -->
+	<header class="header">
+		<div class="average-container">
+			<div class="average-row">
+				<div class="col-lg-12">
+					<div class="header-row">
+						<a class="logo" href="https://www.8host.com/"><img src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/logo.svg" alt="8HOST"></a>
+						<ul class="menu"><a href="https://www.8host.com/#goods">
+								<li class="menu-item">Услуги</li>
+							</a><a href="https://www.8host.com/features">
+								<li class="menu-item">Преимущества</li>
+							</a><a href="https://www.8host.com/pricing">
+								<li class="menu-item">Тарифы</li>
+							</a><a href="https://www.8host.com/blog" class="active">
+								<li class="menu-item">Информаторий</li>
+							</a><a href="https://www.8host.com/contact-us">
+								<li class="menu-item">Контакты</li>
+							</a></ul>
+						<div class="header-btns">
+							<!-- <a href="/en" class="language">EN</a> -->
+							<a href="https://www.8host.com/portal/register.php" class="white-btn btn"><span class="text">Регистрация</span> <span><svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M8.70596 9.88213L13.3089 5.27916C13.3875 5.20058 13.4268 5.10753 13.4268 5C13.4268 4.89247 13.3875 4.79942 13.3089 4.72084L8.70596 0.117866C8.62738 0.0392891 8.53433 0 8.4268 0C8.31927 0 8.22622 0.0392891 8.14764 0.117866L7.11787 1.14764C7.03929 1.22622 7 1.31927 7 1.4268C7 1.53433 7.03929 1.62738 7.11787 1.70596L9.41191 4H0.5C0.223858 4 0 4.22386 0 4.5V5.5C0 5.77614 0.223858 6 0.5 6H9.41191L7.11787 8.29404C7.03929 8.37262 7 8.46567 7 8.5732C7 8.68073 7.03929 8.77378 7.11787 8.85236L8.14764 9.88213C8.22622 9.96071 8.31927 10 8.4268 10C8.53433 10 8.62738 9.96071 8.70596 9.88213Z"></path>
+									</svg> </span></a>
+							<a href="https://www.8host.com/portal/clientarea.php" class="green-btn btn">Вход</a></div>
+					</div>
+				</div>
+			</div>
+			<div class="average-row">
+				<div class="col-lg-12">
+					<!--Navbar-->
+					<nav class="navbar">
+						<!-- Navbar brand --> <a class="navbar-brand logo__image" href="https://www.8host.com/">
+							<div class="logo"><img src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/logo.svg" alt="8HOST"></div>
+						</a><!-- Collapse button --> <button class="navbar-toggler toggler-example collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"><span></span> <span></span> <span></span></button><!-- Collapsible content -->
+						<div class="collapse navbar-collapse" id="navbarSupportedContent1">
+							<!-- Links -->
+							<ul class="navbar-nav mr-auto">
+								<li class="nav-item active"><a class="nav-link" href="https://www.8host.com/#goods">Услуги</a></li>
+								<li class="nav-item"><a class="nav-link" href="https://www.8host.com/features">Преимущества</a></li>
+								<li class="nav-item"><a class="nav-link" href="https://www.8host.com/pricing">Тарифы</a></li>
+								<li class="nav-item"><a class="nav-link" href="https://www.8host.com/blog">Информаторий</a></li>
+								<li class="nav-item"><a class="nav-link" href="https://www.8host.com/contact-us">Контакты</a></li>
+								<div class="mobile-btns"><a href="https://www.8host.com/portal/register.php" class="white-btn btn"><span class="text">Регистрация</span><span><svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path d="M8.70596 9.88213L13.3089 5.27916C13.3875 5.20058 13.4268 5.10753 13.4268 5C13.4268 4.89247 13.3875 4.79942 13.3089 4.72084L8.70596 0.117866C8.62738 0.0392891 8.53433 0 8.4268 0C8.31927 0 8.22622 0.0392891 8.14764 0.117866L7.11787 1.14764C7.03929 1.22622 7 1.31927 7 1.4268C7 1.53433 7.03929 1.62738 7.11787 1.70596L9.41191 4H0.5C0.223858 4 0 4.22386 0 4.5V5.5C0 5.77614 0.223858 6 0.5 6H9.41191L7.11787 8.29404C7.03929 8.37262 7 8.46567 7 8.5732C7 8.68073 7.03929 8.77378 7.11787 8.85236L8.14764 9.88213C8.22622 9.96071 8.31927 10 8.4268 10C8.53433 10 8.62738 9.96071 8.70596 9.88213Z"></path>
+											</svg> </span></a><a href="https://www.8host.com/portal/clientarea.php" class="green-btn btn">Вход</a></div>
+							</ul><!-- Links -->
+						</div>
+						<div class="collapse-overlay"></div><!-- Collapsible content -->
+					</nav>
+					<!--/.Navbar-->
+				</div>
+			</div>
+		</div>
+	</header>
+
+
+
+
+
+
+
+
+
+
+
+<section class="wrapper">
+	<div class="container">
+		<div class="row">
+			
+								<div class="9u 12u$(small)">
+				
+				<main role="main">
+					<!-- section -->
+					<section>
+
+						
+						<!-- article -->
+						<article id="post-4458" class="post-4458 post type-post status-publish format-standard hentry category-cloud-server category-vps tag-pgbench tag-postgresql tag-sql">
+
+							<!-- post thumbnail -->
+													<!-- /post thumbnail -->
+
+						<!-- post title -->
+						<header class="major article-header">
+							<h1>
+								<a href="https://www.8host.com/blog/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench/" title="Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench">Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench</a>
+							</h1>
+						</header>
+						<!-- /post title -->
+
+						<!-- post details -->
+						<span class="date article-date"><i class="fa fa-calendar" aria-hidden="true"></i> 20 марта, 2019 12:10 пп</span>
+						<span class="date article-date">15&nbsp;606 views</span>
+						<span class="date article-date"> | <i class="fa fa-comments" aria-hidden="true"></i> Комментариев нет</span>
+						<p class="article-category single-post-category"><i class="fa fa-tags" aria-hidden="true"></i> <a href="https://www.8host.com/blog/category/cloud-server/" rel="tag">Cloud Server</a>, <a href="https://www.8host.com/blog/category/vps/" rel="tag">VPS</a>						<span class="author">| <i class="fa fa-user" aria-hidden="true"></i> <a href="https://www.8host.com/blog/author/amber/" title="Записи Amber" rel="author">Amber</a></span>
+						<span class="comments">| <a href="https://www.8host.com/blog/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench/#respond">Комментировать запись</a></span></p>
+						<!-- /post details -->
+
+						<p>Управляемые базы данных позволяют масштабировать БД PostgreSQL несколькими способами. Одним из них является встроенный преобразователь подключений, который позволяет эффективно обрабатывать большое количество клиентских подключений и уменьшить использование их ЦП и памяти. Используя пул соединений и распределяя фиксированный набор перерабатываемых соединений, вы можете обрабатывать значительно больше одновременных клиентских соединений и повысить производительность вашей базы данных PostgreSQL.</p>
+<p>В этом мануале вы научитесь использовать pgbench, встроенный в PostgreSQL инструмент тестирования производительности, для запуска нагрузочных тестов в управляемой базе данных PostgreSQL. Мы расскажем вам про пулы соединений, опишем, как они работают, и покажем, как их создавать. По результатам тестов pgbench вы увидите, что использование пула соединений может стать недорогим средством увеличения пропускной способности базы данных.</p>
+<h3>Требования</h3>
+<ul>
+<li>Управляемая БД PostgreSQL.</li>
+<li>Клиентская машина с экземпляром PostgreSQL. По умолчанию установка PostgreSQL содержит утилиту тестирования производительности pgbench и клиент psql, которые мы будем использовать в этом мануале. Чтобы узнать, как установить PostgreSQL, читайте мануал <a href="https://www.8host.com/blog/ustanovka-i-ispolzovanie-postgresql-v-ubuntu-18-04/">Установка и использование PostgreSQL в Ubuntu 18.04</a>.</li>
+</ul>
+<h2>1: Создание и инициализация БД benchmark</h2>
+<p>Прежде чем создать пул соединений для базы данных, создайте базу данных benchmark в вашем кластере PostgreSQL и заполните ее фиктивными данными, на которых pgbench будет выполнять свои тесты. Утилита pgbench многократно запускает серию из пяти SQL команд (включая запросы SELECT, UPDATE и INSERT), используя несколько потоков и клиентов, и вычисляет показатель полезной производительности под названием «транзакции в секунду» (TPS, transactions per second). TPS – это показатель пропускной способности базы данных, который показывает количество транзакций, обработанных базой данных за одну секунду. Чтобы узнать больше о командах, выполняемых pgbench, обратитесь к <a href="https://www.postgresql.org/docs/10/pgbench.html#id-1.9.4.10.7.2">официальной документации pgbench</a>.</p>
+<p>Итак, подключитесь к кластеру PostgreSQL и создайте БД benchmark.</p>
+<p>Процесс создания будет зависеть от вашего провайдера.</p>
+<p>При этом вам понадобятся такие данные (мы используем условные данные, которые вы должны заменить):</p>
+<ul>
+<li>Имя администратора: myadmin</li>
+<li>your_password</li>
+<li>Пароль: your_password</li>
+<li>Конечная точка кластера: укажите свою точку</li>
+<li>Порт: 25060</li>
+<li>База данных: defaultdb</li>
+<li>Режим SSL: require (чтобы использовать зашифрованное соединение SSL)</li>
+</ul>
+<p>Эти параметры вам понадобятся в дальнейшей работе с клиентом psql и инструментом pgbench, потому запомните или запишите их.</p>
+<p>Подключитесь к кластеру с помощью клиента psql (для этого вам может понадобиться строка подключения).</p>
+<p>Вы попадете в командную строку клиента PostgreSQL, если подключение будет удачно создано.</p>
+<p><code>psql (10.6 (Ubuntu 10.6-0ubuntu0.18.04.1))<br>
+SSL connection (protocol: TLSv1.2, cipher: ECDHE-RSA-AES256-GCM-SHA384, bits: 256, compression: off)<br>
+Type "help" for help.<br>
+defaultdb=&gt;</code></p>
+<p>Создайте БД benchmark:</p>
+<p><code>CREATE DATABASE benchmark;<br>
+CREATE DATABASE</code></p>
+<p>Выйдите из кластера:</p>
+<p><code>\q</code></p>
+<p>Перед запуском тестов pgbench необходимо заполнить эту тестовую базу данных несколькими таблицами и фиктивными данными.</p>
+<p>Для этого мы запустим pgbench со следующими флагами:</p>
+<ul>
+<li>-h: конечная точка кластера PostgreSQL</li>
+<li>-p: порт кластера PostgreSQL</li>
+<li>-U: имя пользователя базы данных</li>
+<li>-i: инициализирует базу данных benchmark с помощью таблиц и их фиктивных данных.</li>
+<li>-s: устанавливает масштабный коэффициент 150, который умножит размеры таблицы на 150. Стандартный масштабный коэффициент 1 создает таблицу следующих размеров:</li>
+</ul>
+<p><code>table&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # of rows<br>
+---------------------------------<br>
+pgbench_branches&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<br>
+pgbench_tellers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;10<br>
+pgbench_accounts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 100000<br>
+pgbench_history&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0</code></p>
+<p>Масштабный коэффициент 150 создаст таблицу pgbench_accounts в 15&nbsp;000&nbsp;000 строк.</p>
+<p style="padding-left: 30px;"><strong>Примечание</strong>: Чтобы избежать чрезмерного количества заблокированных транзакций, убедитесь, что значение масштабного коэффициента как минимум равно количеству одновременно работающих клиентов, которые используются в тестировании. В этом мануале мы протестируем максимум 150 клиентов, поэтому мы установили здесь значение -s 150. Чтобы узнать больше, ознакомьтесь с <a href="https://www.postgresql.org/docs/10/pgbench.html#id-1.9.4.10.7.8">этими рекомендациями</a> из официальной документации pgbench.</p>
+<p>Запустите команду pgbench:</p>
+<p><code>pgbench -h your_cluster_endpoint -p 25060 -U myadmin -i -s 150 benchmark</code></p>
+<p>После этого вам будет предложено ввести пароль указанного пользователя БД. Введите пароль и нажмите Enter.</p>
+<p><code>dropping old tables...<br>
+NOTICE:&nbsp; table "pgbench_accounts" does not exist, skipping<br>
+NOTICE:&nbsp; table "pgbench_branches" does not exist, skipping<br>
+NOTICE:&nbsp; table "pgbench_history" does not exist, skipping<br>
+NOTICE:&nbsp; table "pgbench_tellers" does not exist, skipping<br>
+creating tables...<br>
+generating data...<br>
+100000 of 15000000 tuples (0%) done (elapsed 0.19 s, remaining 27.93 s)<br>
+200000 of 15000000 tuples (1%) done (elapsed 0.85 s, remaining 62.62 s)<br>
+300000 of 15000000 tuples (2%) done (elapsed 1.21 s, remaining 59.23 s)<br>
+400000 of 15000000 tuples (2%) done (elapsed 1.63 s, remaining 59.44 s)<br>
+500000 of 15000000 tuples (3%) done (elapsed 2.05 s, remaining 59.51 s)<br>
+. . .<br>
+14700000 of 15000000 tuples (98%) done (elapsed 70.87 s, remaining 1.45 s)<br>
+14800000 of 15000000 tuples (98%) done (elapsed 71.39 s, remaining 0.96 s)<br>
+14900000 of 15000000 tuples (99%) done (elapsed 71.91 s, remaining 0.48 s)<br>
+15000000 of 15000000 tuples (100%) done (elapsed 72.42 s, remaining 0.00 s)<br>
+vacuuming...<br>
+creating primary keys...<br>
+done.</code></p>
+<p>На данный момент у вас есть база данных benchmark, заполненная таблицами и данными, необходимыми для запуска тестов pgbench. Теперь можно запустить базовый тест, который позволит нам сравнить производительность до и после включения пула соединений.</p>
+<h2>2: Запуск базового теста pgbench</h2>
+<p>Прежде чем начать первый тест, стоит остановиться на том, что именно мы пытаемся оптимизировать с помощью пулов соединений.</p>
+<p>Обычно, когда клиент подключается к БД PostgreSQL, основной процесс PostgreSQL переходит в дочерний процесс, соответствующий этому новому соединению. Если у вас только несколько соединений, это не вызовет проблем. Однако по мере масштабирования клиентов и соединений расходы ресурсов процессора и памяти на создание и поддержание этих соединений начинают накладываться, особенно если рассматриваемое приложение неэффективно использует соединения с БД. Кроме того, параметр PostgreSQL max_connections может ограничивать количество разрешенных клиентских подключений, в результате чего после превышения этого значения соединения будут отклонены или сброшены.</p>
+<p>Пул соединений сохраняет открытым фиксированное количество соединений с базой данных (это размер пула, который он затем использует для распределения и выполнения клиентских запросов). Это означает, что вы можете обслужить гораздо больше одновременных соединений, эффективно обработать неактивных или застойных клиентов, а также поставить клиентские запросы в очередь во время всплесков трафика (вместо того чтобы отклонять их). Повторно используя соединения, вы можете более эффективно применить ресурсы вашего компьютера в среде с большим объемом подключений и оптимизировать производительность БД.</p>
+<p>Пул соединений можно реализовать либо на стороне приложения, либо в качестве промежуточного программного обеспечения между БД и приложением. Пул соединений для управляемых баз данных разработан на основе <a href="https://pgbouncer.github.io/">pgBouncer</a> (это легкий промежуточный пул соединений с открытым исходным кодом для PostgreSQL).</p>
+<p>Откройте панель управления своими базами данных. в меню найдите опцию типа Connection Pools и создайте пул соединений.</p>
+<p>Для этого вам понадобятся такие данные:</p>
+<ul>
+<li>Pool Name: уникальное имя вашего пула соединений.</li>
+<li>Database: База данных, соединения которой вы хотите объединить в пул.</li>
+<li>User: пользователь PostgreSQL, с помощью которого пул соединений будет аутентифицироваться</li>
+<li>Mode: режим. Эта опция контролирует, как долго пул назначает клиентскому серверу бэкэнд-соединение.</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Session: Клиент удерживает соединение до тех пор, пока оно явно не отключится.</li>
+<li>Transaction: Клиент получает соединение до завершения транзакции, после чего соединение возвращается в пул.</li>
+<li>Statement: Пул агрессивно перезапускает соединения после каждого оператора клиента. В этом режиме транзакции с несколькими операторами не поддерживаются.</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>Pool Size: количество соединений, которые пул будет держать открытым между собой и базой данных.</li>
+</ul>
+<p>Прежде чем создать пул соединений, давайте запустим базовый тест, с результатами которого вы сможете сравнить производительность базы данных до и после внедрения пула соединений.</p>
+<p>В этом мануале мы используем 4 ГБ RAM, 2 vCPU, 80 ГБ дискового пространства, управляемую базу данных (только ведущая нода). Вы можете масштабировать параметры теста производительности в соответствии с вашими спецификациями кластера PostgreSQL.</p>
+<p>Итак, давайте запустим первый тест pgbench.</p>
+<p>Войдите на клиентскую машину. Запустите pgbench, указав конечную точку, порт и пользователя. Также нужно добавить эти опции:</p>
+<ul>
+<li>-c: количество одновременных клиентов или сеансов БД, которое нужно симулировать. Мы установим здесь 50, чтобы имитировать количество одновременных соединений, меньшее, чем параметр max_connections данного кластера PostgreSQL.</li>
+<li>-j: количество рабочих потоков, которые pgbench будет использовать во время теста. Если вы используете многопроцессорную машину, вы можете увеличить зто значение, чтоб распределить клиентов по потокам. На двухъядерном компьютере нужно установить значение 2.</li>
+<li>-P: отображает прогресс и метрики каждые 60 секунд.</li>
+<li>-T: запустит тест на 600 секунд (10 минут). Чтобы получить согласованные, воспроизводимые результаты, важно, чтобы тест длился в течение нескольких минут или один цикл контрольных точек.</li>
+</ul>
+<p>Также нужно указать, что тест нужно запустить в БД benchmark.</p>
+<p>Запустите эту команду:</p>
+<p><code>pgbench -h your_db_endpoint -p 25060 -U myadmin -c 50 -j 2 -P 60 -T 600 benchmark</code></p>
+<p>Нажмите клавишу Enter и введите пароль пользователя myadmin, чтобы начать выполнение теста. Вы должны увидеть подобный вывод (результаты будут зависеть от характеристик вашего кластера PostgreSQL):</p>
+<p><code>starting vacuum...end.<br>
+progress: 60.0 s, 157.4 tps, lat 282.988 ms stddev 40.261<br>
+progress: 120.0 s, 176.2 tps, lat 283.726 ms stddev 38.722<br>
+progress: 180.0 s, 167.4 tps, lat 298.663 ms stddev 238.124<br>
+progress: 240.0 s, 178.9 tps, lat 279.564 ms stddev 43.619<br>
+progress: 300.0 s, 178.5 tps, lat 280.016 ms stddev 43.235<br>
+progress: 360.0 s, 178.8 tps, lat 279.737 ms stddev 43.307<br>
+progress: 420.0 s, 179.3 tps, lat 278.837 ms stddev 43.783<br>
+progress: 480.0 s, 178.5 tps, lat 280.203 ms stddev 43.921<br>
+progress: 540.0 s, 180.0 tps, lat 277.816 ms stddev 43.742<br>
+progress: 600.0 s, 178.5 tps, lat 280.044 ms stddev 43.705<br>
+transaction type: &lt;builtin: TPC-B (sort of)&gt;<br>
+scaling factor: 150<br>
+query mode: simple<br>
+number of clients: 50<br>
+number of threads: 2<br>
+duration: 600 s<br>
+number of transactions actually processed: 105256<br>
+latency average = 282.039 ms<br>
+latency stddev = 84.244 ms<br>
+tps = 175.329321 (including connections establishing)<br>
+tps = 175.404174 (excluding connections establishing)</code></p>
+<p>Здесь можно видеть, что за 10 минут работы с 50 одновременными соединениями кластер обработал 105 256 транзакций с пропускной способностью примерно 175 транзакций в секунду.</p>
+<p>Теперь давайте запустим тот же тест, но на этот раз используем 150 одновременных клиентов. Это значение выше, чем max_connections для этой базы данных, это позволяет симулировать массовый приток клиентских подключений:</p>
+<p><code>pgbench -h your_db_endpoint -p 25060 -U myadmin -c 150 -j 2 -P 60 -T 600 benchmark</code></p>
+<p>Вы получите результат:</p>
+<p><code>starting vacuum...end.<br>
+connection to database "pgbench" failed:<br>
+FATAL:&nbsp; remaining connection slots are reserved for non-replication superuser connections<br>
+progress: 60.0 s, 182.6 tps, lat 280.069 ms stddev 42.009<br>
+progress: 120.0 s, 253.8 tps, lat 295.612 ms stddev 237.448<br>
+progress: 180.0 s, 271.3 tps, lat 276.411 ms stddev 40.643<br>
+progress: 240.0 s, 273.0 tps, lat 274.653 ms stddev 40.942<br>
+progress: 300.0 s, 272.8 tps, lat 274.977 ms stddev 41.660<br>
+progress: 360.0 s, 250.0 tps, lat 300.033 ms stddev 282.712<br>
+progress: 420.0 s, 272.1 tps, lat 275.614 ms stddev 42.901<br>
+progress: 480.0 s, 261.1 tps, lat 287.226 ms stddev 112.499<br>
+progress: 540.0 s, 272.5 tps, lat 275.309 ms stddev 41.740<br>
+progress: 600.0 s, 271.2 tps, lat 276.585 ms stddev 41.221<br>
+transaction type: &lt;builtin: TPC-B (sort of)&gt;<br>
+scaling factor: 150<br>
+query mode: simple<br>
+number of clients: 150<br>
+number of threads: 2<br>
+duration: 600 s<br>
+number of transactions actually processed: 154892<br>
+latency average = 281.421 ms<br>
+latency stddev = 125.929 ms<br>
+tps = 257.994941 (including connections establishing)<br>
+tps = 258.049251 (excluding connections establishing)</code></p>
+<p>Обратите внимание на ошибку FATAL – она указывает на то, что pgbench достиг порогового значения в 100 соединений (max_connections), что привело к отказу в соединении. И все же pgbench&nbsp; смог закончить тест с TPS примерно в 257.</p>
+<p>На этом этапе вы можете определить, как пул соединений потенциально может улучшить пропускную способность базы данных.</p>
+<h2>3: Создание и тестирование пула соединений</h2>
+<p>Теперь давайте создадим пул соединений и повторно запустим предыдущий тест pgbench, чтобы посмотреть, сможет ли это улучшить пропускную способность базы данных.</p>
+<p>В общем, настройки max_connections и параметры пула соединений поднимаются вместе, чтобы максимально увеличить нагрузку на базу данных. Однако если вы не можете настроить max_connections в управляемых базах данных, используйте настройки режима и размера пула соединений.</p>
+<p>Для начала нужно создать пул соединений в режиме Transaction, который сохраняет открытыми все доступные внутренние соединения.</p>
+<p>Перейдите панели управления откройте меню баз данных, а затем кликните по кластеру PostgreSQL. Откройте меню пулов подключения и создайте такой пул.</p>
+<p>В появившемся окне конфигурации заполните предложенные поля и нажмите Создать.</p>
+<p>Скопируйте появившийся URI.</p>
+<p>Вы должны заметить, что в результате в URI будет другой порт и, возможно, другая конечная точка и имя базы данных, соответствующее имени пула (в данном случае test-pool).</p>
+<p>Теперь, когда мы создали пул соединений test-pool, мы можем снова запустить тест pgbench, который мы запускали ранее.</p>
+<h3>Повторный запуск pgbench</h3>
+<p>На своем клиентском компьютере выполните следующую команду pgbench (укажите 150 одновременных клиентов), убедившись, что выделенные значения заменены значениями в URI пула соединений:</p>
+<p><code>pgbench -h pool_endpoint -p pool_port -U myadmin -c 150 -j 2 -P 60 -T 600 test-pool</code></p>
+<p>Здесь мы снова используем 150 одновременных клиентов, запуская тест в двух потоках. Команда будет отображать прогресс каждые 60 секунд, тест будет продолжаться в течение 600 секунд. Имя базы данных должно быть &nbsp;test-pool, как и имя пула соединений.</p>
+<p>После завершения теста вы должны увидеть подобный вывод (обратите внимание, что эти результаты будут отличаться в зависимости от характеристик вашей ноды БД).</p>
+<p><code>starting vacuum...end.<br>
+progress: 60.0 s, 240.0 tps, lat 425.251 ms stddev 59.773<br>
+progress: 120.0 s, 350.0 tps, lat 428.647 ms stddev 57.084<br>
+progress: 180.0 s, 340.3 tps, lat 440.680 ms stddev 313.631<br>
+progress: 240.0 s, 364.9 tps, lat 411.083 ms stddev 61.106<br>
+progress: 300.0 s, 366.5 tps, lat 409.367 ms stddev 60.165<br>
+progress: 360.0 s, 362.5 tps, lat 413.750 ms stddev 59.005<br>
+progress: 420.0 s, 359.5 tps, lat 417.292 ms stddev 60.395<br>
+progress: 480.0 s, 363.8 tps, lat 412.130 ms stddev 60.361<br>
+progress: 540.0 s, 351.6 tps, lat 426.661 ms stddev 62.960<br>
+progress: 600.0 s, 344.5 tps, lat 435.516 ms stddev 65.182<br>
+transaction type: &lt;builtin: TPC-B (sort of)&gt;<br>
+scaling factor: 150<br>
+query mode: simple<br>
+number of clients: 150<br>
+number of threads: 2<br>
+duration: 600 s<br>
+number of transactions actually processed: 206768<br>
+latency average = 421.719 ms<br>
+latency stddev = 114.676 ms<br>
+tps = 344.240797 (including connections establishing)<br>
+tps = 344.385646 (excluding connections establishing)</code></p>
+<p>Обратите внимание, мы смогли увеличить пропускную способность базы данных с 257 TPS до 344 TPS при 150 одновременных соединениях (это увеличение на 33%) и не столкнулись с превышением max_connections, как было без пула соединений. Пул соединений позволяет избежать разрыва соединений и значительно увеличить пропускную способность базы данных в среде с большим количеством одновременных соединений.</p>
+<p>Если вы запустите этот же тест, но со значением -c 50 (уменьшив количество клиентов), плюсы использования пула соединений станут гораздо менее очевидными:</p>
+<p><code>starting vacuum...end.<br>
+progress: 60.0 s, 154.0 tps, lat 290.592 ms stddev 35.530<br>
+progress: 120.0 s, 162.7 tps, lat 307.168 ms stddev 241.003<br>
+progress: 180.0 s, 172.0 tps, lat 290.678 ms stddev 36.225<br>
+progress: 240.0 s, 172.4 tps, lat 290.169 ms stddev 37.603<br>
+progress: 300.0 s, 177.8 tps, lat 281.214 ms stddev 35.365<br>
+progress: 360.0 s, 177.7 tps, lat 281.402 ms stddev 35.227<br>
+progress: 420.0 s, 174.5 tps, lat 286.404 ms stddev 34.797<br>
+progress: 480.0 s, 176.1 tps, lat 284.107 ms stddev 36.540<br>
+progress: 540.0 s, 173.1 tps, lat 288.771 ms stddev 38.059<br>
+progress: 600.0 s, 174.5 tps, lat 286.508 ms stddev 59.941<br>
+transaction type: &lt;builtin: TPC-B (sort of)&gt;<br>
+scaling factor: 150<br>
+query mode: simple<br>
+number of clients: 50<br>
+number of threads: 2<br>
+duration: 600 s<br>
+number of transactions actually processed: 102938<br>
+latency average = 288.509 ms<br>
+latency stddev = 83.503 ms<br>
+tps = 171.482966 (including connections establishing)<br>
+tps = 171.553434 (excluding connections establishing)</code></p>
+<p>Этот вывод говорит, что вы не смогли увеличить пропускную способность с помощью пула соединений. Пропускная способность снизилась до 171 TPS со 175 TPS.</p>
+<p>В этом мануале мы используем pgbench с фиктивной БД benchmark. Но чтобы лучше понять, следует ли использовать пул соединений, вы должны тестировать &nbsp;нагрузку, которая точно отражает производственную нагрузку на БД. Создание пользовательских сценариев тестирования и данных выходит за рамки этого мануала, но дополнительную информацию вы можете получить в <a href="https://www.postgresql.org/docs/10/pgbench.html">официальной документации pgbench</a>.</p>
+<p style="padding-left: 30px;"><strong>Примечание</strong>: Настройка размера пула сильно зависит от рабочей нагрузки. В этом мануале мы настроили пул соединений для использования всех доступных подключений к базе данных. Это связано с тем, что на протяжении всего теста база данных редко использовалась по максимуму. В зависимости от загрузки вашей базы данных, это значение параметра может быть не оптимальным. При постоянной загрузке БД сокращение пула соединений может увеличить пропускную способность и повысить производительность: дополнительные запросы попадут в очередь вместо того, БД не будет пытаться выполнить их все одновременно на уже загруженном сервере.</p>
+<h2>Заключение</h2>
+<p>В этом мануале вы научились использовать встроенный инструмент PostgreSQL pgbench для тестирования вашей БД. В любом сценарии производства необходимо тестировать нагрузку, и чем ближе она к реальной ситуации, тем лучше – так вы сможете настроить вашу БД под конкретные условия работы.</p>
+<p>Существуют и другие инструменты для нагрузочного тестирования базы данных. Одним из таких инструментов является <a href="https://github.com/Percona-Lab/sysbench-tpcc">sysbench-tpcc</a>, разработанный Percona. Еще есть Apache <a href="https://jmeter.apache.org/">JMeter</a>, который может загружать тестовые базы данных и веб-приложения.</p>
+<p style="padding-left: 30px;"><strong>Читайте также</strong>:</p>
+<ul>
+<li><a href="https://www.8host.com/blog/upravlyaemye-bazy-dannyx-preimushhestva-uzkie-mesta-prakticheskie-rekomendacii/">Управляемые базы данных: преимущества, узкие места, практические рекомендации</a></li>
+<li><a href="https://www.8host.com/blog/fragmentaciya-bazy-dannyx-osnovnye-metody-i-sluchai-ispolzovaniya/">Фрагментация базы данных: основные методы и случаи использования</a></li>
+<li><a href="https://www.postgresql.org/docs/9.6/pgbench.html">Официальная документация pgbench</a></li>
+</ul>
+<div class="evc-social-likes" data-url="https://www.8host.com/blog/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench/" data-title="Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench"><div class="social-likes social-likes_visible social-likes_ready"><div class="social-likes__widget social-likes__widget_facebook" title="Поделиться ссылкой на Фейсбуке"><span class="social-likes__button social-likes__button_facebook"><span class="social-likes__icon social-likes__icon_facebook"></span>Facebook</span><span class="social-likes__counter social-likes__counter_facebook social-likes__counter_empty"></span></div><div class="social-likes__widget social-likes__widget_twitter" title="Поделиться ссылкой в Твиттере"><span class="social-likes__button social-likes__button_twitter"><span class="social-likes__icon social-likes__icon_twitter"></span>Twitter</span></div><div class="social-likes__widget social-likes__widget_vkontakte" title="Поделиться ссылкой во Вконтакте"><span class="social-likes__button social-likes__button_vkontakte"><span class="social-likes__icon social-likes__icon_vkontakte"></span>Вконтакте</span><span class="social-likes__counter social-likes__counter_vkontakte social-likes__counter_empty"></span></div><div class="social-likes__widget social-likes__widget_plusone" title="Поделиться ссылкой в Гугл-плюсе"><span class="social-likes__button social-likes__button_plusone"><span class="social-likes__icon social-likes__icon_plusone"></span>Google+</span></div></div></div>						<div class="pagelink"></div>
+
+
+
+						Tags: <a href="https://www.8host.com/blog/tag/pgbench/" rel="tag">pgbench</a>, <a href="https://www.8host.com/blog/tag/postgresql/" rel="tag">PostgreSQL</a>, <a href="https://www.8host.com/blog/tag/sql/" rel="tag">SQL</a><br>
+						
+						<div class="comments" id="comments">
+	
+
+
+<script type="text/javascript">
+  VKWidgetsComments.push ({
+    element_id: "vk-widget-4458",
+    options: { width: 0, height: 0, limit: 10, attach: "false", norealtime: 0, autoPublish: 0 }
+  });    
+</script>
+  	<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Добавить комментарий <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://www.8host.com/blog/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench/#respond" style="display:none;">Отменить ответ</a></small></h3><p class="must-log-in">Для отправки комментария вам необходимо <a href="https://www.8host.com/blog/wp-login.php?redirect_to=https%3A%2F%2Fwww.8host.com%2Fblog%2Ftestirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench%2F">авторизоваться</a>.</p>	<div class="vk_widget_comments" id="vk-widget-4458" width="1041" style="width: 1041px;"></div></div><!-- #respond -->
+	
+</div>
+
+					</article>
+					<!-- /article -->
+
+				
+			
+	</section>
+	<!-- /section -->
+</main>
+</div>
+
+<div class="3u 12u$(small) article-sidebar">
+
+	<!-- sidebar -->
+		<aside class="sidebar" role="complementary">
+			<div class="sidebar-widget">
+				<div id="categories-2" class="widget_categories"><h3>Рубрики</h3>
+			<ul>
+					<li class="cat-item cat-item-58"><a href="https://www.8host.com/blog/category/arch-linux/" title="Стабильный и простой дистрибутив Linux. Здесь вы найдете советы по установке, настройкам и обзоры. Отзывы и вопросы оставляйте в комментариях к статьям.">Arch Linux</a>
+</li>
+	<li class="cat-item cat-item-10"><a href="https://www.8host.com/blog/category/centos/" title=" Дистрибутив Linux, основанный Red Hat Enterprise Linux. Здесь вы найдете рекомендации по установке, настройкам и обзоры. Отзывы оставляйте в комментариях.">Centos</a>
+</li>
+	<li class="cat-item cat-item-57"><a href="https://www.8host.com/blog/category/cloud-server/" title="Cloud Server - облачный виртуальный сервер VPS/VDS. Как установить и настроить VPS? Репликация баз данных и многое другое в статьях нашего информатория.">Cloud Server</a>
+</li>
+	<li class="cat-item cat-item-52"><a href="https://www.8host.com/blog/category/debian/" title="Рекомендации по настройке сервера на Debian Linux. Установка Git, настройка Nginx, установка стека LAMP. Отзывы и вопросы внизу статей.">Debian</a>
+</li>
+	<li class="cat-item cat-item-1259"><a href="https://www.8host.com/blog/category/development/" title="Материалы, касающиеся разработки на Java, Python, програмирования в целом, а также разметки HTML и CSS ">Development</a>
+</li>
+	<li class="cat-item cat-item-600"><a href="https://www.8host.com/blog/category/freebsd/" title="Установка ОС FreeBSD на VPS. Рекомендации, обзоры, советы по установкам FAMP Stack, Java, защита сайта от уязвимостей.">FreeBSD</a>
+</li>
+	<li class="cat-item cat-item-7"><a href="https://www.8host.com/blog/category/ftp/" title="Как работать с FTP на виртуальном сервере (VPS). Использование SSL/TLS, рекомендации и советы.">FTP</a>
+</li>
+	<li class="cat-item cat-item-38"><a href="https://www.8host.com/blog/category/general/" title="Настройка DNS, использование SMTP-сервера и другие базовые действия настройки VPS на Linux. Советы и рекомендации в статьях">General</a>
+</li>
+	<li class="cat-item cat-item-179"><a href="https://www.8host.com/blog/category/java/" title="Установка Java в Ubuntu, CentOS 7, настройка фреймворка Node.js. Рекомендации, обзоры, советы по настройкам.">Java</a>
+</li>
+	<li class="cat-item cat-item-12"><a href="https://www.8host.com/blog/category/lampstack/" title="Установка стека LAMP в Ubuntu, CentOS, Fedora 22, Debian, Arch Linux. Пошаговое описание процесса, рекомендации и отзывы.">LAMP Stack</a>
+</li>
+	<li class="cat-item cat-item-209"><a href="https://www.8host.com/blog/category/lemp-stack/" title="Установка стека LEMP Stack (Linux, nginx, MySQL, PHP) на Ubuntu, CentOS, Fedora 22, Debian, Arch Linux. Пошаговое описание процесса, рекомендации и отзывы.">LEMP Stack</a>
+</li>
+	<li class="cat-item cat-item-3"><a href="https://www.8host.com/blog/category/linux/" title="Установка ОС Linux на VPS/VDS: пошаговые пособия по работе с БД, установка и обновление Nginx, работа с GitLab и многое другое">Linux</a>
+</li>
+	<li class="cat-item cat-item-235"><a href="https://www.8host.com/blog/category/mariadb/" title="Работа с базами данных MariaDB: рекомендации по резервному копированию и защите БД  на Ubuntu Linux. Советы и рекомендации в статьях, отзывы внизу статей.">MariaDB</a>
+</li>
+	<li class="cat-item cat-item-11"><a href="https://www.8host.com/blog/category/mysql/" title="Установка и работа MySQL на VPS с ОС Ubuntu, FreeBSD.  Рекомендации, обзоры, советы по установке">mySQL</a>
+</li>
+	<li class="cat-item cat-item-16"><a href="https://www.8host.com/blog/category/php/" title="Работа с PHP-фреймворками на VPS с ОС Linux, масштабирование PHP-приложений, обновление PHP и другие вопросы и рекомендации в статьях.">PHP</a>
+</li>
+	<li class="cat-item cat-item-106"><a href="https://www.8host.com/blog/category/python/" title="Развертывание и обслуживание приложений Django и других приложений на Pyton на VPS. Рекомендации, обзоры, советы по установке">Python</a>
+</li>
+	<li class="cat-item cat-item-1279"><a href="https://www.8host.com/blog/category/quickstart/" title="Как сделать быстро и чтобы работало? Руководства по быстрому развертыванию и настройке платформ и приложений - реальная помощь для тех, кто только начинает знакомство с темой.">Quickstart</a>
+</li>
+	<li class="cat-item cat-item-644"><a href="https://www.8host.com/blog/category/rhel/" title="Red Hat Enterprise Linux - установка, настройка VPS(виртуального сервера). Рекомендации, обзоры, советы по настройкам. Отзывы и вопросы внизу статей.">RHEL</a>
+</li>
+	<li class="cat-item cat-item-2"><a href="https://www.8host.com/blog/category/ruby/" title="Развёртывание Rails-приложения  и установка Ruby на VPS на Ubuntu, CentOS , Debian. Рекомендации, обзоры, советы по настройкам.">Ruby</a>
+</li>
+	<li class="cat-item cat-item-17"><a href="https://www.8host.com/blog/category/ssh/" title="SSH-подключение к серверу VPS, установка и настройка, изменение паролей, использование SSH для подключения к удаленному серверу. Рекомендации и отзывы.">SSH</a>
+</li>
+	<li class="cat-item cat-item-1297"><a href="https://www.8host.com/blog/category/linux/turnkey/" title="Turnkey Linux - готовые дистрибутивы популярных платформ на VPS. Покажем настройку перед началом использования на нашем хостинге.">Turnkey</a>
+</li>
+	<li class="cat-item cat-item-6"><a href="https://www.8host.com/blog/category/ubuntu/" title="Подбор статей о работе с сервером на Ubuntu разных версий. Настройки, установка, развертывание приложений.">Ubuntu</a>
+</li>
+	<li class="cat-item cat-item-37"><a href="https://www.8host.com/blog/category/vps/" title="Помощь в настройке и повседневной работе с VPS и облачной инфраструктурой. Автоматизация, настройка среды, отказоустойчивость, балансировка нагрузки - в этой рубрике будут готовые решения для облачной инфраструктуры.">VPS</a>
+</li>
+	<li class="cat-item cat-item-1"><a href="https://www.8host.com/blog/category/uncategorized/" title="Здесь вы найдете дополнительные материалы по установке приложений, ОС на VPS, советы по работе с БД. Всё, что не вошло в основные категории информатория">Без категорий</a>
+</li>
+			</ul>
+
+			</div><style scoped="" type="text/css">.utcw-857bnk3 {word-wrap:break-word}.utcw-857bnk3 span,.utcw-857bnk3 a{border-width:0px}.utcw-857bnk3 span:hover,.utcw-857bnk3 a:hover{border-width:0px}</style><div id="utcw-2" class="widget_utcw widget_tag_cloud"><h3>Поиск по меткам</h3><div class="utcw-857bnk3 tagcloud"><a class="tag-link-909 utcw-tag utcw-tag-ansible" href="https://www.8host.com/blog/tag/ansible/" style="font-size:10.095923261391px" title="46 topics">Ansible</a> <a class="tag-link-13 utcw-tag utcw-tag-apache" href="https://www.8host.com/blog/tag/apache/" style="font-size:20.215827338129px" title="257 topics">Apache</a> <a class="tag-link-14 utcw-tag utcw-tag-centos-2" href="https://www.8host.com/blog/tag/centos-2/" style="font-size:14.652278177458px" title="141 topics">CentOS</a> <a class="tag-link-169 utcw-tag utcw-tag-centos-6" href="https://www.8host.com/blog/tag/centos-6/" style="font-size:10.191846522782px" title="48 topics">CentOS 6</a> <a class="tag-link-299 utcw-tag utcw-tag-centos-7" href="https://www.8host.com/blog/tag/centos-7/" style="font-size:14.796163069544px" title="144 topics">CentOS 7</a> <a class="tag-link-1059 utcw-tag utcw-tag-cloud-server" href="https://www.8host.com/blog/tag/cloud-server/" style="font-size:14.796163069544px" title="144 topics">Cloud Server</a> <a class="tag-link-457 utcw-tag utcw-tag-css" href="https://www.8host.com/blog/tag/css/" style="font-size:12.877697841727px" title="104 topics">CSS</a> <a class="tag-link-1058 utcw-tag utcw-tag-debian" href="https://www.8host.com/blog/tag/debian/" style="font-size:15.851318944844px" title="166 topics">Debian</a> <a class="tag-link-1254 utcw-tag utcw-tag-debian-10" href="https://www.8host.com/blog/tag/debian-10/" style="font-size:10.575539568345px" title="56 topics">Debian 10</a> <a class="tag-link-712 utcw-tag utcw-tag-debian-8" href="https://www.8host.com/blog/tag/debian-8/" style="font-size:10.095923261391px" title="46 topics">Debian 8</a> <a class="tag-link-1185 utcw-tag utcw-tag-debian-9" href="https://www.8host.com/blog/tag/debian-9/" style="font-size:10.671462829736px" title="58 topics">Debian 9</a> <a class="tag-link-104 utcw-tag utcw-tag-django" href="https://www.8host.com/blog/tag/django/" style="font-size:10.479616306954px" title="54 topics">Django</a> <a class="tag-link-230 utcw-tag utcw-tag-dns" href="https://www.8host.com/blog/tag/dns/" style="font-size:10.287769784173px" title="50 topics">DNS</a> <a class="tag-link-396 utcw-tag utcw-tag-docker" href="https://www.8host.com/blog/tag/docker/" style="font-size:12.973621103118px" title="106 topics">Docker</a> <a class="tag-link-53 utcw-tag utcw-tag-git" href="https://www.8host.com/blog/tag/git/" style="font-size:11.630695443645px" title="78 topics">Git</a> <a class="tag-link-659 utcw-tag utcw-tag-go" href="https://www.8host.com/blog/tag/go/" style="font-size:11.007194244604px" title="65 topics">Go</a> <a class="tag-link-375 utcw-tag utcw-tag-html" href="https://www.8host.com/blog/tag/html/" style="font-size:11.007194244604px" title="65 topics">HTML</a> <a class="tag-link-1062 utcw-tag utcw-tag-java" href="https://www.8host.com/blog/tag/java/" style="font-size:10.719424460432px" title="59 topics">Java</a> <a class="tag-link-193 utcw-tag utcw-tag-javascript" href="https://www.8host.com/blog/tag/javascript/" style="font-size:14.364508393285px" title="135 topics">Javascript</a> <a class="tag-link-269 utcw-tag utcw-tag-lamp-stack" href="https://www.8host.com/blog/tag/lamp-stack/" style="font-size:12.20623501199px" title="90 topics">LAMP stack</a> <a class="tag-link-852 utcw-tag utcw-tag-lets-encrypt" href="https://www.8host.com/blog/tag/lets-encrypt/" style="font-size:11.822541966427px" title="82 topics">Let's Encrypt</a> <a class="tag-link-1052 utcw-tag utcw-tag-linux" href="https://www.8host.com/blog/tag/linux/" style="font-size:24.532374100719px" title="347 topics">Linux</a> <a class="tag-link-1064 utcw-tag utcw-tag-mariadb" href="https://www.8host.com/blog/tag/mariadb/" style="font-size:10.431654676259px" title="53 topics">MariaDB</a> <a class="tag-link-338 utcw-tag utcw-tag-mongodb" href="https://www.8host.com/blog/tag/mongodb/" style="font-size:10.719424460432px" title="59 topics">MongoDB</a> <a class="tag-link-167 utcw-tag utcw-tag-mysql-2" href="https://www.8host.com/blog/tag/mysql-2/" style="font-size:17.961630695444px" title="210 topics">MySQL</a> <a class="tag-link-120 utcw-tag utcw-tag-nginx" href="https://www.8host.com/blog/tag/nginx/" style="font-size:22.94964028777px" title="314 topics">NGINX</a> <a class="tag-link-192 utcw-tag utcw-tag-node-js" href="https://www.8host.com/blog/tag/node-js/" style="font-size:13.26139088729px" title="112 topics">Node.js</a> <a class="tag-link-423 utcw-tag utcw-tag-nosql" href="https://www.8host.com/blog/tag/nosql/" style="font-size:10.479616306954px" title="54 topics">NoSQL</a> <a class="tag-link-1055 utcw-tag utcw-tag-php" href="https://www.8host.com/blog/tag/php/" style="font-size:15.563549160671px" title="160 topics">PHP</a> <a class="tag-link-144 utcw-tag utcw-tag-postgresql" href="https://www.8host.com/blog/tag/postgresql/" style="font-size:11.486810551559px" title="75 topics">PostgreSQL</a> <a class="tag-link-1061 utcw-tag utcw-tag-python" href="https://www.8host.com/blog/tag/python/" style="font-size:14.508393285372px" title="138 topics">Python</a> <a class="tag-link-157 utcw-tag utcw-tag-python-3" href="https://www.8host.com/blog/tag/python-3/" style="font-size:13.357314148681px" title="114 topics">Python 3</a> <a class="tag-link-201 utcw-tag utcw-tag-redis" href="https://www.8host.com/blog/tag/redis/" style="font-size:10px" title="44 topics">Redis</a> <a class="tag-link-1051 utcw-tag utcw-tag-ruby" href="https://www.8host.com/blog/tag/ruby/" style="font-size:11.199040767386px" title="69 topics">Ruby</a> <a class="tag-link-1056 utcw-tag utcw-tag-ssh" href="https://www.8host.com/blog/tag/ssh/" style="font-size:13.357314148681px" title="114 topics">SSH</a> <a class="tag-link-130 utcw-tag utcw-tag-ssl" href="https://www.8host.com/blog/tag/ssl/" style="font-size:14.604316546763px" title="140 topics">SSL</a> <a class="tag-link-207 utcw-tag utcw-tag-tls" href="https://www.8host.com/blog/tag/tls/" style="font-size:10.479616306954px" title="54 topics">TLS</a> <a class="tag-link-1053 utcw-tag utcw-tag-ubuntu" href="https://www.8host.com/blog/tag/ubuntu/" style="font-size:30px" title="461 topics">Ubuntu</a> <a class="tag-link-24 utcw-tag utcw-tag-ubuntu-12-04" href="https://www.8host.com/blog/tag/ubuntu-12-04/" style="font-size:15.323741007194px" title="155 topics">Ubuntu 12.04</a> <a class="tag-link-191 utcw-tag utcw-tag-ubuntu-14-04" href="https://www.8host.com/blog/tag/ubuntu-14-04/" style="font-size:19.928057553957px" title="251 topics">Ubuntu 14.04</a> <a class="tag-link-902 utcw-tag utcw-tag-ubuntu-16-04" href="https://www.8host.com/blog/tag/ubuntu-16-04/" style="font-size:19.736211031175px" title="247 topics">Ubuntu 16.04</a> <a class="tag-link-1163 utcw-tag utcw-tag-ubuntu-18-04" href="https://www.8host.com/blog/tag/ubuntu-18-04/" style="font-size:17.961630695444px" title="210 topics">Ubuntu 18.04</a> <a class="tag-link-1296 utcw-tag utcw-tag-ubuntu-20-04" href="https://www.8host.com/blog/tag/ubuntu-20-04/" style="font-size:12.73381294964px" title="101 topics">Ubuntu 20.04</a> <a class="tag-link-1057 utcw-tag utcw-tag-vps" href="https://www.8host.com/blog/tag/vps/" style="font-size:21.89448441247px" title="292 topics">VPS</a> <a class="tag-link-205 utcw-tag utcw-tag-wordpress" href="https://www.8host.com/blog/tag/wordpress/" style="font-size:11.151079136691px" title="68 topics">WordPress</a></div></div><div id="archives-2" class="widget_archive"><h3>Архивы</h3>		<label class="screen-reader-text" for="archives-dropdown-2">Архивы</label>
+		<select id="archives-dropdown-2" name="archive-dropdown">
+			
+			<option value="">Выберите месяц</option>
+				<option value="https://www.8host.com/blog/2023/05/"> Май 2023 &nbsp;(4)</option>
+	<option value="https://www.8host.com/blog/2023/04/"> Апрель 2023 &nbsp;(18)</option>
+	<option value="https://www.8host.com/blog/2023/03/"> Март 2023 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2023/02/"> Февраль 2023 &nbsp;(18)</option>
+	<option value="https://www.8host.com/blog/2023/01/"> Январь 2023 &nbsp;(19)</option>
+	<option value="https://www.8host.com/blog/2022/12/"> Декабрь 2022 &nbsp;(20)</option>
+	<option value="https://www.8host.com/blog/2022/11/"> Ноябрь 2022 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2022/10/"> Октябрь 2022 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2022/09/"> Сентябрь 2022 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2022/08/"> Август 2022 &nbsp;(12)</option>
+	<option value="https://www.8host.com/blog/2022/07/"> Июль 2022 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2022/06/"> Июнь 2022 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2022/05/"> Май 2022 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2022/04/"> Апрель 2022 &nbsp;(12)</option>
+	<option value="https://www.8host.com/blog/2022/03/"> Март 2022 &nbsp;(2)</option>
+	<option value="https://www.8host.com/blog/2022/02/"> Февраль 2022 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2022/01/"> Январь 2022 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2021/12/"> Декабрь 2021 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2021/11/"> Ноябрь 2021 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2021/10/"> Октябрь 2021 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2021/09/"> Сентябрь 2021 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2021/08/"> Август 2021 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2021/07/"> Июль 2021 &nbsp;(23)</option>
+	<option value="https://www.8host.com/blog/2021/06/"> Июнь 2021 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2021/05/"> Май 2021 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2021/04/"> Апрель 2021 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2021/03/"> Март 2021 &nbsp;(19)</option>
+	<option value="https://www.8host.com/blog/2021/02/"> Февраль 2021 &nbsp;(17)</option>
+	<option value="https://www.8host.com/blog/2021/01/"> Январь 2021 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2020/12/"> Декабрь 2020 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2020/11/"> Ноябрь 2020 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2020/10/"> Октябрь 2020 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2020/09/"> Сентябрь 2020 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2020/08/"> Август 2020 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2020/07/"> Июль 2020 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2020/06/"> Июнь 2020 &nbsp;(24)</option>
+	<option value="https://www.8host.com/blog/2020/05/"> Май 2020 &nbsp;(25)</option>
+	<option value="https://www.8host.com/blog/2020/04/"> Апрель 2020 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2020/03/"> Март 2020 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2020/02/"> Февраль 2020 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2020/01/"> Январь 2020 &nbsp;(23)</option>
+	<option value="https://www.8host.com/blog/2019/12/"> Декабрь 2019 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2019/11/"> Ноябрь 2019 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2019/10/"> Октябрь 2019 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2019/09/"> Сентябрь 2019 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2019/08/"> Август 2019 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2019/07/"> Июль 2019 &nbsp;(23)</option>
+	<option value="https://www.8host.com/blog/2019/06/"> Июнь 2019 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2019/05/"> Май 2019 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2019/04/"> Апрель 2019 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2019/03/"> Март 2019 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2019/02/"> Февраль 2019 &nbsp;(20)</option>
+	<option value="https://www.8host.com/blog/2019/01/"> Январь 2019 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2018/12/"> Декабрь 2018 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2018/11/"> Ноябрь 2018 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2018/10/"> Октябрь 2018 &nbsp;(23)</option>
+	<option value="https://www.8host.com/blog/2018/09/"> Сентябрь 2018 &nbsp;(21)</option>
+	<option value="https://www.8host.com/blog/2018/08/"> Август 2018 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2018/07/"> Июль 2018 &nbsp;(29)</option>
+	<option value="https://www.8host.com/blog/2018/06/"> Июнь 2018 &nbsp;(27)</option>
+	<option value="https://www.8host.com/blog/2018/05/"> Май 2018 &nbsp;(27)</option>
+	<option value="https://www.8host.com/blog/2018/04/"> Апрель 2018 &nbsp;(26)</option>
+	<option value="https://www.8host.com/blog/2018/03/"> Март 2018 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2018/02/"> Февраль 2018 &nbsp;(25)</option>
+	<option value="https://www.8host.com/blog/2018/01/"> Январь 2018 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2017/12/"> Декабрь 2017 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2017/11/"> Ноябрь 2017 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2017/10/"> Октябрь 2017 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2017/09/"> Сентябрь 2017 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2017/08/"> Август 2017 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2017/07/"> Июль 2017 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2017/06/"> Июнь 2017 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2017/05/"> Май 2017 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2017/04/"> Апрель 2017 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2017/03/"> Март 2017 &nbsp;(33)</option>
+	<option value="https://www.8host.com/blog/2017/02/"> Февраль 2017 &nbsp;(28)</option>
+	<option value="https://www.8host.com/blog/2017/01/"> Январь 2017 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2016/12/"> Декабрь 2016 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2016/11/"> Ноябрь 2016 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2016/10/"> Октябрь 2016 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2016/09/"> Сентябрь 2016 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2016/08/"> Август 2016 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2016/07/"> Июль 2016 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2016/06/"> Июнь 2016 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2016/05/"> Май 2016 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2016/04/"> Апрель 2016 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2016/03/"> Март 2016 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2016/02/"> Февраль 2016 &nbsp;(29)</option>
+	<option value="https://www.8host.com/blog/2016/01/"> Январь 2016 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2015/12/"> Декабрь 2015 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2015/11/"> Ноябрь 2015 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2015/10/"> Октябрь 2015 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2015/09/"> Сентябрь 2015 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2015/08/"> Август 2015 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2015/07/"> Июль 2015 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2015/06/"> Июнь 2015 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2015/05/"> Май 2015 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2015/04/"> Апрель 2015 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2015/03/"> Март 2015 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2015/02/"> Февраль 2015 &nbsp;(28)</option>
+	<option value="https://www.8host.com/blog/2015/01/"> Январь 2015 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2014/12/"> Декабрь 2014 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2014/11/"> Ноябрь 2014 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2014/10/"> Октябрь 2014 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2014/09/"> Сентябрь 2014 &nbsp;(30)</option>
+	<option value="https://www.8host.com/blog/2014/08/"> Август 2014 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2014/07/"> Июль 2014 &nbsp;(31)</option>
+	<option value="https://www.8host.com/blog/2014/06/"> Июнь 2014 &nbsp;(25)</option>
+	<option value="https://www.8host.com/blog/2014/05/"> Май 2014 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2014/04/"> Апрель 2014 &nbsp;(22)</option>
+	<option value="https://www.8host.com/blog/2014/03/"> Март 2014 &nbsp;(20)</option>
+	<option value="https://www.8host.com/blog/2014/02/"> Февраль 2014 &nbsp;(6)</option>
+	<option value="https://www.8host.com/blog/2014/01/"> Январь 2014 &nbsp;(12)</option>
+	<option value="https://www.8host.com/blog/2013/12/"> Декабрь 2013 &nbsp;(11)</option>
+
+		</select>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+	var dropdown = document.getElementById( "archives-dropdown-2" );
+	function onSelectChange() {
+		if ( dropdown.options[ dropdown.selectedIndex ].value !== '' ) {
+			document.location.href = this.options[ this.selectedIndex ].value;
+		}
+	}
+	dropdown.onchange = onSelectChange;
+})();
+/* ]]> */
+</script>
+			</div>			</div>
+		</aside>
+	
+			<aside class="sidebar" role="complementary">
+			<div class="sidebar-widget">
+				<div id="text-11" class="widget_text">			<div class="textwidget"></div>
+		</div>			</div>
+		</aside>
+	
+	
+
+</div>
+</div>
+
+
+
+</div>
+</section>
+
+
+	<div id="vk_api_transport"></div>
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function async_load(u, id) {
+			if (!gid(id)) {
+				s = "script", d = document,
+					o = d.createElement(s);
+				o.type = 'text/javascript';
+				o.id = id;
+				o.async = true;
+				o.src = u;
+				// Creating scripts on page
+				x = d.getElementsByTagName(s)[0];
+				x.parentNode.insertBefore(o, x);
+			}
+		}
+
+		function gid(id) {
+			return document.getElementById(id);
+		}
+
+
+		window.addEventListener('load', function () {
+				async_load("//vk.com/js/api/openapi.js", "id-vkontakte");//vkontakte
+			}
+		);
+
+
+		// Инициализация vkontakte
+		window.vkAsyncInit = function () {
+			//console.log(VKWidgetsLike);
+			if (typeof VKWidgetsLike !== 'undefined' && VKWidgetsLike.length > 0) {
+				for (index = 0; index < VKWidgetsLike.length; ++index) {
+					VK.Widgets.Like(VKWidgetsLike[index].element_id, VKWidgetsLike[index].options);
+				}
+			}
+
+			if (typeof VKWidgetsGroup !== 'undefined' && VKWidgetsGroup.length > 0) {
+				for (index = 0; index < VKWidgetsGroup.length; ++index) {
+					//console.log(VKWidgetsGroup);
+					VK.Widgets.Group(VKWidgetsGroup[index].element_id, VKWidgetsGroup[index].options, VKWidgetsGroup[index].group_id);
+				}
+
+				VK.Observer.subscribe('widgets.groups.joined', function (n) {
+					//console.log(VKWidgetsGroup[n - 1].group_id);
+
+					var data = {
+						action: 'evc_add_vk_widget_stats',
+						gid: VKWidgetsGroup[n - 1].group_id,
+						widget: 'group',
+						waction: 'joined'
+					};
+					jQuery.ajax({
+						url: ajaxurl,
+						data: data,
+						type: "POST",
+						dataType: 'json'
+					});
+
+				});
+
+				VK.Observer.subscribe('widgets.groups.leaved', function (n) {
+					//console.log(VKWidgetsGroup[n - 1].group_id);
+
+					var data = {
+						action: 'evc_add_vk_widget_stats',
+						gid: VKWidgetsGroup[n - 1].group_id,
+						widget: 'group',
+						waction: 'leaved'
+					};
+					jQuery.ajax({
+						url: ajaxurl,
+						data: data,
+						type: "POST",
+						dataType: 'json'
+					});
+
+				});
+			}
+
+				// console.log(VKWidgetsContactUs);
+	// Contact Us
+	if (typeof VKWidgetsContactUs !== 'undefined' ) {
+	//console.log(VKWidgetsContactUs);
+
+	for (index = 0; index < VKWidgetsContactUs.length; ++index) {
+	VK.Widgets.ContactUs(
+	VKWidgetsContactUs[index].element_id,
+	VKWidgetsContactUs[index].options,
+	VKWidgetsContactUs[index].owner_id
+	);
+	}
+	}
+		//console.log(VKWidgetsComments);
+	// COMMENTS
+	if (typeof VKWidgetsComments !== 'undefined' ) {
+	//console.log(VKWidgetsComments);
+	for (index = 0; index < VKWidgetsComments.length; ++index) {
+	VK.Widgets.Comments(
+	VKWidgetsComments[index].element_id,
+	VKWidgetsComments[index].options,
+	VKWidgetsComments[index].page_id
+	);
+	}
+	
+      evcCommentsRefresh = false;            
+      var new_data = {
+        post_id: evc_post_id,
+        url: document.URL,
+        widget_api_id: jQuery('meta[property="vk:app_id"]').attr('content'),
+        action: 'evc_comments_refresh'
+      };
+
+      VK.Observer.subscribe('widgets.comments.new_comment', function(num, last_comment, date, sign, wID, n) {
+
+        if ( typeof VKWidgetsComments[n - 1] !== 'undefined' && typeof VKWidgetsComments[n - 1].page_id !== 'undefined' ) 
+          new_data.page_id = VKWidgetsComments[n - 1].page_id;
+        else
+          new_data.page_id = VKWidgetsComments[0].page_id;
+        //console.log(new_data); //
+        
+        if (!evcCommentsRefresh) {
+          evcCommentsRefresh = true;
+          jQuery.ajax({
+            url: ajaxurl,
+            data: new_data,
+            type:"POST",
+            dataType: 'json',
+            success: function(data) {
+              //console.log(data); //
+              evcCommentsRefresh = false;
+            }
+          }); 
+        }
+        
+      });
+      
+      VK.Observer.subscribe('widgets.comments.delete_comment', function(num, last_comment, date, sign) {
+        //console.log(date);
+        
+      });    
+     
+	}
+	  //console.log(VKWidgetsPolls);
+  // Polls
+    if (typeof VKWidgetsPolls !== 'undefined' ) {
+      //console.log(VKWidgetsPolls);
+      for (index = 0; index < VKWidgetsPolls.length; ++index) {
+        VK.Widgets.Poll(
+          VKWidgetsPolls[index].element_id, 
+          VKWidgetsPolls[index].options, 
+          VKWidgetsPolls[index].poll_id
+        );
+      }
+    
+      evcCommentsRefresh = false;            
+      var new_data = {
+        post_id: evc_post_id,
+        url: document.URL,
+        widget_api_id: jQuery('meta[property="vk:app_id"]').attr('content'),
+        action: 'evc_comments_refresh'
+      };
+
+      VK.Observer.subscribe('widgets.comments.new_comment', function(num, last_comment, date, sign, wID, n) {
+
+        if ( typeof VKWidgetsComments[n - 1] !== 'undefined' && typeof VKWidgetsComments[n - 1].page_id !== 'undefined' ) 
+          new_data.page_id = VKWidgetsComments[n - 1].page_id;
+        else
+          new_data.page_id = VKWidgetsComments[0].page_id;
+        //console.log(new_data); //
+        
+        if (!evcCommentsRefresh) {
+          evcCommentsRefresh = true;
+          jQuery.ajax({
+            url: ajaxurl,
+            data: new_data,
+            type:"POST",
+            dataType: 'json',
+            success: function(data) {
+              //console.log(data); //
+              evcCommentsRefresh = false;
+            }
+          }); 
+        }
+        
+      });
+      
+      VK.Observer.subscribe('widgets.comments.delete_comment', function(num, last_comment, date, sign) {
+        //console.log(date);
+        
+      });    
+     
+    
+    }
+	//console.log(VKWidgetsSubscribe);
+	// Widget Subscribe
+	if (typeof VKWidgetsSubscribe !== 'undefined' ) {
+
+	var subscribeCookieExpires = 1; // !!!
+
+	for (index = 0; index < VKWidgetsSubscribe.length; ++index) {
+	VK.Widgets.Subscribe(
+	VKWidgetsSubscribe[index].element_id,
+	VKWidgetsSubscribe[index].options,
+	VKWidgetsSubscribe[index].owner_id
+	);
+	}
+
+	VK.Observer.subscribe('widgets.subscribed', function(n) {
+
+	vkwidget = jQuery("#vkwidget" + n).parent();
+	vkwidgetID = jQuery(vkwidget).attr('id');
+
+	if (jQuery(vkwidget).hasClass('evc-vk-lock')) {
+	console.log('Fire');
+	//vkwidgetID = jQuery("#vkwidget" + n).parent().attr('id');
+	subscribeObj = jQuery.grep(VKWidgetsSubscribe, function(e){ return e.element_id == vkwidgetID; });
+	if (subscribeObj.length != 0) {
+	o = subscribeObj[0].owner_id;
+	if (jQuery.cookie('vkUnLock' + o) == 'undefined' || !jQuery.cookie('vkUnLock' + o) || jQuery.cookie('vkUnLock' + o) !=  subscribeObj[0].owner_id ) {
+	jQuery.cookie('vkUnLock' + o, subscribeObj[0].owner_id, { expires: subscribeCookieExpires, path: '/' });
+	}
+	location.reload();
+	}
+	}
+	});
+
+	VK.Observer.subscribe('widgets.unsubscribed', function(n) {
+
+	vkwidget = jQuery("#vkwidget" + n).parent();
+	vkwidgetID = jQuery(vkwidget).attr('id');
+
+	if (jQuery(vkwidget).hasClass('evc-vk-lock')) {
+	console.log('Fire');
+	subscribeObj = jQuery.grep(VKWidgetsSubscribe, function(e){ return e.element_id == vkwidgetID;});
+	if (subscribeObj.length != 0) {
+	o = subscribeObj[0].owner_id;
+	if (jQuery.cookie('vkUnLock' + o) != 'undefined') {
+	jQuery.removeCookie('vkUnLock' + o);
+	}
+	}
+	}
+	});
+
+
+	}
+			// console.log(VKWidgetsContactUs);
+	// Contact Us
+	if (typeof VKWidgetsCommunityMessages !== 'undefined') {
+	console.log(VKWidgetsCommunityMessages);
+
+	for (index = 0; index < VKWidgetsCommunityMessages.length; ++index) {
+	VK.Widgets.CommunityMessages(
+	VKWidgetsCommunityMessages[index].element_id,
+	VKWidgetsCommunityMessages[index].group_id,
+	VKWidgetsCommunityMessages[index].options
+	);
+	}
+	}
+		
+		};
+
+		/* ]]> */
+	</script>	<script type="text/javascript">
+		jQuery(document).ready(function ($) {
+
+			if ($('.social-likes')) {
+
+				$('.social-likes').each(function () {
+					var p = $(this).parent();
+					if (p.data('url')) {
+						$(this).data({
+							'url': p.data('url'),
+							'title': p.data('title')
+						});
+					}
+
+					if ($(this).find('.pinterest').length) {
+						if (p.data('media')) {
+							$($(this).find('.pinterest')[0]).data({
+								'media': p.data('media')
+							});
+						}
+						else
+							$($(this).find('.pinterest')[0]).remove();
+					}
+
+				});
+
+				$('.social-likes').socialLikes({
+					zeroes: 0				});
+			}
+
+		});
+	</script>
+			<script type="text/javascript">
+			let cust_login = document.getElementById("loginform");
+			if(cust_login !== null) {
+				var recaptcha_script = document.createElement('script');
+				recaptcha_script.setAttribute('src','https://www.google.com/recaptcha/api.js');
+				document.head.appendChild(recaptcha_script);                
+			}
+		</script>
+		<script type="text/javascript" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/evc-share.js.Без названия" id="evc-share-js"></script>
+<script type="text/javascript" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/social-likes.min.js.Без названия" id="social-likes-js"></script>
+<script type="text/javascript" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/comment-reply.min.js.Без названия" id="comment-reply-js"></script>
+<script type="text/javascript" id="wp-postviews-cache-js-extra">
+/* <![CDATA[ */
+var viewsCacheL10n = {"admin_ajax_url":"https:\/\/www.8host.com\/blog\/wp-admin\/admin-ajax.php","post_id":"4458"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/postviews-cache.js.Без названия" id="wp-postviews-cache-js"></script>
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		jQuery(document).ready(function ($) {
+
+			if (typeof VKWidgetsComments !== 'undefined' && VKWidgetsComments.length && evc_post_id) {
+				if ($('#vk-widget-' + evc_post_id).length) {
+										if ($('#respond').length) {
+						$('#respond form').hide();
+						$('#respond').append($('#vk-widget-' + evc_post_id));
+					}
+									}
+
+								cClose = false;
+				if ($("#comments .comment-list").length) {
+					$("#comments .comment-list").wrap('<div class = "evc-comments-wrap"></div>');
+
+					docViewHeight = $(window).height();
+					$(document).scroll(function () {
+						var docViewTop = $(window).scrollTop();
+						var elemTop = $('.evc-comments-wrap').offset().top;
+						//var elemBottom = elemTop + $('.evc-comments-wrap').height();
+						if (elemTop * 3 / 4 <= docViewTop && !cClose) {
+							cClose = true;
+							$(".evc-comments-wrap").animate({"height": 0}, 800);
+							//console.log(elemTop + ' >= ' + docViewHeight+ '+'+ docViewTop);
+						}
+					});
+				}
+							}
+
+			// Rresponsive VK Comments Widget Width
+						if ($('.vk_widget_comments').length) {
+
+				responsiveVkWidget();
+				$(window).on('resize', function () {
+					responsiveVkWidget();
+				});
+			}
+			
+			function responsiveVkWidget() {
+				var vkParentWidth = parseInt($('.vk_widget_comments').parent().width());
+
+				$('.vk_widget_comments, .vk_widget_comments iframe').css({
+					width: vkParentWidth
+				});
+				$('.vk_widget_comments, .vk_widget_comments iframe').attr('width', vkParentWidth);
+			}
+
+			// END Rresponsive VK Comments Widget Width
+
+
+		}); // End jQuery
+
+		/* ]]> */
+	</script><!-- Footer -->
+<!-- Footer -->
+
+<section class="footer-banner">
+<a href="https://www.8host.com/?utm_source=blog&amp;utm_content=banner_footer" class="footer-banner__link">
+	<img src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/footer-banner.svg" class="footer-banner__img" alt="">
+</a>
+</section>
+
+<footer class="footer">
+	<div class="average-container">
+		<div class="average-row">
+			<div class="col-lg-3 col-md-3 col-6">
+				<ul class="footer-list">
+					<li class="footer-list__item">Продукт</li><a href="https://www.8host.com/features#features-tech">
+						<li class="footer-list__item">Облачный хостинг VPS/VDS</li>
+					</a><a href="https://www.8host.com/features#features-paas">
+						<li class="footer-list__item">Облачные сервисы и CMS</li>
+					</a><a href="https://www.8host.com/blog/testirovanie-proizvoditelnosti-upravlyaemoj-bazy-dannyx-postgresql-s-pomoshhyu-pgbench/#privateCloud">
+						<li class="footer-list__item">Частное облако</li>
+					</a><a href="https://www.8host.com/pricing">
+						<li class="footer-list__item">Тарифы</li>
+					</a>
+				</ul>
+			</div>
+			<div class="col-lg-3 col-md-3 col-6">
+				<ul class="footer-list">
+					<li class="footer-list__item">Преимущества</li><a href="https://www.8host.com/features#features-tech">
+						<li class="footer-list__item">Технологии</li>
+					</a><a href="https://www.8host.com/features#features-freedom">
+						<li class="footer-list__item">Свобода и безопасность</li>
+					</a><a href="https://www.8host.com/features#features-reliability">
+						<li class="footer-list__item">Надежность</li>
+					</a><a href="https://www.8host.com/features#features-access">
+						<li class="footer-list__item">Доступность</li>
+					</a>
+				</ul>
+			</div>
+			<div class="col-lg-3 col-md-3 col-6">
+				<ul class="footer-list">
+					<li class="footer-list__item">Помощь</li><a href="https://www.8host.com/contact-us">
+						<li class="footer-list__item">Техподдержка</li>
+					</a><a href="https://www.8host.com/blog/">
+						<li class="footer-list__item">Информаторий</li>
+					</a><a href="https://www.8host.com/pricing#payment-methods">
+						<li class="footer-list__item">Способы оплаты</li>
+					</a>
+					<a href="javascript:void(0);">
+						<li class="footer-list__item">Отзывы</li>
+					</a>
+				</ul>
+			</div>
+			<div class="col-lg-3 col-md-3 col-6">
+				<ul class="footer-list">
+					<li class="footer-list__item">Информация</li><a href="https://www.8host.com/features#features-freedom">
+						<li class="footer-list__item">О компании</li>
+					</a><a href="https://www.8host.com/contact-us">
+						<li class="footer-list__item">Контакты</li>
+					</a>
+				</ul>
+			</div>
+		</div>
+		<div class="average-row">
+			<div class="col-lg-12">
+				<div class="footer-border"></div>
+			</div>
+		</div>
+		<div class="average-row">
+			<div class="col-lg-1 col-md-3 col-12">
+				<div class="logo-footer">
+
+					<svg width="58" height="43" viewBox="0 0 58 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<g clip-path="url(#clip0)">
+							<path d="M36.2729 15.8014C39.3881 13.2583 40.5325 9.38019 39.2609 5.37489C38.1166 1.56032 34.8742 1.11528 31.6318 0.924555C29.6609 0.797403 27.6265 0.797402 25.5921 0.988131C22.5404 1.30601 19.6159 2.19608 18.9801 5.81992C18.2808 9.57091 18.1537 13.2583 22.159 15.8014C18.408 18.1537 17.1364 21.5232 18.1537 26.2914C18.9166 29.8517 21.0146 31.314 25.5921 31.8226C28.453 32.1405 30.9325 32.204 33.7298 31.6318C38.1166 30.8054 39.5153 29.5974 40.151 25.8464C41.1047 21.0146 39.8331 17.8994 36.2729 15.8014ZM29.4066 5.62919C32.7762 5.69277 33.6662 6.51926 33.6662 9.63449C33.6662 12.6226 32.649 13.4491 29.2159 13.4491C25.8464 13.4491 24.8292 12.4954 24.7656 9.57091C24.702 6.45568 25.7828 5.56562 29.4066 5.62919ZM34.1113 22.7312C33.9841 25.8464 32.7126 26.8636 29.0252 26.8001C25.4013 26.7365 24.1934 25.6557 24.1298 22.4769C24.1298 19.2345 25.4649 18.0265 29.2159 18.0265C32.9033 18.0901 34.2384 19.2981 34.1113 22.7312Z" fill="white"></path>
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M9.50727 31.7592H20.6331C18.9801 30.9327 17.9629 29.7247 17.3271 27.9446H9.44369C6.58277 27.9446 4.29402 25.7194 4.29402 22.9221C4.29402 20.2519 6.39204 18.0903 8.99866 17.8996H12.4953V14.085C12.8132 11.7963 14.7205 10.0797 17.0728 10.0797H17.2636C17.1364 8.74461 17.2636 7.47308 17.4543 6.26514H17.0728C12.6225 6.26514 8.99866 9.69825 8.68078 14.085C4.10329 14.53 0.54303 18.281 0.54303 22.9221C0.54303 27.7539 4.42118 31.6956 9.31654 31.7592H9.50727ZM8.68078 14.085H8.74435L8.68078 14.3393V14.085ZM48.8609 31.7592H37.7351C39.3245 30.9327 40.3417 29.7247 40.9775 27.9446H48.9245C51.7854 27.9446 54.0742 25.7194 54.0742 22.9221C54.0742 20.2519 51.9761 18.0903 49.3695 17.8996H45.8728V14.085C45.555 11.7963 43.6477 10.0797 41.2953 10.0797H41.1046C41.2318 8.74461 41.1046 7.47308 40.9139 6.26514H41.2953C45.7457 6.26514 49.3695 9.69825 49.6238 14.085H49.5602L49.6238 14.3393V14.085C54.2013 14.53 57.7616 18.281 57.7616 22.9221C57.7616 27.7539 53.8834 31.632 49.0516 31.7592H48.8609Z" fill="#1AAAE5"></path>
+							<path d="M14.8044 42.238V35.4532H13.6143V38.2302H10.0846V35.4532H8.89441V42.238H10.0846V39.2779H13.6143V42.238H14.8044Z" fill="white"></path>
+							<path d="M24.495 42.3601C26.5295 42.3601 27.9638 40.875 27.9638 38.8507C27.9638 36.8264 26.5295 35.3413 24.495 35.3413C22.4606 35.3413 21.0263 36.8264 21.0263 38.8507C21.0263 40.875 22.4606 42.3601 24.495 42.3601ZM24.495 41.3022C23.1218 41.3022 22.247 40.2443 22.247 38.8507C22.247 37.447 23.1218 36.3992 24.495 36.3992C25.8581 36.3992 26.7431 37.447 26.7431 38.8507C26.7431 40.2443 25.8581 41.3022 24.495 41.3022Z" fill="white"></path>
+							<path d="M36.515 42.3601C38.346 42.3601 39.1394 41.3938 39.1394 40.2646C39.1394 37.7318 35.1926 38.515 35.1926 37.2537C35.1926 36.7451 35.6402 36.4094 36.3421 36.4094C37.0541 36.4094 37.7763 36.6535 38.3053 37.1825L38.9868 36.2975C38.3562 35.6872 37.5017 35.3515 36.4438 35.3515C34.9586 35.3515 33.9719 36.2161 33.9719 37.3351C33.9719 39.8374 37.9289 38.9524 37.9289 40.3765C37.9289 40.8241 37.5424 41.3022 36.5659 41.3022C35.6198 41.3022 34.8874 40.8648 34.4195 40.3664L33.7583 41.2819C34.3585 41.9227 35.2638 42.3601 36.515 42.3601Z" fill="white"></path>
+							<path d="M48.0298 42.238V36.5009H50.0845V35.4532H44.7848V36.5009H46.8396V42.238H48.0298Z" fill="white"></path>
+						</g>
+						<defs>
+							<clippath id="clip0">
+								<rect x="0.54303" y="0.835938" width="57.2185" height="41.5244" fill="white"></rect>
+							</clippath>
+						</defs>
+					</svg>
+
+				</div>
+			</div>
+			<div class="col-lg-10 col-md-7 col-12">
+				<div class="footer-bottom">
+					<div class="footer-bottom__text">© 2013 - 2023 Все права защищены.</div>
+					<a href="https://www.8host.com/privacy" class="footer-bottom__link"><span>
+							<svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="2" cy="2" r="2" fill="#3D6E9C"></circle>
+							</svg>
+						</span>Политика обработки персональных данных </a>
+					<a href="https://www.8host.com/terms-and-conditions" class="footer-bottom__link"><span>
+
+							<svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="2" cy="2" r="2" fill="#3D6E9C"></circle>
+							</svg>
+
+						</span>Правила пользования сайтом</a>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-2 col-12">
+				<div class="footer-icons">
+					<a href="https://www.facebook.com/8host.social" alt="facebook">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M18.8932 0H1.10677C0.494791 0 0 0.494791 0 1.10677V18.8932C0 19.5052 0.494791 20 1.10677 20H10.6771V12.2526H8.07292V9.23177H10.6771V7.00521C10.6771 4.42709 12.2656 3.02083 14.5703 3.02083C15.6641 3.02083 16.6146 3.09896 16.888 3.13802V5.83334L15.2995 5.84635C14.0365 5.84635 13.8021 6.43229 13.8021 7.30469V9.23177H16.7839L16.3932 12.2526H13.8021V20H18.8932C19.5052 20 20 19.5052 20 18.8932V1.10677C20 0.494791 19.5052 0 18.8932 0Z" fill="#3D6E9C"></path>
+						</svg>
+					</a>
+								<a href="https://www.instagram.com/8host.social/" alt="Instagram"><svg class="instagram" fill="#3D6E9C" x="0px" y="0px" height="20" viewBox="0 0 22 22" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"></path></svg>
+                  </a>
+				</div>
+			</div>
+	</div>
+</div></footer>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script> -->
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		let navbar = document.querySelector('.navbar-toggler');
+		let overlay = document.querySelector('.collapse-overlay');
+		navbar.addEventListener('click', function() {
+			overlay.classList.toggle('show');
+		});
+		const menuLinks = document.querySelectorAll('.menu a');
+		if (menuLinks.length > 0) {
+			menuLinks.forEach((link) => {
+				if (window.location.href.match(link.href))
+					link.classList.add('active');
+			});
+		};
+		//Scroll to anchor
+
+		$(function() {
+			$('a[href*="#"]:not([href="#"])').click(function() {
+				//        Если не использовать scroll active
+
+				//        $('a').each(function () {
+				//            $(this).removeClass('active');
+				//        })
+				//        $(this).addClass('active');
+				if (location.pathname.replace(/^\//, '') === this.pathname.replace(/^\//, '') && location.hostname === this.hostname) {
+					var target = $(this.hash);
+					target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+					if (target.length) {
+						$('html, body').animate({
+							scrollTop: target.offset().top - 50
+						}, 500);
+						return false;
+					}
+				}
+			});
+		});
+	});
+</script>
+<script src="./Тестирование производительности управляемой базы данных PostgreSQL с помощью pgbench _ 8HOST.COM_files/bootstrap.min.js.Без названия" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+</div><div id="skel-layers-hiddenWrapper" style="height: 100%;"></div><div id="skel-layers-visibleWrapper" style="position: relative;"></div></body><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+  div.grammarly-desktop-integration {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+  }
+
+  div.grammarly-desktop-integration:before {
+    content: attr(data-content);
+  }
+</style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>

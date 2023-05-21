@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)https://postgrespro.ru/docs/postgrespro/15/pgbench -->
+<html lang="ru"><script type="text/javascript" async="" src="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/watch.js.Без названия"></script><script src="chrome-extension://mjnbclmflcpookeapghfhapeffmpodij/injected_content.js"></script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Postgres Pro Standard : Документация: 15: pgbench : Компания Postgres Professional</title>
+	
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/mstile-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+	<meta name="p:domain_verify" content="26bcf8b79467031bea9a8631dd6f0b11">
+	<meta name="google-site-verification" content="Vy_P_vr-Jp6rfy_wQpPSplaU1p3wfEPSwtHOQBFZU7Q">
+    <meta name="csrf-token" content="">
+
+	<meta property="og:url" content="https://postgrespro.ru/docs/postgrespro/15/pgbench">
+	<meta property="fb:app_id" content="546521955527856">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Postgres Pro Standard : Документация: 15: pgbench">
+	<meta property="og:image" content="https://postgrespro.ru/img/v3/logo2.png">
+	
+	
+	<link rel="alternate" type="application/rss+xml" title="RSS" href="https://postgrespro.ru/rss">
+	<link rel="apple-touch-icon" sizes="57x57" href="https://postgrespro.ru/img/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://postgrespro.ru/img/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://postgrespro.ru/img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://postgrespro.ru/img/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://postgrespro.ru/img/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://postgrespro.ru/img/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://postgrespro.ru/img/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://postgrespro.ru/img/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://postgrespro.ru/img/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" href="https://postgrespro.ru/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="https://postgrespro.ru/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://postgrespro.ru/img/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="https://postgrespro.ru/img/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="https://postgrespro.ru/img/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="https://postgrespro.ru/img/manifest.json">
+    <link rel="mask-icon" href="https://postgrespro.ru/img/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="https://postgrespro.ru/img/favicon.ico">
+
+
+	<link rel="stylesheet" href="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/bootstrap.min.css">
+	<link rel="stylesheet" href="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/style_v3.css">
+	<link rel="stylesheet" href="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/hljs.css">
+	<link rel="stylesheet" href="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/docs.css">
+
+	<link rel="stylesheet" href="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/font-awesome.min.css">
+
+	<script src="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/all.js.Без названия"></script>
+	
+
+
+
+	
+<style>
+.main > section {
+	padding-top: 0;
+}
+
+.doc-list h3 {
+	margin-bottom: 25px;
+}
+
+.doc-nav-versions li > a.disabled { 
+	pointer-events: none;
+	color: #525f62;
+	text-decoration: none;
+}
+.doc-list { list-style: none; color: #343a3d; }
+.doc-list ul { margin: 2px 0 2px -26px }
+.doc-list li { display: inline; padding-right: 4px; }
+.doc-list li.separator { padding-right: 10px; }
+.doc-list a.disabled {
+	color: #343a3d;
+	pointer-events: none;
+}
+.doc-list a::before {
+	position:relative; 
+	left: -2px; 
+	top: 2px; 
+} 
+
+.menu-docs { 
+	font-weight: 500; 
+    margin: 0 auto 0 auto ;
+    
+    padding-top: 3em;
+    padding-bottom: 0;
+    width: 100%;
+}
+.menu-docs a.disabled {
+	pointer-events: none;
+}
+.menu-product-wrapper {
+	margin-bottom: 1em;
+	display: inline-block; text-align: left; padding-left:2em;vertical-align: top;
+}
+.menu-product-wrapper a.active{
+	font-weight: 700;
+}
+.menu-product-wrapper a.active.disabled{
+	color: black !important;
+}
+.dark-theme  .menu-product-wrapper a.active.disabled{
+	color: white !important;
+}
+.menu-versions-wrapper {
+	margin-top: 0.5em;
+}
+
+#toggle-lang input[type="radio"] {
+	position: absolute;clip: 
+	rect(0, 0, 0, 0);
+	pointer-events: none;
+}
+
+.menu-doc-files-group {
+	position: absolute;
+	right: 0;
+	margin-right: 1em; 
+}
+
+.toggle-lang-group {
+	top: 96px; 
+	position:sticky;
+	display: block; 
+	float:right; 
+	margin-top: 42px;
+	
+}
+@media (max-width: 991.98px) {
+	.toggle-lang-group {
+		display: inline-flex;
+		position: absolute;
+		right: 140px;
+		top: -21px;
+		background: white;
+		z-index: 990;
+	}
+	.toggle-lang-group > label {
+		width: 64px;
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+	
+	.toggle-lang-group .slider {
+		width: 72px;		
+	}
+}
+nav.menu-docs .btn-group {
+	vertical-align: inherit;
+	
+}
+
+
+.menu-versions-wrapper .btn.unsupported { opacity: 0.4; }
+
+</style>
+
+	
+	
+	<script type="text/javascript">
+		var LANG = 'ru';
+	</script>
+	
+
+</head>
+<body data-new-gr-c-s-check-loaded="14.1110.0" data-gr-ext-installed="">
+	
+<div class="modal fade" id="loginForm" style="display: none;">
+	<form onsubmit="return false;">
+	<div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+		<h5 class="modal-title">Вход в личный кабинет</h5>
+	</div><div class="modal-body">
+			<input type="text" required="" name="email" class="primary" placeholder="введите e-mail">
+			<input type="password" required="" name="password" class="primary" placeholder="введите пароль">
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary ">Войти</button>
+		<div class="text-center" style="display: block;width: 100%; margin-left:0; margin-top:0.5em;">
+			<button type="button" class="btn btn-psevdo btn-restore float-left">Забыли пароль?</button>
+			<button type="button" class="btn btn-outline-primary btn-reg float-right">Регистрация</button><hr style="clear: both;margin-top:4em;">
+			<button type="button" class="btn btn-outline-success " onclick="document.location.href = &#39;/&#39;;">Спасибо, потом</button>
+		</div>
+	</div>
+	</div></div>
+	</form>
+</div>
+
+<div class="modal fade" id="regForm" role="dialog" style="display: none;">
+	<form onsubmit="return false;">
+	<div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+		<h5 class="modal-title">Регистрация пользователя</h5>
+	</div>
+	<div class="modal-body">		
+		<input type="text" required="" name="email" placeholder="E-mail">
+		<input type="password" required="" name="password" placeholder="Пароль">
+		<input type="password" required="" name="passw2" placeholder="Пароль повторно">
+		<input type="text" required="" name="last_name_ru" placeholder="Фамилия">
+		<input type="text" required="" name="first_name_ru" placeholder="Имя">
+		<!-- input type="text"              name="middle_name_ru" placeholder="Отчество">
+		<input type="text"              name="phone"          placeholder="Телефон" -->
+		<label><input id="agree" name="agree" type="checkbox"> Подтверждаю</label>
+	 		<span class="toggler" style="display:inline" onclick="loadAgreement();">согласие с обработкой персональных данных</span>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary ">Зарегистрироваться</button>
+		<button class="btn btn-psevdo btn-back">назад</button>
+	</div></div></div>
+	</form>
+</div>
+
+<style>
+	.cabinet-modal .modal-dialog{
+		margin: 5em 2em auto auto;
+	}
+	.cabinet-modal .icon-cabinet {
+		display:block;
+		margin:auto;
+		font-size: 2em;
+	}
+</style>
+
+
+<div class="modal fade cabinet-modal" id="cabinet-modal-info" tabindex="-1" role="dialog" aria-labelledby="cabinet-modal-infoLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+         <span class="fa fa-sign-in fa-lg icon-cabinet cabinet-button btn btn-primary xs-none text-center" data-action="login"></span>
+      </div>
+      <div class="modal-body">
+	      <p id="name" class="text-center text-muted"></p>
+	      <p id="e-mail" class="text-center font-weight-light"></p>
+	      <p class="text-center"><a href="https://postgrespro.ru/user">Личный кабинет</a></p>
+      </div>
+      <div class="modal-footer" style="width: 85%;margin: auto;">
+	      <button class="text-center btn btn-warning" id="cabinet-action-button" style="width: 100%;" onclick="logout();">Выйти</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="warp-agreement" style="z-index: 10000;">
+<div class="pop-up-agreement" style="display: none;z-index: 10000;" onclick="$(this).slideToggle(150);">
+<div class="agreement">
+<div class="pop-up-close">✖</div>
+<div id="agreement">
+</div>
+</div>
+</div>
+</div>
+
+
+
+<div class="modal fade" id="restoreForm" style="display: none;">
+	<form onsubmit="return false;">
+	<div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+		<h5 class="modal-title">Восстановление пароля</h5>
+	</div>
+	<div class="modal-body">
+		<p>Укажите e-mail, на который будет выслан код восстановления пароля.</p>
+		<input type="text" name="email" required="" placeholder="введите e-mail">
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary ">Продолжить</button>
+		<button type="button" class="btn btn-psevdo btn-back">назад</button>
+	</div></div></div>
+	</form>
+</div>
+
+<div class="modal fade" id="confirmForm" style="display: none;">
+	<form onsubmit="return false;">
+	<div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+		<h4 class="modal-title">Подтверждение аккаунта</h4>
+	</div>
+	<div class="modal-body">
+		<p>На указанный вами адрес e-mail был выслан код подтверждения аккаунта. Введите полученный код для продолжения:</p>
+		<input type="text" name="key" required="" placeholder="введите код">
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary ">Продолжить</button>
+		<button type="button" class="btn btn-psevdo btn-back">назад</button>
+	</div></div></div>
+	</form>
+</div>
+
+<div class="modal fade" id="newPasswordForm" style="display: none;">
+	<form onsubmit="return false;">
+	<div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+		<h4 class="modal-title">Изменение пароля</h4>
+	</div><div class="modal-body">
+		<p>Введите новый пароль два раза:</p>
+		<input required="" type="password" name="password"><br>
+		<input required="" type="password" name="pass2">
+	</div><div class="modal-footer">
+		<div class="row">
+			<div class="col-sm-12"><button type="submit" class="btn btn-success ">Продолжить</button></div>
+		</div>
+	</div></div></div>
+	</form>
+</div>
+
+	
+	
+		<div id="fb-root"></div>
+		
+		
+		<script src="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/platform.js.Без названия" async="" defer="" gapi_processed="true">
+		  {lang: 'ru'}
+		</script>
+		
+
+	
+	
+
+	
+    <header>
+	<nav class="navbar navbar-expand-xl navbar-light bg-light justify-content-between">
+		<!-- div class="mr-2">
+			<span class=" d-none d-xl-inline">{XL}</span>
+			<span class=" d-none d-lg-inline d-xl-none">{LG}</span>
+			<span class=" d-none d-md-inline d-lg-none">{MD}</span>
+			<span class=" d-none d-sm-inline d-md-none">{SM}</span>
+			<span class=" d-block d-sm-none">{XS}</span>
+		</div -->
+		
+		<a class="navbar-brand" href="https://postgrespro.ru/">
+			<img src="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/PostgresPro_logo.svg" alt="Postgres Pro" title="Postgres Pro">			
+		</a>
+		
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		  
+		
+		<div class="collapse navbar-collapse" id="navbarNavDropdown">			
+			
+	<ul class="nav navbar-nav float-left">
+		
+			<li class="nav-item dropdown">
+				<a class="nav-link " href="https://postgrespro.ru/docs/postgrespro/15/pgbench#" aria-haspopup="false" aria-expanded="true">
+					 Компания
+				</a>				
+				<a class="nav-link dropdown-toggle dropdown-toggle-split" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#"></a>
+				
+				<ul class="dropdown-menu  dropright">
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/about" class="dropdown-item 
+							" style="display: inline;">О компании</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/about/team" class="dropdown-item 
+							" style="display: inline;">Руководство</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/about/license" class="dropdown-item 
+							" style="display: inline;">Документы</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/partners" class="dropdown-item 
+							" style="display: inline;">Партнёры</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/vacancies" class="dropdown-item 
+							" style="display: inline;">Вакансии</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/contacts" class="dropdown-item 
+							" style="display: inline;">Контакты</a></li>
+				
+				</ul>
+			</li>
+		
+			<li class="nav-item dropdown">
+				<a class="nav-link " href="https://postgrespro.ru/products/postgrespro" aria-haspopup="false" aria-expanded="true">
+					Продукты
+				</a>				
+				<a class="nav-link dropdown-toggle dropdown-toggle-split" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#"></a>
+				
+				<ul class="dropdown-menu  dropright" style="display: none;">
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/products/postgrespro/enterprise" class="dropdown-item 
+							" style="display: inline;">СУБД POSTGRES PRO ENTERPRISE</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/products/postgrespro/enterprisecertified" class="dropdown-item 
+							" style="display: inline;">СУБД POSTGRES PRO ENTERPRISE CERTIFIED</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/products/postgrespro/certified" class="dropdown-item 
+							" style="display: inline;">СУБД POSTGRES PRO CERTIFIED</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/products/postgrespro/standard" class="dropdown-item 
+							" style="display: inline;">СУБД POSTGRES PRO STANDARD</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/windows" class="dropdown-item 
+							" style="display: inline;">СУБД PostgreSQL для Windows</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/roadmap" class="dropdown-item 
+							" style="display: inline;">План разработок</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/compatible-solutions" class="dropdown-item 
+							" style="display: inline;">Совместимые решения</a></li>
+				
+				</ul>
+			</li>
+		
+			<li class="nav-item dropdown">
+				<a class="nav-link " href="https://postgrespro.ru/services/" aria-haspopup="false" aria-expanded="true">
+					Услуги
+				</a>				
+				<a class="nav-link dropdown-toggle dropdown-toggle-split" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#"></a>
+				
+				<ul class="dropdown-menu  dropright">
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/services/support" class="dropdown-item 
+							" style="display: inline;">Техподдержка СУБД</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/services/audit" class="dropdown-item 
+							" style="display: inline;">Аудит СУБД</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/services/migration" class="dropdown-item 
+							" style="display: inline;">Миграция СУБД</a></li>
+				
+				</ul>
+			</li>
+		
+			<li class="nav-item dropdown">
+				<a class="nav-link " href="https://postgrespro.ru/docs/postgrespro/15/pgbench#" aria-haspopup="false" aria-expanded="true">
+					 Клиенты
+				</a>				
+				<a class="nav-link dropdown-toggle dropdown-toggle-split" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#"></a>
+				
+				<ul class="dropdown-menu  dropright">
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/trusted" class="dropdown-item 
+							" style="display: inline;">Нам доверяют</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/reviews" class="dropdown-item 
+							" style="display: inline;">Отзывы</a></li>
+				
+				</ul>
+			</li>
+		
+			<li class="nav-item dropdown">
+				<a class="nav-link " href="https://postgrespro.ru/education" aria-haspopup="false" aria-expanded="true">
+					Образование
+				</a>				
+				<a class="nav-link dropdown-toggle dropdown-toggle-split" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#"></a>
+				
+				<ul class="dropdown-menu  dropright">
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/docs" class="dropdown-item 
+							" style="display: inline;">Документация</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/education/books" class="dropdown-item 
+							" style="display: inline;">Книги</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					dropdown-toggle ">
+						<a href="https://postgrespro.ru/education/courses" class="dropdown-item 
+							" style="display: inline;">Учебные курсы</a><ul class="dropdown-submenu" aria-labelledby="navbarDropdownSubMenuLink" style=""><li class="nav-item " style="white-space: nowrap; padding: 8px 0 8px 8px;">
+										<a href="https://postgrespro.ru/education/courses" class="dropdown-item 
+											">
+										 	Для DBA и разработчиков
+										 </a>
+									 </li><li class="nav-item " style="white-space: nowrap; padding: 8px 0 8px 8px;">
+										<a href="https://postgrespro.ru/education/where" class="dropdown-item 
+											">
+										 	Учебные центры
+										 </a>
+									 </li></ul>
+						</li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/video/how-to" class="dropdown-item 
+							" style="display: inline;">How-to видео</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/education/cert" class="dropdown-item 
+							" style="display: inline;">Сертификация</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					dropdown-toggle ">
+						<a href="https://postgrespro.ru/education/university" class="dropdown-item 
+							" style="display: inline;">Курсы для ВУЗов</a><ul class="dropdown-submenu" aria-labelledby="navbarDropdownSubMenuLink" style=""><li class="nav-item " style="white-space: nowrap; padding: 8px 0 8px 8px;">
+										<a href="https://postgrespro.ru/education/university/dbtech" class="dropdown-item 
+											">
+										 	ОСНОВЫ ТЕХНОЛОГИЙ БАЗ ДАННЫХ 
+										 </a>
+									 </li><li class="nav-item " style="white-space: nowrap; padding: 8px 0 8px 8px;">
+										<a href="https://postgrespro.ru/education/university/sqlprimer" class="dropdown-item 
+											">
+										 	ЯЗЫК SQL
+										 </a>
+									 </li></ul>
+						</li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/education/code4all" class="dropdown-item 
+							" style="display: inline;">Код для всех</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/education/glossary" class="dropdown-item 
+							" style="display: inline;">Глоссарий</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/education/demodb" class="dropdown-item 
+							" style="display: inline;">Демо-база</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/list" class="dropdown-item 
+							" style="display: inline;">Списки рассылки</a></li>
+				
+				</ul>
+			</li>
+		
+			<li class="nav-item dropdown">
+				<a class="nav-link " href="https://postgrespro.ru/blog" aria-haspopup="false" aria-expanded="true">
+					Новости
+				</a>				
+				<a class="nav-link dropdown-toggle dropdown-toggle-split" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#"></a>
+				
+				<ul class="dropdown-menu  dropright">
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/blog/media" class="dropdown-item 
+							" style="display: inline;">СМИ  о нас</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/blog/postgresso" class="dropdown-item 
+							" style="display: inline;">Дайджест Postgresso</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/blog/events" class="dropdown-item 
+							" style="display: inline;">Мероприятия</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/blog/technical" class="dropdown-item 
+							" style="display: inline;">Технические анонсы</a></li>
+				
+					<li style="white-space: nowrap; padding: 8px 0 8px 8px;" class="nav-item dropdown 
+					">
+						<a href="https://postgrespro.ru/about/press" class="dropdown-item 
+							" style="display: inline;">Для СМИ</a></li>
+				
+				</ul>
+			</li>
+		
+	</ul>
+	
+<script type="text/template" id="menu-tmpl">
+</script>
+		<ul class="navbar-nav d-xl-none" style="display: inline-block; float: right;">
+			<li class="nav-item " style="display: inline-block !important; padding-right: 1em;"><a href="https://postgrespro.ru/search" class="nav-item nav-link icon-search text-primary"></a></li>
+			
+			<li class="nav-item " style="display: inline-block !important;"><a class="nav-item nav-link " href="https://postgrespro.ru/docs/postgrespro/15/pgbench#">RU</a></li>
+			<li class="nav-item active" style="display: inline-block !important;"><a class="nav-item nav-link active" href="https://postgrespro.com/docs/postgrespro/15/pgbench">EN</a></li>
+			
+			<div style="display: inline-block;">
+				
+<style>
+	.account-menu { 
+		display: inline-block; 
+		white-space: nowrap;
+	}
+	.cabinet-button  {
+		margin: 0 0 0 1em;
+		padding: 0.5em 0.5em;
+		border-radius: 50%;		
+	}
+	.cabinet-info {
+		font-weight: 700;
+		cursor: pointer;		
+	}
+	.cabinet-info:hover {
+		color: green;		
+	}
+</style>
+	<li class="nav-item ">
+		<div class="account-menu" data-action="info" id="cabinet-buttons">
+			<a class="fa fa-sign-in fa-lg btn btn-primary cabinet-button" onclick="showLoginLogout(this); return false;" href="https://postgrespro.ru/user" title="Личный кабинет" data-action="login"></a>
+			<span class="nav-item cabinet-info invisible" onclick="return showAccountInfo();" title="Дополнительно…">⋮</span>
+		</div>
+	</li>
+
+			</div>
+		</ul>
+	
+
+
+		</div>
+
+		
+<script type="text/template" id="menu-tmpl">
+</script>
+	<div class=" d-none d-xl-flex">
+		<ul class="navbar-nav float-right">
+			<li id="li-search"><a class="nav-item nav-link icon-search text-primary" id="search-button" data-action="null" style="font-size: 1.6em;top: -6px;position: relative;" onclick="showSearch(this);"></a></li>
+			
+			<li class="nav-item "><a class="nav-item nav-link " href="https://postgrespro.ru/docs/postgrespro/15/pgbench#">RU</a></li>
+			<li class="nav-item active"><a class="nav-item nav-link active" href="https://postgrespro.com/docs/postgrespro/15/pgbench">EN</a></li>
+			
+			
+<style>
+	.account-menu { 
+		display: inline-block; 
+		white-space: nowrap;
+	}
+	.cabinet-button  {
+		margin: 0 0 0 1em;
+		padding: 0.5em 0.5em;
+		border-radius: 50%;		
+	}
+	.cabinet-info {
+		font-weight: 700;
+		cursor: pointer;		
+	}
+	.cabinet-info:hover {
+		color: green;		
+	}
+</style>
+	<li class="nav-item ">
+		<div class="account-menu" data-action="info" id="cabinet-buttons">
+			<a class="fa fa-sign-in fa-lg btn btn-primary cabinet-button" onclick="showLoginLogout(this); return false;" href="https://postgrespro.ru/user" title="Личный кабинет" data-action="login"></a>
+			<span class="nav-item cabinet-info invisible" onclick="return showAccountInfo();" title="Дополнительно…">⋮</span>
+		</div>
+	</li>
+
+		</ul>
+	</div>
+	
+
+		
+	</nav>
+    </header>
+    
+    <main name="main">
+    <div class="main" name="main">
+		
+
+<script>
+$(function() {
+	if ("" != "")
+		toggleLang('', 'postgrespro', '15', 'pgbench');
+		
+	$('div.sect2').each(function(i,r){
+		var _id = $(r).attr('id');
+		if (_id !== undefined) {
+			if ($(r).find('h3:first').length > 0) {
+				$(r).html('<a href="#'+_id+'" class="autolink"></a>'+$(r).html());
+			}
+		} 
+	});		
+	
+	$('dt').each(function(i,r){
+		var _id = $(r).attr('id');
+		if (_id !== undefined) {
+			$(r).html('<a href="#'+_id+'" class="autolink"></a>'+$(r).html());
+		}
+	});		
+
+// "Тёмная тема"		
+/*	let isDarkTheme = localStorage.getItem("pg_isDarkTheme");
+	var fs = $('#dark-theme').data('target');
+	if (fs) {
+		if (isDarkTheme === 'dark') {
+			$(fs).addClass('dark-theme');
+		} else{
+			$(fs).removeClass('dark-theme');
+		} 
+	}
+	$('#dark-theme').prop('checked', isDarkTheme === 'dark');
+*/
+
+	$('#dark-theme').change(function(e,r) {
+		var t = $($(this).data('content'));
+		t.addClass('transition'); 
+		var fs = $($(this).data('target'));
+		if ($(this).prop('checked')) {
+			fs.addClass('dark-theme');
+//			localStorage.setItem("pg_isDarkTheme", "dark");
+			document.cookie = "css_theme=dark;max-age=604800;samesite=strict";			
+		}
+		else {
+			fs.removeClass('dark-theme');
+//			localStorage.setItem("pg_isDarkTheme", "");
+			document.cookie = "css_theme=;max-age=604800;samesite=strict";			
+		}
+	});
+			
+})
+</script>
+
+
+<nav class="menu-docs text-center">
+	<div class="--d-none --d-sm-inline" style="float: right;">
+		
+			<div id="menu-doc-files" class="menu-doc-files-group d-none d-xl-inline">
+				
+					<a href="https://repo.postgrespro.ru/doc/pgpro/15.2.1/ru/postgres.epub" class="epub btn btn-outline-primary" title="epub"></a><br>
+				
+					<a href="https://repo.postgrespro.ru/doc/pgpro/15.2.1/ru/postgres-A4.pdf" class="pdf btn btn-outline-primary" title="pdf"></a><br>
+				
+			</div>
+		
+	
+	</div>
+	
+	
+		
+	<div class="doc-menu-wrapper doc-menu-wrapper-ru  ">
+	
+		
+			<div class="menu-product-wrapper">
+				<a href="https://postgrespro.ru/docs/postgrespro" class="active" style="font-weight: 700;">Postgres Pro Standard</a><br>
+		
+				<div class="menu-versions-wrapper btn-group">
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/15/pgbench" class="disabled active btn btn-outline-primary ">
+							15										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/14/pgbench" class=" btn btn-outline-primary ">
+							14										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/13/pgbench" class=" btn btn-outline-primary ">
+							13										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/12/pgbench" class=" btn btn-outline-primary ">
+							12										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/11/pgbench" class=" btn btn-outline-primary ">
+							11										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/10/pgbench" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							10										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/9.6/pgbench" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.6										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/9.5/pgbench" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.5										
+						</a>	
+					    	
+		    	
+				</div>
+			</div>
+		
+	
+		
+			<div class="menu-product-wrapper">
+				<a href="https://postgrespro.ru/docs/enterprise">Postgres Pro Enterprise</a><br>
+		
+				<div class="menu-versions-wrapper btn-group">
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/15/pgbench" class=" btn btn-outline-primary ">
+							15										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/14/pgbench" class=" btn btn-outline-primary ">
+							14										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/13/pgbench" class=" btn btn-outline-primary ">
+							13										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/12/pgbench" class=" btn btn-outline-primary ">
+							12										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/11/pgbench" class=" btn btn-outline-primary ">
+							11										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/10/pgbench" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							10										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/9.6/pgbench" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.6										
+						</a>	
+					    	
+		    	
+				</div>
+			</div>
+		
+	
+		
+			<div class="menu-product-wrapper">
+				<a href="https://postgrespro.ru/docs/postgresql">PostgreSQL</a><br>
+		
+				<div class="menu-versions-wrapper btn-group">
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/15/pgbench" class=" btn btn-outline-primary ">
+							15										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/14/pgbench" class=" btn btn-outline-primary ">
+							14										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/13/pgbench" class=" btn btn-outline-primary ">
+							13										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/12/pgbench" class=" btn btn-outline-primary ">
+							12										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/11/pgbench" class=" btn btn-outline-primary ">
+							11										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/10/pgbench" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							10										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/9.6/pgbench" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.6										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/9.5/pgbench" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.5										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/9.4/pgbench" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.4										
+						</a>	
+					    	
+		    	
+				</div>
+			</div>
+		
+		
+	</div>
+
+		
+	<div class="doc-menu-wrapper doc-menu-wrapper-en  d-none">
+	
+		
+			<div class="menu-product-wrapper">
+				<a href="https://postgrespro.ru/docs/postgrespro" class="active" style="font-weight: 700;">Postgres Pro Standard</a><br>
+		
+				<div class="menu-versions-wrapper btn-group">
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/15/pgbench?lang=en" class="disabled active btn btn-outline-primary ">
+							15										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/14/pgbench?lang=en" class=" btn btn-outline-primary ">
+							14										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/13/pgbench?lang=en" class=" btn btn-outline-primary ">
+							13										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/12/pgbench?lang=en" class=" btn btn-outline-primary ">
+							12										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/11/pgbench?lang=en" class=" btn btn-outline-primary ">
+							11										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/10/pgbench?lang=en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							10										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/9.6/pgbench?lang=en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.6										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/9.5/pgbench?lang=en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.5										
+						</a>	
+					    	
+		    	
+				</div>
+			</div>
+		
+	
+		
+			<div class="menu-product-wrapper">
+				<a href="https://postgrespro.ru/docs/enterprise">Postgres Pro Enterprise</a><br>
+		
+				<div class="menu-versions-wrapper btn-group">
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/15/pgbench?lang=en" class=" btn btn-outline-primary ">
+							15										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/14/pgbench?lang=en" class=" btn btn-outline-primary ">
+							14										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/13/pgbench?lang=en" class=" btn btn-outline-primary ">
+							13										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/12/pgbench?lang=en" class=" btn btn-outline-primary ">
+							12										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/11/pgbench?lang=en" class=" btn btn-outline-primary ">
+							11										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/10/pgbench?lang=en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							10										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/9.6/pgbench?lang=en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.6										
+						</a>	
+					    	
+		    	
+				</div>
+			</div>
+		
+	
+		
+			<div class="menu-product-wrapper">
+				<a href="https://postgrespro.ru/docs/postgresql">PostgreSQL</a><br>
+		
+				<div class="menu-versions-wrapper btn-group">
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/15/pgbench?lang=en" class=" btn btn-outline-primary ">
+							15										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/14/pgbench?lang=en" class=" btn btn-outline-primary ">
+							14										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/13/pgbench?lang=en" class=" btn btn-outline-primary ">
+							13										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/12/pgbench?lang=en" class=" btn btn-outline-primary ">
+							12										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/11/pgbench?lang=en" class=" btn btn-outline-primary ">
+							11										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/10/pgbench?lang=en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							10										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/9.6/pgbench?lang=en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.6										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/9.5/pgbench?lang=en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.5										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/9.4/pgbench?lang=en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.4										
+						</a>	
+					    	
+		    	
+				</div>
+			</div>
+		
+		
+	</div>
+
+		
+	<div class="doc-menu-wrapper doc-menu-wrapper-ru-en  d-none">
+	
+		
+			<div class="menu-product-wrapper">
+				<a href="https://postgrespro.ru/docs/postgrespro" class="active" style="font-weight: 700;">Postgres Pro Standard</a><br>
+		
+				<div class="menu-versions-wrapper btn-group">
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/15/pgbench?lang=ru-en" class="disabled active btn btn-outline-primary ">
+							15										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/14/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							14										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/13/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							13										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/12/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							12										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/11/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							11										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/10/pgbench?lang=ru-en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							10										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/9.6/pgbench?lang=ru-en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.6										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgrespro/9.5/pgbench?lang=ru-en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.5										
+						</a>	
+					    	
+		    	
+				</div>
+			</div>
+		
+	
+		
+			<div class="menu-product-wrapper">
+				<a href="https://postgrespro.ru/docs/enterprise">Postgres Pro Enterprise</a><br>
+		
+				<div class="menu-versions-wrapper btn-group">
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/15/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							15										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/14/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							14										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/13/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							13										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/12/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							12										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/11/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							11										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/10/pgbench?lang=ru-en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							10										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/enterprise/9.6/pgbench?lang=ru-en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.6										
+						</a>	
+					    	
+		    	
+				</div>
+			</div>
+		
+	
+		
+			<div class="menu-product-wrapper">
+				<a href="https://postgrespro.ru/docs/postgresql">PostgreSQL</a><br>
+		
+				<div class="menu-versions-wrapper btn-group">
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/15/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							15										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/14/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							14										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/13/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							13										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/12/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							12										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/11/pgbench?lang=ru-en" class=" btn btn-outline-primary ">
+							11										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/10/pgbench?lang=ru-en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							10										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/9.6/pgbench?lang=ru-en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.6										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/9.5/pgbench?lang=ru-en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.5										
+						</a>	
+					    	
+		    	
+					
+						<a href="https://postgrespro.ru/docs/postgresql/9.4/pgbench?lang=ru-en" class=" btn btn-outline-primary unsupported" title="не поддерживается">
+							9.4										
+						</a>	
+					    	
+		    	
+				</div>
+			</div>
+		
+		
+	</div>
+
+
+	
+
+</nav>
+
+				
+<section class="container-fluid">
+		<div id="toggle-lang" class="btn-group toggle-lang-group">
+			<label class="btn btn-outline-success active" name="ru" style="cursor: pointer; margin: 0; width: 100%;">
+				<input type="radio" autocomplete="off" name="ru" value="ru" checked="" onchange="toggleLang(this.value, &#39;postgrespro&#39;, &#39;15&#39;, &#39;pgbench&#39;); return false;"> RU
+			</label><br>
+			<label class="btn btn-outline-success" name="en" style="cursor: pointer; margin: 0; width: 100%;">
+				<input type="radio" autocomplete="off" name="en" value="en" onchange="toggleLang(this.value, &#39;postgrespro&#39;, &#39;15&#39;, &#39;pgbench&#39;); return false;"> EN
+			</label><br>
+			<label class="btn btn-outline-success d-none d-sm-inline-block" name="ru-en" style="cursor: pointer; margin: 0; width: 100%;">
+				<input type="radio" autocomplete="off" name="ru-en" value="ru-en" onchange="toggleLang(this.value, &#39;postgrespro&#39;, &#39;15&#39;, &#39;pgbench&#39;); return false;"> RU EN
+			</label>
+
+			<label class="switch">
+			   <input type="checkbox" id="dark-theme" data-target="html" data-content="body">
+			   <span class="slider"></span>
+			</label>		
+
+		</div>
+<div class="container">
+<div class="row docs content" id="docContent-wrapper-ppg">
+    <div class="col-md-12" id="divDocRu">
+    	
+			<div class="container-fluid col-10" id="docContent"><div class="navheader"><table summary="Navigation header" width="100%"><tbody><tr><th align="center" colspan="5"><span class="application">pgbench</span></th></tr><tr><td align="left" width="10%"><a accesskey="p" href="https://postgrespro.ru/docs/postgrespro/15/app-pgbasebackup" title="pg_basebackup">Пред.</a>&nbsp;</td><td align="left" width="10%"><a accesskey="u" href="https://postgrespro.ru/docs/postgrespro/15/reference-client" title="Клиентские приложения Postgres Pro">Наверх</a></td><th align="center" width="60%">Клиентские приложения Postgres Pro</th><td align="right" width="10%"><a accesskey="h" href="https://postgrespro.ru/docs/postgrespro/15/index" title="Документация к Postgres Pro Standard 15.2.1">Начало</a></td><td align="right" width="10%">&nbsp;<a accesskey="n" href="https://postgrespro.ru/docs/postgrespro/15/app-pgconfig" title="pg_config">След.</a></td></tr></tbody></table><hr></div><div class="refentry" id="PGBENCH"><div class="titlepage"></div><a class="indexterm" id="id-1.9.4.11.1"></a><div class="refnamediv"><h2><span class="refentrytitle"><span class="application">pgbench</span></span></h2><p>pgbench — запустить тест производительности <span class="productname">Postgres Pro</span></p></div><div class="refsynopsisdiv"><h2>Синтаксис</h2><div class="cmdsynopsis"><p id="id-1.9.4.11.4.1"><code class="command">pgbench</code> <code class="option">-i</code> [<em class="replaceable"><code>параметр</code></em>...] [<em class="replaceable"><code>имя_бд</code></em>]</p></div><div class="cmdsynopsis"><p id="id-1.9.4.11.4.2"><code class="command">pgbench</code> [<em class="replaceable"><code>параметр</code></em>...] [<em class="replaceable"><code>имя_бд</code></em>]</p></div></div><div class="refsect1" id="id-1.9.4.11.5"><h2>Описание</h2><p><span class="application">pgbench</span> — это простая программа для запуска тестов производительности <span class="productname">Postgres Pro</span>. Она многократно выполняет одну последовательность команд, возможно в параллельных сеансах базы данных, а затем вычисляет среднюю скорость транзакций (число транзакций в секунду). По умолчанию <span class="application">pgbench</span> тестирует сценарий, примерно соответствующий TPC-B, который состоит из пяти команд <code class="command">SELECT</code>, <code class="command">UPDATE</code> и <code class="command">INSERT</code> в одной транзакции. Однако вы можете легко протестировать и другие сценарии, написав собственные скрипты транзакций.</p><p>Типичный вывод <span class="application">pgbench</span> выглядит так: </p><pre class="screen">transaction type: &lt;builtin: TPC-B (sort of)&gt;
+scaling factor: 10
+query mode: simple
+number of clients: 10
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000
+number of transactions actually processed: 10000/10000
+number of failed transactions: 0 (0.000%)
+latency average = 11.013 ms
+latency stddev = 7.351 ms
+initial connection time = 45.758 ms
+tps = 896.967014 (without initial connection time)
+</pre><p> В первых семи строках выводятся значения некоторых самых важных параметров. В шестой строке выводится максимальное число повторов транзакций с ошибками сериализации или взаимоблокировки (за подробностями обратитесь к <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#FAILURES-AND-RETRIES" title="Повторы и отказы из-за ошибок сериализации/взаимоблокировки">Повторы и отказы из-за ошибок сериализации/взаимоблокировки</a>). В восьмой строке показывается количество выполненных и запланированных транзакций (произведение числа клиентов и числа транзакций для одного клиента); эти количества будут различаться, только если выполнение завершится досрочно или какие-либо команды SQL завершатся ошибкой. (В режиме <code class="option">-T</code> выводится только число фактически выполненных транзакций.) В следующей строке выводится количество транзакций, не выполненных из-за ошибок сериализации или взаимоблокировок (за подробностями обратитесь к <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#FAILURES-AND-RETRIES" title="Повторы и отказы из-за ошибок сериализации/взаимоблокировки">Повторы и отказы из-за ошибок сериализации/взаимоблокировки</a>). В последней строке показывается число транзакций в секунду.</p><p>Для запускаемого по умолчанию теста типа TPC-B требуется предварительно подготовить определённые таблицы. Чтобы создать и наполнить эти таблицы, следует запустить <span class="application">pgbench</span> с ключом <code class="option">-i</code> (инициализировать). (Если вы применяете нестандартный скрипт, это не требуется, но тем не менее нужно подготовить конфигурацию, нужную вашему тесту.) Запуск инициализации выглядит так: </p><pre class="programlisting">pgbench -i [<span class="optional"> <em class="replaceable"><code>другие-параметры</code></em> </span>] <em class="replaceable"><code>имя_базы</code></em></pre><p> где <em class="replaceable"><code>имя_базы</code></em> — имя уже существующей базы, в которой будет проводиться тест. (Чтобы указать, как подключиться к серверу баз данных, вы также можете добавить параметры <code class="option">-h</code>, <code class="option">-p</code> и/или <code class="option">-U</code>.)</p><div class="caution"><h3 class="title">Внимание</h3><p><code class="literal">pgbench -i</code> создаёт четыре таблицы <code class="structname">pgbench_accounts</code>, <code class="structname">pgbench_branches</code>, <code class="structname">pgbench_history</code> и <code class="structname">pgbench_tellers</code>, предварительно уничтожая существующие таблицы с этими именами. Если вы вдруг используете эти имена в своей базе данных, обязательно переключитесь на другую базу!</p></div><p>С <span class="quote">«<span class="quote">коэффициентом масштаба</span>»</span>, по умолчанию равным 1, эти таблицы изначально содержат такое количество строк: </p><pre class="screen">table                   # of rows
+---------------------------------
+pgbench_branches        1
+pgbench_tellers         10
+pgbench_accounts        100000
+pgbench_history         0
+</pre><p> Эти числа можно (и в большинстве случаев даже нужно) увеличить, воспользовавшись параметром <code class="option">-s</code> (коэффициент масштаба). При этом также может быть полезен ключ <code class="option">-F</code> (фактор заполнения).</p><p>Подготовив требуемую конфигурацию, можно запустить тест производительности командой без <code class="option">-i</code>, то есть: </p><pre class="programlisting">pgbench [<span class="optional"> <em class="replaceable"><code>параметры</code></em> </span>] <em class="replaceable"><code>имя_базы</code></em></pre><p> Практически во всех случаях, чтобы получить полезные результаты, необходимо передать какие-либо дополнительные параметры. Наиболее важные параметры: <code class="option">-c</code> (число клиентов), <code class="option">-t</code> (число транзакций), <code class="option">-T</code> (длительность) и <code class="option">-f</code> (файл со скриптом). Полный список параметров приведён ниже.</p></div><div class="refsect1" id="id-1.9.4.11.6"><h2>Параметры</h2><p>Следующий список разделён на три подраздела: одни параметры используются при инициализации базы данных, другие при проведении тестирования, а третьи в обоих случаях.</p><div class="refsect2" id="PGBENCH-INIT-OPTIONS"><h3>Параметры инициализации</h3><p><span class="application">pgbench</span> принимает следующие аргументы командной строки для инициализации: </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="replaceable"><code>имя_бд</code></em></span></dt><dd><p>Указывает имя базы, в которой будет проводиться тест. Если имя не задано, то используется значение переменной окружения <code class="envar">PGDATABASE</code>. Если и переменная не задана, то в качестве имени базы будет взято имя пользователя, под которым осуществляется подключение.</p></dd><dt><span class="term"><code class="option">-i</code><br></span><span class="term"><code class="option">--initialize</code></span></dt><dd><p>Требуется для вызова режима инициализации.</p></dd><dt><span class="term"><code class="option">-I <em class="replaceable"><code>этапы_инициализации</code></em></code><br></span><span class="term"><code class="option">--init-steps=<em class="replaceable"><code>этапы_инициализации</code></em></code></span></dt><dd><p>Выполнять только выбранные из всех обычных подготовительных этапов. В параметре <em class="replaceable"><code>этапы_инициализации</code></em> отдельные символы для каждого этапа выбирают, какие этапы должны выполняться. Все этапы выполняются в определённом порядке. Список этапов по умолчанию: <code class="literal">dtgvp</code>. Полный перечень подготовительных этапов: </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">d</code> (Drop, удалить)</span></dt><dd><p>Удалить все существующие таблицы <span class="application">pgbench</span>.</p></dd><dt><span class="term"><code class="literal">t</code> (create Tables, создать таблицы)</span></dt><dd><p>Создать таблицы, используемые стандартным сценарием <span class="application">pgbench</span>, а именно: <code class="structname">pgbench_accounts</code>, <code class="structname">pgbench_branches</code>, <code class="structname">pgbench_history</code> и <code class="structname">pgbench_tellers</code>.</p></dd><dt><span class="term"><code class="literal">g</code> или <code class="literal">G</code> (Generate data, сгенерировать данные на стороне клиента или на стороне сервера)</span></dt><dd><p>Сгенерировать данные и загрузить их в стандартные таблицы, заменив все уже существующие данные.</p><p>С ключом <code class="literal">g</code> (выбирающим генерирование данных на стороне клиента), данные формируются в клиентском коде <code class="command">pgbench</code>, а затем передаются на сервер. При этом соединение клиент/сервер нагружается командой <code class="command">COPY</code>. С <span class="productname">Postgres Pro</span> версии 14 или выше <code class="command">pgbench</code> использует параметр FREEZE для ускорения последующей операции <code class="command">VACUUM</code>, если не применяется секционирование. Когда с ключом <code class="literal">g</code> генерируются данные для таблицы <code class="structname">pgbench_accounts</code>, после каждых 100000 строк выдаётся сообщение о прогрессе.</p><p>С ключом <code class="literal">G</code> (выбирающим генерирование данных на стороне сервера), клиентский код <code class="command">pgbench</code> передаёт на сервер только небольшие запросы, а собственно формированием данных занимается сервер. В этом случае сетевое соединение не нагружается, но возрастает нагрузка на сервер. При генерировании данных с ключом <code class="literal">G</code> никакие сообщения о ходе операции не выдаются.</p><p>По умолчанию при инициализации базы данные генерируются на стороне клиента (то есть подразумевается ключ <code class="literal">g</code>).</p></dd><dt><span class="term"><code class="literal">v</code> (Vacuum, очистка)</span></dt><dd><p>Вызывать <code class="command">VACUUM</code> для стандартных таблиц.</p></dd><dt><span class="term"><code class="literal">p</code> (create Primary keys, создать первичные ключи)</span></dt><dd><p>Создать первичные ключи в стандартных таблицах.</p></dd><dt><span class="term"><code class="literal">f</code> (create Foreign keys, создать внешние ключи)</span></dt><dd><p>Создать ограничения внешних ключей между стандартными таблицами. (Заметьте, что это действие по умолчанию не выполняется.)</p></dd></dl></div></dd><dt><span class="term"><code class="option">-F</code> <em class="replaceable"><code>фактор_заполнения</code></em><br></span><span class="term"><code class="option">--fillfactor=</code><em class="replaceable"><code>фактор_заполнения</code></em></span></dt><dd><p>Создать таблицы <code class="structname">pgbench_accounts</code>, <code class="structname">pgbench_tellers</code> и <code class="structname">pgbench_branches</code> с заданным фактором заполнения. Значение по умолчанию — 100.</p></dd><dt><span class="term"><code class="option">-n</code><br></span><span class="term"><code class="option">--no-vacuum</code></span></dt><dd><p>Не выполнять очистку во время инициализации. (Этот параметр выключает этап инициализации <code class="literal">v</code>, даже если он был указан в <code class="option">-I</code>.)</p></dd><dt><span class="term"><code class="option">-q</code><br></span><span class="term"><code class="option">--quiet</code></span></dt><dd><p>Переключить вывод в немногословный режим, когда выводится только одно сообщение о прогрессе в 5 секунд. В режиме по умолчанию одно сообщение выводится на каждые 100000 строк, при этом за секунду обычно выводится довольно много строк (особенно на хорошем оборудовании).</p><p>Этот параметр не оказывает влияния, если в <code class="option">-I</code> выбран вариант <code class="literal">G</code>.</p></dd><dt><span class="term"><code class="option">-s</code> <em class="replaceable"><code>коэффициент_масштаба</code></em><br></span><span class="term"><code class="option">--scale=</code><em class="replaceable"><code>коэффициент_масштаба</code></em></span></dt><dd><p>Умножить число генерируемых строк на заданный коэффициент. Например, с ключом <code class="literal">-s 100</code> в таблицу <code class="structname">pgbench_accounts</code> будут записаны 10 000 000 строк. Значение по умолчанию — 1. При коэффициенте, равном 20 000 или больше, столбцы, содержащие идентификаторы счетов (столбцы <code class="structfield">aid</code>), перейдут к большим целым числам (типу <code class="type">bigint</code>), чтобы в них могли уместиться все возможные значения идентификаторов.</p></dd><dt><span class="term"><code class="option">--foreign-keys</code></span></dt><dd><p>Создать ограничения внешних ключей между стандартными таблицами. (Этот ключ добавляет этап <code class="literal">f</code> к последовательности подготовительных этапов, если он отсутствует.)</p></dd><dt><span class="term"><code class="option">--index-tablespace=<em class="replaceable"><code>табл_пространство_индексов</code></em></code></span></dt><dd><p>Создать индексы в указанном табличном пространстве, а не в пространстве по умолчанию.</p></dd><dt><span class="term"><code class="option">--partition-method=<em class="replaceable"><code>ИМЯ</code></em></code></span></dt><dd><p>Создать секционированную таблицу <code class="literal">pgbench_accounts</code>, применив метод <em class="replaceable"><code>ИМЯ</code></em> (это может быть <code class="literal">range</code> или <code class="literal">hash</code>). Для использования этого параметра необходимо, чтобы было задано ненулевое значение <code class="option">--partitions</code>. Если этот параметр не указывается, подразумевается метод <code class="literal">range</code>.</p></dd><dt><span class="term"><code class="option">--partitions=<em class="replaceable"><code>ЧИСЛО</code></em></code></span></dt><dd><p>Создать секционированную таблицу <code class="literal">pgbench_accounts</code> с заданным <em class="replaceable"><code>ЧИСЛОМ</code></em> секций примерно равного размера в соответствии с масштабированным количеством счетов. По умолчанию подразумевается число <code class="literal">0</code>, то есть таблица не секционируется.</p></dd><dt><span class="term"><code class="option">--tablespace=<em class="replaceable"><code>табличное_пространство</code></em></code></span></dt><dd><p>Создать таблицы в указанном табличном пространстве, а не в пространстве по умолчанию.</p></dd><dt><span class="term"><code class="option">--unlogged-tables</code></span></dt><dd><p>Создать все таблицы как нежурналируемые, а не как постоянные таблицы.</p></dd></dl></div></div><div class="refsect2" id="PGBENCH-RUN-OPTIONS"><h3>Параметры тестирования производительности</h3><p><span class="application">pgbench</span> принимает следующие аргументы командной строки для тестирования производительности: </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-b</code> <em class="replaceable"><code>имя_скрипта[@вес]</code></em><br></span><span class="term"><code class="option">--builtin</code>=<em class="replaceable"><code>имя_скрипта[@вес]</code></em></span></dt><dd><p>Добавляет в список скриптов, которые будут выполняться, указанный встроенный скрипт. В число встроенных скриптов входят <code class="literal">tpcb-like</code>, <code class="literal">simple-update</code> и <code class="literal">select-only</code>. Также принимаются однозначные начала их имён. Со специальным именем <code class="literal">list</code> программа выводит список встроенных скриптов и немедленно завершается.</p><p>Дополнительно можно задать целочисленный вес после <code class="literal">@</code>, меняющий вероятность выбора этого скрипта относительно других. По умолчанию вес считается равным 1. Подробности следуют ниже.</p></dd><dt><span class="term"><code class="option">-c</code> <em class="replaceable"><code>клиенты</code></em><br></span><span class="term"><code class="option">--client=</code><em class="replaceable"><code>клиенты</code></em></span></dt><dd><p>Число имитируемых клиентов, то есть число одновременных сеансов базы данных. Значение по умолчанию — 1.</p></dd><dt><span class="term"><code class="option">-C</code><br></span><span class="term"><code class="option">--connect</code></span></dt><dd><p>Устанавливать новое подключение для каждой транзакции вместо одного для каждого клиента. Это полезно для оценивания издержек подключений.</p></dd><dt><span class="term"><code class="option">-d</code><br></span><span class="term"><code class="option">--debug</code></span></dt><dd><p>Выводить отладочные сообщения.</p></dd><dt><span class="term"><code class="option">-D</code> <em class="replaceable"><code>имя_переменной</code></em><code class="literal">=</code><em class="replaceable"><code>значение</code></em><br></span><span class="term"><code class="option">--define=</code><em class="replaceable"><code>имя_переменной</code></em><code class="literal">=</code><em class="replaceable"><code>значение</code></em></span></dt><dd><p>Определить переменную для пользовательского скрипта (см. ниже). Параметр <code class="option">-D</code> может добавляться неоднократно.</p></dd><dt><span class="term"><code class="option">-f</code> <em class="replaceable"><code>имя_файла[@вес]</code></em><br></span><span class="term"><code class="option">--file=</code><em class="replaceable"><code>имя_файла[@вес]</code></em></span></dt><dd><p>Добавить в список выполняемых скриптов скрипт транзакции из файла <em class="replaceable"><code>имя_файла</code></em>.</p><p>Дополнительно можно задать целочисленный вес после <code class="literal">@</code>, меняющий вероятность выбора этого скрипта относительно других. По умолчанию вес считается равным 1. (Если вам нужно передать имя скрипта, содержащее символ <code class="literal">@</code>, добавьте к такому имени вес, чтобы исключить неоднозначность прочтения, например <code class="literal">filen@me@1</code>.) Подробности следуют ниже.</p></dd><dt><span class="term"><code class="option">-j</code> <em class="replaceable"><code>потоки</code></em><br></span><span class="term"><code class="option">--jobs=</code><em class="replaceable"><code>потоки</code></em></span></dt><dd><p>Число рабочих потоков в <span class="application">pgbench</span>. Использовать нескольких потоков может быть полезно на многопроцессорных компьютерах. Клиенты распределяются по доступным потокам равномерно, насколько это возможно. Значение по умолчанию — 1.</p></dd><dt><span class="term"><code class="option">-l</code><br></span><span class="term"><code class="option">--log</code></span></dt><dd><p>Записать информацию о каждой транзакции в файл протокола. Подробности описаны ниже.</p></dd><dt><span class="term"><code class="option">-L</code> <em class="replaceable"><code>предел</code></em><br></span><span class="term"><code class="option">--latency-limit=</code><em class="replaceable"><code>предел</code></em></span></dt><dd><p>Транзакции, продолжающиеся дольше указанного <em class="replaceable"><code>предела</code></em> (в миллисекундах), подсчитываются и отмечаются отдельно, как <em class="firstterm">опаздывающие</em>.</p><p>В режиме ограничения скорости (<code class="option">--rate=...</code>) транзакции, которые отстают от графика более чем на заданный <em class="replaceable"><code>предел</code></em> (в мс) и поэтому никак не могут уложиться в отведённый интервал, не передаются серверу вовсе. Они подсчитываются и отмечаются отдельно как <em class="firstterm">пропущенные</em>.</p><p>Когда используется параметр <code class="option">--max-tries</code>, транзакция, прерванная из-за аномалии сериализации или взаимоблокировки, не будет повторяться, если общее время всех её повторений превышает <em class="replaceable"><code>предел</code></em> в миллисекундах. Чтобы ограничить только общее время повторений, а не их количество, установите значение <code class="literal">--max-tries=0</code>. По умолчанию параметр <code class="option">--max-tries</code> имеет значение 1, и транзакции с ошибками сериализации/взаимоблокировки не повторяются. Подробнее о повторных попытках выполнения таких транзакций рассказывается в <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#FAILURES-AND-RETRIES" title="Повторы и отказы из-за ошибок сериализации/взаимоблокировки">Повторы и отказы из-за ошибок сериализации/взаимоблокировки</a>.</p></dd><dt><span class="term"><code class="option">-M</code> <em class="replaceable"><code>режим_запросов</code></em><br></span><span class="term"><code class="option">--protocol=</code><em class="replaceable"><code>режим_запросов</code></em></span></dt><dd><p>Протокол, выбираемый для передачи запросов на сервер: </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">simple</code>: использовать протокол простых запросов.</p></li><li class="listitem"><p><code class="literal">extended</code>: использовать протокол расширенных запросов.</p></li><li class="listitem"><p><code class="literal">prepared</code>: использовать протокол расширенных запросов с подготовленными операторами.</p></li></ul></div><p> В режиме <code class="literal">prepared</code> <span class="application">pgbench</span> повторно использует результат разбора запроса, начиная со второй итерации, и поэтому работает быстрее, чем в других режимах.</p><p>По умолчанию выбирается протокол простых запросов. (За подробностями обратитесь к <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/protocol" title="Глава 53. Клиент-серверный протокол">Главе&nbsp;53</a>.)</p></dd><dt><span class="term"><code class="option">-n</code><br></span><span class="term"><code class="option">--no-vacuum</code></span></dt><dd><p>Не производить очистку таблиц перед запуском теста. Этот параметр <span class="emphasis"><em>необходим</em></span>, если вы применяете собственный сценарий, не затрагивающий стандартные таблицы <code class="structname">pgbench_accounts</code>, <code class="structname">pgbench_branches</code>, <code class="structname">pgbench_history</code> и <code class="structname">pgbench_tellers</code>.</p></dd><dt><span class="term"><code class="option">-N</code><br></span><span class="term"><code class="option">--skip-some-updates</code></span></dt><dd><p>Запустить встроенный упрощённый скрипт simple-update. Краткий вариант записи <code class="option">-b simple-update</code>.</p></dd><dt><span class="term"><code class="option">-P</code> <em class="replaceable"><code>сек</code></em><br></span><span class="term"><code class="option">--progress=</code><em class="replaceable"><code>сек</code></em></span></dt><dd><p>Выводить отчёт о прогрессе через заданное число секунд (<em class="replaceable"><code>сек</code></em>). Выдаваемый отчёт включает время, прошедшее с момента запуска, скорость (в TPS) с момента предыдущего отчёта, а также среднее время ожидания транзакций, стандартное отклонение и количество неуспешных транзакций с момента последнего отчёта. В режиме ограничения скорости (<code class="option">-R</code>) время ожидания вычисляется относительно назначенного времени запуска транзакции, а не фактического времени её начала, так что оно включает и среднее время отставания от графика. Когда параметр <code class="option">--max-tries</code> включает повторение транзакций после ошибок сериализации/взаимоблокировок, в отчёт добавляется количество повторявшихся транзакций и общее число повторов.</p></dd><dt><span class="term"><code class="option">-r</code><br></span><span class="term"><code class="option">--report-per-command</code></span></dt><dd><p>Выдать следующую статистику по каждой команде после завершения теста: среднюю длительность выполнения операторов (время выполнения с точки зрения клиента), число отказов и повторений вследствие ошибок сериализации и взаимоблокировки в этой команде. Статистика повторений отображается в отчёте, только если параметр <code class="option">--max-tries</code> не равен 1.</p></dd><dt><span class="term"><code class="option">-R</code> <em class="replaceable"><code>скорость передачи</code></em><br></span><span class="term"><code class="option">--rate=</code><em class="replaceable"><code>скорость передачи</code></em></span></dt><dd><p>Выполнять транзакции, ориентируясь на заданную скорость, а не максимально быстро (по умолчанию). Скорость задаётся в транзакциях в секунду. Если заданная скорость превышает максимально возможную, это ограничение скорости не повлияет на результаты.</p><p>Для получения нужной скорости транзакции запускаются со случайными задержками, имеющими распределение Пуассона. При этом запланированное время запуска отсчитывается от начального времени, а не от завершения предыдущей транзакции. Это означает, что если какие-то транзакции отстанут от изначально рассчитанного времени завершения, всё же возможно, что последующие нагонят график.</p><p>В режиме ограничения скорости время ожидания транзакций, выводимое по итогам тестирования, вычисляется, исходя из запланированного времени запуска, так что в него входит время, которое очередная транзакция должна была ждать завершения предыдущей транзакции. Это время называется временем отклонения от графика, и его среднее и максимальное значения выводятся отдельно. Время ожидания транзакций с момента их фактического запуска, то есть время, потраченное на выполнение транзакций в базе данных, можно получить, если вычесть время отклонения от графика из времени ожидания транзакций.</p><p>Если ограничение <code class="option">--latency-limit</code> задаётся вместе с <code class="option">--rate</code>, транзакция может заведомо не вписываться в отведённое ей время, если предыдущая транзакция завершится слишком поздно, так как ожидаемое время окончания транзакции отсчитывается от времени запуска по графику. Такие транзакции не передаются серверу, а пропускаются и подсчитываются отдельно.</p><p>Большое значение отклонения от графика свидетельствует о том, что система не успевает выполнять транзакции с заданной скоростью и выбранным числом клиентов и потоков. Когда среднее время ожидания транзакции превышает запланированный интервал между транзакциями, каждая последующая транзакция будет отставать от графика, и чем дольше будет выполняться тестирование, тем больше будет отставание. Когда это наблюдается, нужно уменьшить скорость транзакций.</p></dd><dt><span class="term"><code class="option">-s</code> <em class="replaceable"><code>коэффициент_масштаба</code></em><br></span><span class="term"><code class="option">--scale=</code><em class="replaceable"><code>коэффициент_масштаба</code></em></span></dt><dd><p>Показать заданный коэффициент масштаба в выводе <span class="application">pgbench</span>. Для встроенных тестов это не требуется; корректный коэффициент масштаба будет получен в результате подсчёта строк в таблице <code class="structname">pgbench_branches</code>. Однако при использовании только нестандартных тестов (запускаемых с ключом <code class="option">-f</code>) без этого параметра в качестве коэффициента масштаба будет выводиться 1.</p></dd><dt><span class="term"><code class="option">-S</code><br></span><span class="term"><code class="option">--select-only</code></span></dt><dd><p>Запустить встроенный скрипт select-only (только выборка). Краткий вариант записи <code class="option">-b select-only</code>.</p></dd><dt><span class="term"><code class="option">-t</code> <em class="replaceable"><code>транзакции</code></em><br></span><span class="term"><code class="option">--transactions=</code><em class="replaceable"><code>транзакции</code></em></span></dt><dd><p>Число транзакций, которые будут выполняться каждым клиентом (по умолчанию 10).</p></dd><dt><span class="term"><code class="option">-T</code> <em class="replaceable"><code>секунды</code></em><br></span><span class="term"><code class="option">--time=</code><em class="replaceable"><code>секунды</code></em></span></dt><dd><p>Выполнять тест с ограничением по времени (в секундах), а не по числу транзакций для каждого клиента. Параметры <code class="option">-t</code> и <code class="option">-T</code> являются взаимоисключающими.</p></dd><dt><span class="term"><code class="option">-v</code><br></span><span class="term"><code class="option">--vacuum-all</code></span></dt><dd><p>Очищать все четыре стандартные таблицы перед запуском теста. Без параметров <code class="option">-n</code> и <code class="option">-v</code> <span class="application">pgbench</span> будет очищать от старых записей таблицы <code class="structname">pgbench_tellers</code> и <code class="structname">pgbench_branches</code>, а также опустошать <code class="structname">pgbench_history</code>.</p></dd><dt><span class="term"><code class="option">--aggregate-interval=<em class="replaceable"><code>секунды</code></em></code></span></dt><dd><p>Длительность интервала агрегации (в секундах). Может использоваться только с ключом <code class="option">-l</code>. С данным параметром в протокол выводится сводка по интервалам, как описано ниже.</p></dd><dt><span class="term"><code class="option">--failures-detailed</code></span></dt><dd><p>Выдавать информацию об ошибках в протоколе по транзакциям и в протоколе с агрегированием, а также в основном отчёте и в отчётах по скриптам, группируя её по типам: </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>ошибки сериализации;</p></li><li class="listitem"><p>ошибки взаимоблокировки;</p></li></ul></div><p> За подробностями обратитесь к <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#FAILURES-AND-RETRIES" title="Повторы и отказы из-за ошибок сериализации/взаимоблокировки">Повторы и отказы из-за ошибок сериализации/взаимоблокировки</a>.</p></dd><dt><span class="term"><code class="option">--log-prefix=<em class="replaceable"><code>префикс</code></em></code></span></dt><dd><p>Задать префикс имён файлов для файлов протоколов, создаваемых с ключом <code class="option">--log</code>. Префикс по умолчанию — <code class="literal">pgbench_log</code>.</p></dd><dt><span class="term"><code class="option">--max-tries=<em class="replaceable"><code>число_попыток</code></em></code></span></dt><dd><p>Разрешить повторение транзакций с ошибками сериализации/взаимоблокировки и установить максимальное число попыток выполнения транзакций. Этот параметр можно комбинировать с параметром <code class="option">--latency-limit</code>, который ограничивает общее время всех попыток для транзакции; также заметьте, что нельзя выбрать неограниченное количество попыток (<code class="literal">--max-tries=0</code>), не определив <code class="option">--latency-limit</code> или <code class="option">--time</code>. Значение по умолчанию — 1, то есть транзакции с ошибками сериализации/взаимоблокировки повторяться не будут. Подробнее о повторении таких транзакций рассказывается в <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#FAILURES-AND-RETRIES" title="Повторы и отказы из-за ошибок сериализации/взаимоблокировки">Повторы и отказы из-за ошибок сериализации/взаимоблокировки</a>.</p></dd><dt><span class="term"><code class="option">--progress-timestamp</code></span></dt><dd><p>При отображении прогресса (с параметром <code class="option">-P</code>) выводить текущее время (в формате Unix), а не количество секунд от начала запуска. Время задаётся в секундах с точностью до миллисекунд. Это помогает сравнивать журналы, записываемые разными средствами.</p></dd><dt><span class="term"><code class="option">--random-seed=</code><em class="replaceable"><code>затравка</code></em></span></dt><dd><p>Установить затравку для генератора случайных чисел. Инициализирует генератор случайных чисел, который затем выдаёт последовательность начальных состояний отдельных генераторов для каждого потока. <em class="replaceable"><code>затравка</code></em> может принимать следующие значения: <code class="literal">time</code> (по умолчанию, затравка базируется на текущем времени), <code class="literal">rand</code> (задействовать надёжный генератор случайных чисел или выдать ошибку, если он отсутствует) или беззнаковое десятичное число. Генератор случайных чисел может вызываться явно из скрипта pgbench (функциями <code class="literal">random...</code>) или неявно (например, для планирования выполнения транзакций с ключом <code class="option">--rate</code>). В случае установки значения явным образом оно выводится в терминале. Любое значение, допустимое в качестве <em class="replaceable"><code>затравки</code></em>, можно также задать в переменной окружения <code class="literal">PGBENCH_RANDOM_SEED</code>. Чтобы заданная затравка применялась во всех возможных случаях использования, задайте этот параметр первым или установите переменную окружения.</p><p>Явное указание определённой затравки позволяет точно воспроизвести выполнение <code class="command">pgbench</code> в части использования случайных чисел. Так как случайное состояние поддерживается внутри потока, это означает, что выполнение <code class="command">pgbench</code> при одинаковых запусках повторится в точности, если один поток используется одним клиентом и отсутствуют внешние зависимости или зависимости от данных. Со статистической точки зрения точное воспроизведение выполнения нежелательно, так как это может скрыть вариативность производительности или показать завышенную скорость, например из-за попадания в одни и те же страницы данных. Однако это может быть очень полезно для отладки, например, для повторения редкого сценария, приводящего к ошибке. Используйте данную возможность обдуманно.</p></dd><dt><span class="term"><code class="option">--sampling-rate=<em class="replaceable"><code>скорость передачи</code></em></code></span></dt><dd><p>Частота выборки для записи данных в протокол, изменяя которую можно уменьшить объём протокола. При указании этого параметра в протокол выводится информация только о заданном проценте транзакций. Со значением 1.0 в нём будут отмечаться все транзакции, а с 0.05 только 5%.</p><p>Обрабатывая протокол, не забудьте учесть частоту выборки. Например, вычисляя скорость (TPS), вам нужно будет соответственно умножить содержащиеся в нём числа (например, с частотой выборки 0.01 вы получите только 1/100 фактической скорости).</p></dd><dt><span class="term"><code class="option">--show-script=</code><em class="replaceable"><code>имя_скрипта</code></em></span></dt><dd><p>Вывести код встроенного скрипта <em class="replaceable"><code>имя_скрипта</code></em> в stderr и сразу завершиться.</p></dd><dt><span class="term"><code class="option">--verbose-errors</code></span></dt><dd><p>Выводить сообщения обо всех ошибках сериализации/взаимоблокировки и отказах (ошибках, после которых транзакция не повторяется) с информацией о том, как ограничиваются повторения и насколько достигается ограничение. (Учтите, что в этом случае объём вывода может значительно увеличиться.) За подробностями обратитесь к <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#FAILURES-AND-RETRIES" title="Повторы и отказы из-за ошибок сериализации/взаимоблокировки">Повторы и отказы из-за ошибок сериализации/взаимоблокировки</a>.</p></dd></dl></div></div><div class="refsect2" id="PGBENCH-COMMON-OPTIONS"><h3>Общие параметры</h3><p>Программа <span class="application">pgbench</span> также принимает общие аргументы командой строки, определяющие параметры подключения: </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-h</code> <em class="replaceable"><code>компьютер</code></em><br></span><span class="term"><code class="option">--host=</code><em class="replaceable"><code>компьютер</code></em></span></dt><dd><p>Адрес сервера баз данных</p></dd><dt><span class="term"><code class="option">-p</code> <em class="replaceable"><code>порт</code></em><br></span><span class="term"><code class="option">--port=</code><em class="replaceable"><code>порт</code></em></span></dt><dd><p>Номер порта сервера баз данных</p></dd><dt><span class="term"><code class="option">-U</code> <em class="replaceable"><code>имя_пользователя</code></em><br></span><span class="term"><code class="option">--username=</code><em class="replaceable"><code>имя_пользователя</code></em></span></dt><dd><p>Имя пользователя для подключения</p></dd><dt><span class="term"><code class="option">-V</code><br></span><span class="term"><code class="option">--version</code></span></dt><dd><p>Вывести версию <span class="application">pgbench</span> и завершиться.</p></dd><dt><span class="term"><code class="option">-?</code><br></span><span class="term"><code class="option">--help</code></span></dt><dd><p>Вывести справку об аргументах командной строки <span class="application">pgbench</span> и завершиться.</p></dd></dl></div></div></div><div class="refsect1" id="id-1.9.4.11.7"><h2>Код завершения</h2><p>В случае успешного выполнения возвращается код 0. Код завершения 1 указывает на статичные проблемы, например ошибки в параметрах командной строки или внутренние ошибки, которые не должны происходить. В случае ошибок, возникающих на ранних этапах при запуске теста, например при сбое начального подключения, кодом завершения также будет 1. При возникновении ошибок во время выполнения, например при обращении к базе данных или выполнении скрипта, выдаётся код завершения 2. В последнем случае <span class="application">pgbench</span> выведет частичные результаты.</p></div><div class="refsect1" id="id-1.9.4.11.8"><h2>Переменные окружения</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="envar">PGDATABASE</code><br></span><span class="term"><code class="envar">PGHOST</code><br></span><span class="term"><code class="envar">PGPORT</code><br></span><span class="term"><code class="envar">PGUSER</code></span></dt><dd><p>Параметры подключения по умолчанию.</p></dd></dl></div><p>Эта утилита, как и большинство других утилит <span class="productname">Postgres Pro</span>, использует переменные среды, поддерживаемые <span class="application">libpq</span> (см. <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/libpq-envars" title="32.15. Переменные окружения">Раздел&nbsp;32.15</a>).</p><p>Переменная окружения <code class="envar">PG_COLOR</code> управляет использованием цвета в диагностических сообщениях. Возможные значения: <code class="literal">always</code> (всегда), <code class="literal">auto</code> (автоматически) и <code class="literal">never</code> (никогда).</p></div><div class="refsect1" id="id-1.9.4.11.9"><h2>Замечания</h2><div class="refsect2" id="TRANSACTIONS-AND-SCRIPTS"><h3>Каково содержание <span class="quote">«<span class="quote">транзакции</span>»</span>, которую выполняет <span class="application">pgbench</span>?</h3><p>Программа <span class="application">pgbench</span> выполняет тестовые скрипты, выбирая их случайным образом из заданного списка. Это могут быть как встроенные скрипты, задаваемые аргументами <code class="option">-b</code>, так и пользовательские, задаваемые аргументами <code class="option">-f</code>. Для каждого скрипта можно задать относительный вес после <code class="literal">@</code>, чтобы скорректировать вероятность его выбора. По умолчанию вес считается равным <code class="literal">1</code>. Скрипты с весом <code class="literal">0</code> игнорируются.</p><p>Стандартный встроенный скрипт (также вызываемый с ключом <code class="option">-b tpcb-like</code>) выдаёт семь команд в транзакции со случайно выбранными <code class="literal">aid</code>, <code class="literal">tid</code>, <code class="literal">bid</code> и <code class="literal">delta</code>. Его сценарий написан по мотивам теста производительности TPC-B, но это не собственно TPC-B, потому он называется так.</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><code class="literal">BEGIN;</code></p></li><li class="listitem"><p><code class="literal">UPDATE pgbench_accounts SET abalance = abalance + :delta WHERE aid = :aid;</code></p></li><li class="listitem"><p><code class="literal">SELECT abalance FROM pgbench_accounts WHERE aid = :aid;</code></p></li><li class="listitem"><p><code class="literal">UPDATE pgbench_tellers SET tbalance = tbalance + :delta WHERE tid = :tid;</code></p></li><li class="listitem"><p><code class="literal">UPDATE pgbench_branches SET bbalance = bbalance + :delta WHERE bid = :bid;</code></p></li><li class="listitem"><p><code class="literal">INSERT INTO pgbench_history (tid, bid, aid, delta, mtime) VALUES (:tid, :bid, :aid, :delta, CURRENT_TIMESTAMP);</code></p></li><li class="listitem"><p><code class="literal">END;</code></p></li></ol></div><p>При выборе встроенного скрипта <code class="literal">simple-update</code> (или указании <code class="option">-N</code>) шаги 4 и 5 исключаются из транзакции. Это позволяет избежать конкуренции при обращении к этим таблицам, но тест становится ещё менее похожим на TPC-B.</p><p>При выборе встроенного теста <code class="literal">select-only</code> (или указании <code class="option">-S</code>) выполняется только <code class="command">SELECT</code>.</p></div><div class="refsect2" id="id-1.9.4.11.9.3"><h3>Пользовательские скрипты</h3><p>Программа <span class="application">pgbench</span> поддерживает запуск пользовательских сценариев оценки производительности, позволяя заменять стандартный скрипт транзакции (описанный выше) скриптом, считываемым из файла (с параметром <code class="option">-f</code>). В этом случае <span class="quote">«<span class="quote">транзакцией</span>»</span> считается одно выполнение данного скрипта.</p><p>Файл скрипта содержит одну или несколько команд SQL, разделённых точкой с запятой. Пустые строки и строки, начинающиеся с <code class="literal">--</code>, игнорируются. В файлах скриптов также могут содержаться <span class="quote">«<span class="quote">метакоманды</span>»</span>, которые обрабатывает сама программа <span class="application">pgbench</span>, как описано ниже.</p><div class="note"><h3 class="title">Примечание</h3><p>До версии <span class="productname">Postgres Pro</span> 9.6, SQL-команды в файлах скриптов завершались символами перевода строки, и поэтому они не могли занимать несколько строк. Теперь для разделения последовательных команд SQL <span class="emphasis"><em>требуется</em></span> добавлять точку с запятой (хотя без неё можно обойтись в конце SQL-команды, за которой идёт метакоманда). Если вам нужно создать файл скрипта, работающий и со старыми версиями <span class="application">pgbench</span>, записывайте каждую команду SQL в отдельной строке и завершайте её точкой с запятой.</p><p>Предполагается, что скрипты pgbench не содержат незавершённых блоков SQL-транзакций. Если по достижении клиентом конца скрипта окажется, что блок последней транзакции не завершён, работа клиента будет прервана.</p></div><p>Для файлов скриптов реализован простой механизм подстановки переменных. Имя переменных должно состоять из букв (буквы могут быть не латинскими), подчёркиваний и цифр (но цифра не может быть первым символом). Переменные можно задать в командной строке параметрами <code class="option">-D</code>, описанными выше, или метакомандами, рассматриваемыми ниже. Помимо переменных, которые можно установить параметрами командной строки <code class="option">-D</code>, есть несколько автоматически устанавливаемых переменных; они перечислены в <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#PGBENCH-AUTOMATIC-VARIABLES" title="Таблица 292. Автоматические переменные pgbench">Таблице&nbsp;292</a>. Если значение этих переменных задаётся в параметре <code class="option">-D</code>, оно переопределяет автоматическое значение. Когда значение переменной определено, его можно вставить в команду SQL, написав <code class="literal">:</code><em class="replaceable"><code>имя_переменной</code></em>. Каждый клиентский сеанс, если их несколько, получает собственный набор переменных. В одном операторе <span class="application">pgbench</span> поддерживает до 255 ссылок на переменные.</p><div class="table" id="PGBENCH-AUTOMATIC-VARIABLES"><p class="title"><strong>Таблица 292. Автоматические переменные pgbench</strong></p><div class="table-contents"><table border="1" class="table" summary="Автоматические переменные pgbench"><colgroup><col class="col1"><col class="col2"></colgroup><thead><tr><th>Переменная</th><th>Описание</th></tr></thead><tbody><tr><td><code class="literal">client_id</code></td><td>уникальное число, идентифицирующее клиентский сеанс (начиная с нуля)</td></tr><tr><td><code class="literal">default_seed</code></td><td>затравка, по умолчанию используемая в функциях, вычисляющих хеш и псевдослучайные перестановки</td></tr><tr><td><code class="literal">random_seed</code></td><td>затравка генератора случайных чисел (в отсутствие переопределения с ключом <code class="option">-D</code>)</td></tr><tr><td><code class="literal">scale</code></td><td>текущий коэффициент масштаба</td></tr></tbody></table></div></div><br class="table-break"><p>Метакоманды в скрипте начинаются с обратной косой черты (<code class="literal">\</code>) и обычно продолжаются до конца строки, хотя их можно переносить на следующую строку последовательностью символов: обратная косая, возврат каретки. Аргументы метакоманд разделяются пробелами. Поддерживаемые метакоманды представлены ниже:</p><div class="variablelist"><dl class="variablelist"><dt id="PGBENCH-METACOMMAND-GSET"><a href="https://postgrespro.ru/docs/postgrespro/15/pgbench#PGBENCH-METACOMMAND-GSET" class="autolink"></a><span class="term"> <code class="literal">\gset [<em class="replaceable"><code>префикс</code></em>]</code> <code class="literal">\aset [<em class="replaceable"><code>префикс</code></em>]</code> </span></dt><dd><p>Эти команды могут применяться для завершения SQL-запросов вместо завершающей точки с запятой (<code class="literal">;</code>).</p><p>Когда используется команда <code class="literal">\gset</code>, ожидается, что предыдущий SQL-запрос возвратит одну строку; значения столбцов будут сохранены в переменные с именами столбцов, а если указан <em class="replaceable"><code>префикс</code></em>, он будет добавлен в эти имена.</p><p>Когда используется команда <code class="literal">\aset</code>, значения столбцов всех совмещённых SQL-запросов (разделённых <code class="literal">\;</code>) будут сохранены в переменные, названные по именам столбцов с добавлением <em class="replaceable"><code>префикса</code></em>, если он задан. Если запрос не возвращает в результате строки, присваивание не выполняется и в этом можно убедиться, проверив, существует ли переменная. Если запрос возвращает несколько строк, в переменных сохраняется последнее значение.</p><p>Команды <code class="literal">\gset</code> и <code class="literal">\aset</code> нельзя использовать в конвейерном режиме, так как ко времени, когда результаты запросов могут понадобиться команде, они ещё не будут готовы.</p><p>В следующем примере итоговый баланс счёта из первого запроса попадает в переменную <em class="replaceable"><code>abalance</code></em>, а целочисленные значения из третьего запроса попадают в переменные <em class="replaceable"><code>p_two</code></em> и <em class="replaceable"><code>p_three</code></em>. Результат второго запроса отбрасывается. Результаты двух последних запросов объединяются и сохраняются в переменных <em class="replaceable"><code>four</code></em> и <em class="replaceable"><code>five</code></em>. </p><pre class="programlisting">UPDATE pgbench_accounts
+  SET abalance = abalance + :delta
+  WHERE aid = :aid
+  RETURNING abalance \gset
+-- объединяет два запроса
+SELECT 1 \;
+SELECT 2 AS two, 3 AS three \gset p_
+SELECT 4 AS four \; SELECT 5 AS five \aset</pre></dd><dt><span class="term"><code class="literal">\if</code> <em class="replaceable"><code>выражение</code></em><br></span><span class="term"><code class="literal">\elif</code> <em class="replaceable"><code>выражение</code></em><br></span><span class="term"><code class="literal">\else</code><br></span><span class="term"><code class="literal">\endif</code></span></dt><dd><p>Эта группа команд реализует вкладываемые условные блоки, подобные <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/app-psql#PSQL-METACOMMAND-IF"><code class="literal">\if</code> <em class="replaceable"><code>выражение</code></em></a> в <code class="literal">psql</code>. В качестве условных задаются те же выражения, что и в <code class="literal">\set</code>, при этом истинным считается любое ненулевое значение.</p></dd><dt id="PGBENCH-METACOMMAND-SET"><a href="https://postgrespro.ru/docs/postgrespro/15/pgbench#PGBENCH-METACOMMAND-SET" class="autolink"></a><span class="term"> <code class="literal">\set <em class="replaceable"><code>имя_переменной</code></em> <em class="replaceable"><code>выражение</code></em></code> </span></dt><dd><p>Устанавливает для переменной <em class="replaceable"><code>имя_переменной</code></em> значение, вычисленное из <em class="replaceable"><code>выражения</code></em>. Выражение может содержать константу <code class="literal">NULL</code>, логические константы <code class="literal">TRUE</code> и <code class="literal">FALSE</code>, целочисленные константы (например, <code class="literal">5432</code>), константы с плавающей точкой (например, <code class="literal">3.14159</code>), ссылки на переменные <code class="literal">:</code><em class="replaceable"><code>имя_переменной</code></em>, <a class="link" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#PGBENCH-BUILTIN-OPERATORS" title="Встроенные операторы">операторы</a> с обычными для SQL приоритетами и ассоциативностью, <a class="link" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#PGBENCH-BUILTIN-FUNCTIONS" title="Встроенные функции">вызовы функций</a>, <a class="link" href="https://postgrespro.ru/docs/postgrespro/15/functions-conditional#FUNCTIONS-CASE" title="9.18.1. CASE">общие условные SQL-выражения <code class="token">CASE</code></a>, а также скобки.</p><p>Функции и большинство операторов возвращают <code class="literal">NULL</code> для аргументов <code class="literal">NULL</code>.</p><p>При проверке условия отличные от нуля числовые значения воспринимаются как <code class="literal">TRUE</code>, а числовые нулевые значения и <code class="literal">NULL</code> — как <code class="literal">FALSE</code>.</p><p>При переполнениях, вызванных слишком большими числами с плавающей точкой или целыми, а также целочисленными операциями (<code class="literal">+</code>, <code class="literal">-</code>, <code class="literal">*</code> и <code class="literal">/</code>), выдаются ошибки.</p><p>Если в конструкции <code class="token">CASE</code> отсутствует заключительное <code class="token">ELSE</code>, значением по умолчанию считается <code class="literal">NULL</code>.</p><p>Примеры: </p><pre class="programlisting">\set ntellers 10 * :scale
+\set aid (1021 * random(1, 100000 * :scale)) % \
+           (100000 * :scale) + 1
+\set divx CASE WHEN :x &lt;&gt; 0 THEN :y/:x ELSE NULL END</pre></dd><dt><span class="term"> <code class="literal">\sleep <em class="replaceable"><code>номер</code></em> [ us | ms | s ]</code> </span></dt><dd><p>Приостанавливает выполнение скрипта на заданное число микросекунд (<code class="literal">us</code>), миллисекунд (<code class="literal">ms</code>) или секунд (<code class="literal">s</code>). Когда единицы не указываются, подразумеваются секунды. Здесь <em class="replaceable"><code>число</code></em> может быть целочисленной константой или ссылкой <code class="literal">:</code><em class="replaceable"><code>имя_переменной</code></em> на переменную с целочисленным значением.</p><p>Пример: </p><pre class="programlisting">\sleep 10 ms</pre></dd><dt><span class="term"> <code class="literal">\setshell <em class="replaceable"><code>имя_переменной</code></em> <em class="replaceable"><code>команда</code></em> [ <em class="replaceable"><code>аргумент</code></em> ... ]</code> </span></dt><dd><p>Присваивает переменной <em class="replaceable"><code>имя_переменной</code></em> результат команды оболочки <em class="replaceable"><code>команда</code></em> с указанными <em class="replaceable"><code>аргументами</code></em>. Эта команда должна просто выдать целочисленное значение в стандартный вывод.</p><p>Здесь <em class="replaceable"><code>команда</code></em> и каждый <em class="replaceable"><code>аргумент</code></em> может быть либо текстовой константой, либо ссылкой на переменную <code class="literal">:</code><em class="replaceable"><code>имя_переменной</code></em>. Если вы хотите записать <em class="replaceable"><code>аргумент</code></em>, начинающийся с двоеточия, добавьте перед <em class="replaceable"><code>аргументом</code></em> дополнительное двоеточие.</p><p>Пример: </p><pre class="programlisting">\setshell назначаемая_переменная команда строковый_аргумент :переменная ::строка_начинающаяся_двоеточием</pre></dd><dt><span class="term"> <code class="literal">\shell <em class="replaceable"><code>команда</code></em> [ <em class="replaceable"><code>аргумент</code></em> ... ]</code> </span></dt><dd><p>Действует так же, как и <code class="literal">\setshell</code>, но не учитывает результат команды.</p><p>Пример: </p><pre class="programlisting">\shell команда строковый_аргумент :переменная ::строка_начинающаяся_двоеточием</pre></dd><dt id="PGBENCH-METACOMMAND-PIPELINE"><a href="https://postgrespro.ru/docs/postgrespro/15/pgbench#PGBENCH-METACOMMAND-PIPELINE" class="autolink"></a><span class="term"><code class="literal">\startpipeline</code><br></span><span class="term"><code class="literal">\endpipeline</code></span></dt><dd><p>Эти команды отделяют начало и конец конвейера SQL-команд. В конвейерном режиме команды передаются серверу, не дожидаясь результатов предыдущих команд. За подробностями обратитесь к <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/libpq-pipeline-mode" title="32.5. Конвейерный режим">Разделу&nbsp;32.5</a>. Для конвейерного режима должен использоваться расширенный протокол запросов.</p></dd></dl></div></div><div class="refsect2" id="PGBENCH-BUILTIN-OPERATORS"><h3>Встроенные операторы</h3><p>Перечисленные в <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#PGBENCH-OPERATORS" title="Таблица 293. Операторы pgbench">Таблице&nbsp;293</a> арифметические, битовые и логические операторы, а также операторы сравнения встроены в <span class="application">pgbench</span> и могут применяться в выражениях в <a class="link" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#PGBENCH-METACOMMAND-SET"><code class="literal">\set</code></a>. Эти операторы приведены в порядке возрастания их приоритета. Не считая явно отмеченных исключений, операторы с двумя числовыми аргументами будут выдавать результат в типе с плавающей точкой, если какой-либо аргумент имеет такой тип; в противном случае результат будет целочисленным.</p><div class="table" id="PGBENCH-OPERATORS"><p class="title"><strong>Таблица 293. Операторы pgbench</strong></p><div class="table-contents"><table border="1" class="table" summary="Операторы pgbench"><colgroup><col></colgroup><thead><tr><th class="func_table_entry"><p class="func_signature">Оператор</p><p>Описание</p><p>Примеры</p></th></tr></thead><tbody><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>логическое_значение</code></em> <code class="literal">OR</code> <em class="replaceable"><code>логическое_значение</code></em> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Логическое ИЛИ</p><p><code class="literal">5 or 0</code> → <code class="returnvalue">TRUE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>логическое_значение</code></em> <code class="literal">AND</code> <em class="replaceable"><code>логическое_значение</code></em> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Логическое И</p><p><code class="literal">3 and 0</code> → <code class="returnvalue">FALSE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="literal">NOT</code> <em class="replaceable"><code>логическое_значение</code></em> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Логическое НЕ</p><p><code class="literal">not false</code> → <code class="returnvalue">TRUE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>логическое_значение</code></em> <code class="literal">IS [NOT] (NULL|TRUE|FALSE)</code> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Логические проверки значений</p><p><code class="literal">1 is null</code> → <code class="returnvalue">FALSE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>значение</code></em> <code class="literal">ISNULL|NOTNULL</code> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Проверки на NULL</p><p><code class="literal">1 notnull</code> → <code class="returnvalue">TRUE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">=</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Равно</p><p><code class="literal">5 = 4</code> → <code class="returnvalue">FALSE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">&lt;&gt;</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Не равно</p><p><code class="literal">5 &lt;&gt; 4</code> → <code class="returnvalue">TRUE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">!=</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Не равно</p><p><code class="literal">5 != 5</code> → <code class="returnvalue">FALSE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">&lt;</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Меньше</p><p><code class="literal">5 &lt; 4</code> → <code class="returnvalue">FALSE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">&lt;=</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Меньше или равно</p><p><code class="literal">5 &lt;= 4</code> → <code class="returnvalue">FALSE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">&gt;</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Больше</p><p><code class="literal">5 &gt; 4</code> → <code class="returnvalue">TRUE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">&gt;=</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>логическое_значение</code></em></code></p><p>Больше или равно</p><p><code class="literal">5 &gt;= 4</code> → <code class="returnvalue">TRUE</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>integer</code></em> <code class="literal">|</code> <em class="replaceable"><code>integer</code></em> → <code class="returnvalue"><em class="replaceable"><code>integer</code></em></code></p><p>Битовое ИЛИ</p><p><code class="literal">1 | 2</code> → <code class="returnvalue">3</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>integer</code></em> <code class="literal">#</code> <em class="replaceable"><code>integer</code></em> → <code class="returnvalue"><em class="replaceable"><code>integer</code></em></code></p><p>Битовое исключающее ИЛИ</p><p><code class="literal">1 # 3</code> → <code class="returnvalue">2</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>integer</code></em> <code class="literal">&amp;</code> <em class="replaceable"><code>integer</code></em> → <code class="returnvalue"><em class="replaceable"><code>integer</code></em></code></p><p>Битовое И</p><p><code class="literal">1 &amp; 3</code> → <code class="returnvalue">1</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="literal">~</code> <em class="replaceable"><code>integer</code></em> → <code class="returnvalue"><em class="replaceable"><code>integer</code></em></code></p><p>Битовое НЕ</p><p><code class="literal">~ 1</code> → <code class="returnvalue">-2</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>integer</code></em> <code class="literal">&lt;&lt;</code> <em class="replaceable"><code>integer</code></em> → <code class="returnvalue"><em class="replaceable"><code>integer</code></em></code></p><p>Битовый сдвиг влево</p><p><code class="literal">1 &lt;&lt; 2</code> → <code class="returnvalue">4</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>integer</code></em> <code class="literal">&gt;&gt;</code> <em class="replaceable"><code>integer</code></em> → <code class="returnvalue"><em class="replaceable"><code>integer</code></em></code></p><p>Битовый сдвиг вправо</p><p><code class="literal">8 &gt;&gt; 2</code> → <code class="returnvalue">2</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">+</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>номер</code></em></code></p><p>Сложение</p><p><code class="literal">5 + 4</code> → <code class="returnvalue">9</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">-</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>номер</code></em></code></p><p>Вычитание</p><p><code class="literal">3 - 2.0</code> → <code class="returnvalue">1.0</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">*</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>номер</code></em></code></p><p>Умножение</p><p><code class="literal">5 * 4</code> → <code class="returnvalue">20</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>номер</code></em> <code class="literal">/</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>номер</code></em></code></p><p>Деление (если оба аргумента целочисленные, результат округляется в сторону нуля)</p><p><code class="literal">5 / 3</code> → <code class="returnvalue">1</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><em class="replaceable"><code>integer</code></em> <code class="literal">%</code> <em class="replaceable"><code>integer</code></em> → <code class="returnvalue"><em class="replaceable"><code>integer</code></em></code></p><p>Остаток от деления</p><p><code class="literal">3 % 2</code> → <code class="returnvalue">1</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="literal">-</code> <em class="replaceable"><code>номер</code></em> → <code class="returnvalue"><em class="replaceable"><code>номер</code></em></code></p><p>Смена знака</p><p><code class="literal">- 2.0</code> → <code class="returnvalue">-2.0</code></p></td></tr></tbody></table></div></div><br class="table-break"></div><div class="refsect2" id="PGBENCH-BUILTIN-FUNCTIONS"><h3>Встроенные функции</h3><p>Функции, перечисленные в <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#PGBENCH-FUNCTIONS" title="Таблица 294. Функции pgbench">Таблице&nbsp;294</a>, встроены в <span class="application">pgbench</span> и могут применяться в выражениях в метакоманде <a class="link" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#PGBENCH-METACOMMAND-SET"><code class="literal">\set</code></a>.</p><div class="table" id="PGBENCH-FUNCTIONS"><p class="title"><strong>Таблица 294. Функции pgbench</strong></p><div class="table-contents"><table border="1" class="table" summary="Функции pgbench"><colgroup><col></colgroup><thead><tr><th class="func_table_entry"><p class="func_signature">Функция</p><p>Описание</p><p>Примеры</p></th></tr></thead><tbody><tr><td class="func_table_entry"><p class="func_signature"><code class="function">abs</code> ( <em class="replaceable"><code>число</code></em> ) → <code class="returnvalue"></code> тип аргумента</p><p>Модуль числа (абсолютное значение)</p><p><code class="literal">abs(-17)</code> → <code class="returnvalue">17</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">debug</code> ( <em class="replaceable"><code>число</code></em> ) → <code class="returnvalue"></code> тип аргумента</p><p>Выводит аргумент в <span class="systemitem">stderr</span> и выдаёт его.</p><p><code class="literal">debug(5432.1)</code> → <code class="returnvalue">5432.1</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">double</code> ( <em class="replaceable"><code>число</code></em> ) → <code class="returnvalue">double</code></p><p>Приводит аргумент к типу с плавающей точкой.</p><p><code class="literal">double(5432)</code> → <code class="returnvalue">5432.0</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">exp</code> ( <em class="replaceable"><code>число</code></em> ) → <code class="returnvalue">double</code></p><p>Экспонента (<code class="literal">e</code> возводится в заданную степень)</p><p><code class="literal">exp(1.0)</code> → <code class="returnvalue">2.718281828459045</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">greatest</code> ( <em class="replaceable"><code>число</code></em> [<span class="optional">, <code class="literal">...</code></span>] ) → <code class="returnvalue"></code> <code class="type">double</code> при наличии аргумента(ов) double, иначе — <code class="type">integer</code></p><p>Выбирает наибольшее значение среди аргументов.</p><p><code class="literal">greatest(5, 4, 3, 2)</code> → <code class="returnvalue">5</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">hash</code> ( <em class="parameter"><code>значение</code></em> [<span class="optional">, <em class="parameter"><code>затравка</code></em></span>] ) → <code class="returnvalue">integer</code></p><p>Псевдоним <code class="function">hash_murmur2</code>.</p><p><code class="literal">hash(10, 5432)</code> → <code class="returnvalue">-5817877081768721676</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">hash_fnv1a</code> ( <em class="parameter"><code>значение</code></em> [<span class="optional">, <em class="parameter"><code>затравка</code></em></span>] ) → <code class="returnvalue">integer</code></p><p>Вычисляет хеш по алгоритму <a class="ulink" href="https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function" target="_top">FNV-1a</a>.</p><p><code class="literal">hash_fnv1a(10, 5432)</code> → <code class="returnvalue">-7793829335365542153</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">hash_murmur2</code> ( <em class="parameter"><code>значение</code></em> [<span class="optional">, <em class="parameter"><code>затравка</code></em></span>] ) → <code class="returnvalue">integer</code></p><p>Вычисляет хеш по алгоритму <a class="ulink" href="https://en.wikipedia.org/wiki/MurmurHash" target="_top">MurmurHash2</a>.</p><p><code class="literal">hash_murmur2(10, 5432)</code> → <code class="returnvalue">-5817877081768721676</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">int</code> ( <em class="replaceable"><code>число</code></em> ) → <code class="returnvalue">integer</code></p><p>Приводит аргумент к целочисленному типу.</p><p><code class="literal">int(5.4 + 3.8)</code> → <code class="returnvalue">9</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">least</code> ( <em class="replaceable"><code>число</code></em> [<span class="optional">, <code class="literal">...</code></span>] ) → <code class="returnvalue"></code> <code class="type">double</code> при наличии аргумента(ов) double, иначе — <code class="type">integer</code></p><p>Выбирает наименьшее значение среди аргументов.</p><p><code class="literal">least(5, 4, 3, 2.1)</code> → <code class="returnvalue">2.1</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">ln</code> ( <em class="replaceable"><code>число</code></em> ) → <code class="returnvalue">double</code></p><p>Натуральный логарифм</p><p><code class="literal">ln(2.718281828459045)</code> → <code class="returnvalue">1.0</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">mod</code> ( <em class="replaceable"><code>целое</code></em>, <em class="replaceable"><code>целое</code></em> ) → <code class="returnvalue">integer</code></p><p>Остаток от деления</p><p><code class="literal">mod(54, 32)</code> → <code class="returnvalue">22</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">permute</code> ( <em class="parameter"><code>i</code></em>, <em class="parameter"><code>size</code></em> [, <em class="parameter"><code>seed</code></em> ] ) → <code class="returnvalue">integer</code></p><p>Переставленное значение <em class="parameter"><code>i</code></em> в диапазоне <code class="literal">[0, size)</code>, то есть позиция <em class="parameter"><code>i</code></em> (по модулю <em class="parameter"><code>size</code></em>) в псевдослучайной перестановке целых чисел <code class="literal">0...size-1</code>, полученной с затравкой <em class="parameter"><code>seed</code></em>, см. ниже.</p><p><code class="literal">permute(0, 4)</code> → <code class="returnvalue">целое между 0 и 3</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">pi</code> () → <code class="returnvalue">double</code></p><p>Приближённое значение <span class="symbol_font">π</span></p><p><code class="literal">pi()</code> → <code class="returnvalue">3.1415926535​8979323846</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">pow</code> ( <em class="parameter"><code>x</code></em>, <em class="parameter"><code>y</code></em> ) → <code class="returnvalue">double</code></p><p class="func_signature"><code class="function">power</code> ( <em class="parameter"><code>x</code></em>, <em class="parameter"><code>y</code></em> ) → <code class="returnvalue">double</code></p><p>Возводит <em class="parameter"><code>x</code></em> в степень <em class="parameter"><code>y</code></em></p><p><code class="literal">pow(2.0, 10)</code> → <code class="returnvalue">1024.0</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">random</code> ( <em class="parameter"><code>lb</code></em>, <em class="parameter"><code>ub</code></em> ) → <code class="returnvalue">integer</code></p><p>Выдаёт случайное целое число с равномерным распределением в интервале <code class="literal">[lb, ub]</code>.</p><p><code class="literal">random(1, 10)</code> → <code class="returnvalue">целое между 1 и 10</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">random_exponential</code> ( <em class="parameter"><code>lb</code></em>, <em class="parameter"><code>ub</code></em>, <em class="parameter"><code>parameter</code></em> ) → <code class="returnvalue">integer</code></p><p>Выдаёт случайное целое число с экспоненциальным распределением в интервале <code class="literal">[lb, ub]</code>, см. ниже.</p><p><code class="literal">random_exponential(1, 10, 3.0)</code> → <code class="returnvalue">целое между 1 и 10</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">random_gaussian</code> ( <em class="parameter"><code>lb</code></em>, <em class="parameter"><code>ub</code></em>, <em class="parameter"><code>parameter</code></em> ) → <code class="returnvalue">integer</code></p><p>Выдаёт целое число с распределением Гаусса в интервале <code class="literal">[lb, ub]</code>, см. ниже.</p><p><code class="literal">random_gaussian(1, 10, 2.5)</code> → <code class="returnvalue">целое между 1 и 10</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">random_zipfian</code> ( <em class="parameter"><code>lb</code></em>, <em class="parameter"><code>ub</code></em>, <em class="parameter"><code>parameter</code></em> ) → <code class="returnvalue">integer</code></p><p>Выдаёт целое число с распределением Ципфа в интервале <code class="literal">[lb, ub]</code>, см. ниже.</p><p><code class="literal">random_zipfian(1, 10, 1.5)</code> → <code class="returnvalue">целое между 1 и 10</code></p></td></tr><tr><td class="func_table_entry"><p class="func_signature"><code class="function">sqrt</code> ( <em class="replaceable"><code>число</code></em> ) → <code class="returnvalue">double</code></p><p>Квадратный корень</p><p><code class="literal">sqrt(2.0)</code> → <code class="returnvalue">1.414213562</code></p></td></tr></tbody></table></div></div><br class="table-break"><p>Функция <code class="literal">random</code> выдаёт значения с равномерным распределением, то есть вероятности получения всех чисел в интервале равны. Функции <code class="literal">random_exponential</code>, <code class="literal">random_gaussian</code> и <code class="literal">random_zipfian</code> требуют указания дополнительного параметра типа double, определяющего точную форму распределения.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Для экспоненциального распределения <em class="replaceable"><code>parameter</code></em> управляет распределением, обрезая быстро спадающее экспоненциальное распределение в точке <em class="replaceable"><code>parameter</code></em>, а затем это распределение проецируется на целые числа между границами. Точнее говоря, с </p><div class="literallayout"><p><br> f(x)&nbsp;=&nbsp;exp(-parameter&nbsp;*&nbsp;(x&nbsp;-&nbsp;min)&nbsp;/&nbsp;(max&nbsp;-&nbsp;min&nbsp;+&nbsp;1))&nbsp;/&nbsp;(1&nbsp;-&nbsp;exp(-parameter))<br></p></div><p> значение <em class="replaceable"><code>i</code></em> между <em class="replaceable"><code>min</code></em> и <em class="replaceable"><code>max</code></em> выдаётся с вероятностью: <code class="literal">f(i) - f(i + 1)</code>.</p><p>Интуиция подсказывает, что чем больше <em class="replaceable"><code>parameter</code></em>, тем чаще будут выдаваться значения, близкие к <em class="replaceable"><code>min</code></em>, и тем реже значения, близкие к <em class="replaceable"><code>max</code></em>. Чем <em class="replaceable"><code>parameter</code></em> ближе к 0, тем более плоским (более равномерным) будет распределение. В грубом приближении при таком распределении наиболее частый 1% значений в диапазоне рядом с <em class="replaceable"><code>min</code></em> выдаётся <em class="replaceable"><code>parameter</code></em>% времени. Значение <em class="replaceable"><code>parameter</code></em> должно быть строго положительным.</p></li><li class="listitem"><p>Для распределения Гаусса по интервалу строится обычное нормальное распределение (классическая кривая Гаусса в форме колокола) и этот интервал обрезается в точке <code class="literal">-parameter</code> слева и <code class="literal">+parameter</code> справа. Вероятнее всего при таком распределении выдаются значения из середины интервала. Точнее говоря, если <code class="literal">PHI(x)</code> — функция распределения нормальной случайной величины со средним значением <code class="literal">mu</code>, равным <code class="literal">(max + min) / 2.0</code>, и </p><div class="literallayout"><p><br> f(x)&nbsp;=&nbsp;PHI(2.0&nbsp;*&nbsp;parameter&nbsp;*&nbsp;(x&nbsp;-&nbsp;mu)&nbsp;/&nbsp;(max&nbsp;-&nbsp;min&nbsp;+&nbsp;1))&nbsp;/<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2.0&nbsp;*&nbsp;PHI(parameter)&nbsp;-&nbsp;1)<br></p></div><p> тогда значение <em class="replaceable"><code>i</code></em> между <em class="replaceable"><code>min</code></em> и <em class="replaceable"><code>max</code></em> включительно выдаётся с вероятностью: <code class="literal">f(i + 0.5) - f(i - 0.5)</code>. Интуиция подсказывает, что чем больше <em class="replaceable"><code>parameter</code></em>, тем чаще будут выдаваться значения в середине интервала, и тем реже значения у границ <em class="replaceable"><code>min</code></em> и <em class="replaceable"><code>max</code></em>. Около 67% значений будут выдаваться из среднего интервала <code class="literal">1.0 / parameter</code>, то есть плюс/минус <code class="literal">0.5 / parameter</code> от среднего значения, и 95% из среднего интервала <code class="literal">2.0 / parameter</code>, то есть плюс/минус <code class="literal">1.0 / parameter</code> от среднего значения; например, если <em class="replaceable"><code>parameter</code></em> равен 4.0, 67% значений выдаются из средней четверти (1.0 / 4.0) интервала (то есть от <code class="literal">3.0 / 8.0</code> до <code class="literal">5.0 / 8.0</code>) и 95% из средней половины (<code class="literal">2.0 / 4.0</code>) интервала (из второй и третьей четвертей). Значение <em class="replaceable"><code>parameter</code></em> не может быть меньше 2.0.</p></li><li class="listitem"><p>Функция <code class="literal">random_zipfian</code> генерирует ограниченное распределение по закону Ципфа. <em class="replaceable"><code>parameter</code></em> определяет, насколько неравномерно распределение. Чем больше <em class="replaceable"><code>parameter</code></em>, тем чаще выдаются значения, близкие к началу интервала. Это распределение таково, что при диапазоне, начинающемся с 1, отношение вероятности получить <em class="replaceable"><code>k</code></em> к вероятности получения <em class="replaceable"><code>k+1</code></em> равняется <code class="literal">((<em class="replaceable"><code>k</code></em>+1)/<em class="replaceable"><code>k</code></em>)**<em class="replaceable"><code>parameter</code></em></code>. Например, <code class="literal">random_zipfian(1, ..., 2.5)</code> будет выдавать число <code class="literal">1</code> примерно в <code class="literal">(2/1)**2.5 = 5.66</code> раза чаще, чем число <code class="literal">2</code>, а оно, в свою очередь, будет выдаваться примерно в <code class="literal">(3/2)**2.5 = 2.76</code> раза чаще, чем <code class="literal">3</code>, и так далее.</p><p>Это распределение реализовано в <span class="application">pgbench</span> по материалу книги «Non-Uniform Random Variate Generation» («Генерация неравномерно распределённых случайных чисел» Люк Деврой, стр. 550-551, Springer 1986. Вследствие ограничений алгоритма <em class="replaceable"><code>parameter</code></em> может принимать значения только в интервале [1.001, 1000].</p></li></ul></div><div class="note"><h3 class="title">Примечание</h3><p>Разрабатывая тест производительности, выбирающий строки неравномерно, учтите, что выбираемые строки могут коррелировать с другими данными, например, идентификаторами, выдаваемыми последовательностями, или физическим расположением строк, а это может искажать оценки производительности.</p><p>Чтобы избежать этого, можно использовать функцию <code class="function">permute</code> для перемешивания выбранных строк и устранения таких корреляций, либо выполнить другие дополнительные операции, дающие подобный эффект.</p></div><p>Функции хеширования <code class="literal">hash</code>, <code class="literal">hash_murmur2</code> и <code class="literal">hash_fnv1a</code> принимают на вход хешируемое значение и необязательный параметр с затравкой. Если значение затравки не задаётся, используется значение переменной <code class="literal">:default_seed</code>, которая инициализируется случайным числом (если не задаётся явно ключом командной строки <code class="literal">-D</code>).</p><p>Функция <code class="literal">permute</code> принимает входное значение, размер и необязательный параметр с затравкой. Она получает псевдослучайную перестановку целых чисел в диапазоне <code class="literal">[0, размер)</code> и возвращает индекс входного значения в этой перестановке. Выбираемая перестановка зависит от затравки; по умолчанию затравкой будет значение <code class="literal">:default_seed</code>. В отличие от функций вычисления хеша, функция <code class="literal">permute</code> гарантирует отсутствие пропусков и наложений в выходных значениях. Входные значения, лежащие за границами интервала, пересчитываются по модулю размера. Если значение размера не положительное, эта функция выдаёт ошибку. Функцию <code class="function">permute</code> можно использовать для выравнивания результатов функций, выдающих неравномерно распределённые случайные числа, таких как <code class="literal">random_zipfian</code> или <code class="literal">random_exponential</code>, чтобы чаще выдаваемые значения не создавали корреляции. Например, следующий скрипт <span class="application">pgbench</span> эмулирует возможную реальную нагрузку, типичную для социальных медиа- и блог-платформ, где несколько пользователей генерируют львиную долю нагрузки: </p><pre class="programlisting">\set size 1000000
+\set r random_zipfian(1, :size, 1.07)
+\set k 1 + permute(:r, :size)</pre><p> В некоторых случаях требуются другие разнообразные распределения, не коррелирующие друг с другом, и тогда может быть полезно дополнительно указать затравку: </p><pre class="programlisting">\set k1 1 + permute(:r, :size, :default_seed + 123)
+\set k2 1 + permute(:r, :size, :default_seed + 321)</pre><p> Примерно такого же эффекта можно добиться, используя функцию <code class="function">hash</code>: </p><pre class="programlisting">\set size 1000000
+\set r random_zipfian(1, 100 * :size, 1.07)
+\set k 1 + abs(hash(:r)) % :size</pre><p> Но так как <code class="function">hash</code> может порождать коллизии, некоторые значения окажутся пропущенными, а другие будут встречаться чаще других, при том что в исходном распределении этого не наблюдалось.</p><p>В качестве примера взгляните на встроенное определение транзакции типа TPC-B: </p><pre class="programlisting">\set aid random(1, 100000 * :scale)
+\set bid random(1, 1 * :scale)
+\set tid random(1, 10 * :scale)
+\set delta random(-5000, 5000)
+BEGIN;
+UPDATE pgbench_accounts SET abalance = abalance + :delta WHERE aid = :aid;
+SELECT abalance FROM pgbench_accounts WHERE aid = :aid;
+UPDATE pgbench_tellers SET tbalance = tbalance + :delta WHERE tid = :tid;
+UPDATE pgbench_branches SET bbalance = bbalance + :delta WHERE bid = :bid;
+INSERT INTO pgbench_history (tid, bid, aid, delta, mtime) VALUES (:tid, :bid, :aid, :delta, CURRENT_TIMESTAMP);
+END;</pre><p> С таким скриптом транзакция на каждой итерации будет обращаться к разным, случайно выбираемым строкам. (Этот пример показывает, почему важно, чтобы в каждом клиентском сеансе были собственные переменные — в противном случае они не будут независимо обращаться к разным строкам.)</p></div><div class="refsect2" id="id-1.9.4.11.9.6"><h3>Протоколирование транзакций</h3><p>С параметром <code class="option">-l</code> (но без <code class="option">--aggregate-interval</code>), <span class="application">pgbench</span> записывает информацию о каждой транзакции в протокол. Этот файл протокола будет называться <code class="filename"><em class="replaceable"><code>префикс</code></em>.<em class="replaceable"><code>nnn</code></em></code>, где <em class="replaceable"><code>префикс</code></em> по умолчанию — <code class="literal">pgbench_log</code>, а <em class="replaceable"><code>nnn</code></em> — PID процесса <span class="application">pgbench</span>. Префикс можно сменить, воспользовавшись ключом <code class="option">--log-prefix</code>. Если параметр <code class="option">-j</code> равен 2 или выше, будет создано несколько рабочих потоков, и каждый будет записывать отдельный протокол. Первый рабочий процесс будет использовать файл с тем же именем, что и в стандартном случае с одним потоком, а файлы остальных потоков будут называться <code class="filename"><em class="replaceable"><code>префикс</code></em>.<em class="replaceable"><code>nnn</code></em>.<em class="replaceable"><code>mmm</code></em></code>, где <em class="replaceable"><code>mmm</code></em> — последовательный номер рабочего процесса, начиная с 1.</p><p>Каждая строка в файле протокола описывает одну транзакцию. Она содержит следующие поля, разделённые пробелами: </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="replaceable"><code>код_клиента</code></em></span></dt><dd><p>идентифицирует клиентский сеанс, в котором выполнялась транзакция</p></dd><dt><span class="term"><em class="replaceable"><code>число_транзакций</code></em></span></dt><dd><p>показывает, сколько SQL-транзакций было выполнено в этом сеансе</p></dd><dt><span class="term"><em class="replaceable"><code>длительность</code></em></span></dt><dd><p>общее время транзакции, в микросекундах</p></dd><dt><span class="term"><em class="replaceable"><code>номер_скрипта</code></em></span></dt><dd><p>показывает, какой файл скрипта использовался (это полезно при указании нескольких скриптов ключами <code class="option">-f</code> и <code class="option">-b</code>)</p></dd><dt><span class="term"><em class="replaceable"><code>время_эпохи</code></em></span></dt><dd><p>отметка времени в формате Unix, показывающая, когда транзакция была завершена</p></dd><dt><span class="term"><em class="replaceable"><code>время_мкс</code></em></span></dt><dd><p>микросекунды в отметке времени, показывающей, когда транзакция была завершена</p></dd><dt><span class="term"><em class="replaceable"><code>отставание_от_графика</code></em></span></dt><dd><p>задержка начала транзакции, которая представляет собой разницу между запланированным временем запуска транзакции и фактическим временем запуска, в микросекундах (выводится, только когда указан параметр <code class="option">--rate</code>)</p></dd><dt><span class="term"><em class="replaceable"><code>повторные_попытки</code></em></span></dt><dd><p>число повторений транзакции после ошибок сериализации или взаимоблокировки (выводится, только когда <code class="option">--max-tries</code> не равен одному)</p></dd></dl></div><p>Когда одновременно применяются параметры <code class="option">--rate</code> и <code class="option">--latency-limit</code>, в поле <em class="replaceable"><code>длительность</code></em> для пропущенных транзакций выводится <code class="literal">skipped</code>. Если транзакция завершилась неудачей, в столбце <em class="replaceable"><code>длительность</code></em> выводится <code class="literal">failed</code>. Когда применяется параметр <code class="option">--failures-detailed</code>, вместо <em class="replaceable"><code>длительности</code></em> для неуспешной транзакции будет указано <code class="literal">serialization</code> или <code class="literal">deadlock</code> в зависимости от типа ошибки (за дополнительными сведениями обратитесь к <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#FAILURES-AND-RETRIES" title="Повторы и отказы из-за ошибок сериализации/взаимоблокировки">Повторы и отказы из-за ошибок сериализации/взаимоблокировки</a>).</p><p>Фрагмент протокола, полученного при выполнении с одним клиентом: </p><pre class="screen">0 199 2241 0 1175850568 995598
+0 200 2465 0 1175850568 998079
+0 201 2513 0 1175850569 608
+0 202 2038 0 1175850569 2663
+</pre><p> Ещё один пример с <code class="literal">--rate=100</code> и <code class="literal">--latency-limit=5</code> (обратите внимание на дополнительный столбец <em class="replaceable"><code>отставание_от_графика</code></em>): </p><pre class="screen">0 81 4621 0 1412881037 912698 3005
+0 82 6173 0 1412881037 914578 4304
+0 83 skipped 0 1412881037 914578 5217
+0 83 skipped 0 1412881037 914578 5099
+0 83 4722 0 1412881037 916203 3108
+0 84 4142 0 1412881037 918023 2333
+0 85 2465 0 1412881037 919759 740
+</pre><p> В этом примере транзакция 82 опоздала, так как её длительность (6.173 мс) превысила ограничение в 5 мс. Следующие две транзакции были пропущены, так как было слишком поздно их начинать.</p><p>Ниже показан фрагмент протокола с отказами и повторными попытками при максимальном числе попыток, равном 10 (обратите внимание на дополнительный столбец <em class="replaceable"><code>повторные_попытки</code></em>): </p><pre class="screen">3 0 47423 0 1499414498 34501 3
+3 1 8333 0 1499414498 42848 0
+3 2 8358 0 1499414498 51219 0
+4 0 72345 0 1499414498 59433 6
+1 3 41718 0 1499414498 67879 4
+1 4 8416 0 1499414498 76311 0
+3 3 33235 0 1499414498 84469 3
+0 0 failed 0 1499414498 84905 9
+2 0 failed 0 1499414498 86248 9
+3 4 8307 0 1499414498 92788 0
+</pre><p>Если применяется параметр <code class="option">--failures-detailed</code>, в графе <em class="replaceable"><code>длительность</code></em> выводится тип ошибки: </p><pre class="screen">3 0 47423 0 1499414498 34501 3
+3 1 8333 0 1499414498 42848 0
+3 2 8358 0 1499414498 51219 0
+4 0 72345 0 1499414498 59433 6
+1 3 41718 0 1499414498 67879 4
+1 4 8416 0 1499414498 76311 0
+3 3 33235 0 1499414498 84469 3
+0 0 serialization 0 1499414498 84905 9
+2 0 serialization 0 1499414498 86248 9
+3 4 8307 0 1499414498 92788 0
+</pre><p>Когда проводится длительное тестирование с большим количеством транзакций, файлы протоколов могут быть очень объёмными. Чтобы в них записывалась только случайная выборка транзакций, можно запустить команду с параметром <code class="option">--sampling-rate</code>.</p></div><div class="refsect2" id="id-1.9.4.11.9.7"><h3>Протоколирование с агрегированием</h3><p>С параметром <code class="option">--aggregate-interval</code> для файлов протоколов используется другой формат. Каждая строка протокола описывает один интервал агрегации. Она содержит следующие поля, разделённые пробелами: </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="replaceable"><code>начало_интервала</code></em></span></dt><dd><p>начальное время интервала в формате времени Unix</p></dd><dt><span class="term"><em class="replaceable"><code>число_транзакций</code></em></span></dt><dd><p>количество транзакций в данном интервале</p></dd><dt><span class="term"><em class="replaceable"><code>сумма_длительности</code></em></span></dt><dd><p>суммарная длительность транзакций</p></dd><dt><span class="term"><em class="replaceable"><code>сумма_длительности_2</code></em></span></dt><dd><p>сумма квадратов длительностей транзакций</p></dd><dt><span class="term"><em class="replaceable"><code>мин_длительность</code></em></span></dt><dd><p>минимальная длительность транзакции</p></dd><dt><span class="term"><em class="replaceable"><code>макс_длительность</code></em></span></dt><dd><p>максимальная длительность транзакции</p></dd><dt><span class="term"><em class="replaceable"><code>сумма_задержки</code></em></span></dt><dd><p>сумма задержек начала транзакций (ноль, если не указан параметр <code class="option">--rate</code>)</p></dd><dt><span class="term"><em class="replaceable"><code>сумма_задержки_2</code></em></span></dt><dd><p>сумма квадратов задержек начала транзакций (ноль, если не указан параметр <code class="option">--rate</code>)</p></dd><dt><span class="term"><em class="replaceable"><code>мин_задержка</code></em></span></dt><dd><p>минимальная задержка начала транзакции (ноль, если не указан параметр <code class="option">--rate</code>)</p></dd><dt><span class="term"><em class="replaceable"><code>макс_задержка</code></em></span></dt><dd><p>максимальная задержка начала транзакции (ноль, если не указан параметр <code class="option">--rate</code>)</p></dd><dt><span class="term"><em class="replaceable"><code>пропущено_транзакций</code></em></span></dt><dd><p>число транзакций, пропущенных из-за того, что было слишком поздно их начинать (ноль, если не заданы параметры <code class="option">--rate</code> и <code class="option">--latency-limit</code>)</p></dd><dt><span class="term"><em class="replaceable"><code>повторено_транзакций</code></em></span></dt><dd><p>число транзакций, которые были повторены (ноль, если не указан параметр <code class="option">--max-tries</code>)</p></dd><dt><span class="term"><em class="replaceable"><code>повторные_попытки</code></em></span></dt><dd><p>число повторов после ошибок сериализации или взаимоблокировок (ноль, если параметр <code class="option">--max-tries</code> не единица)</p></dd><dt><span class="term"><em class="replaceable"><code>сбои_сериализации</code></em></span></dt><dd><p>число транзакций, которые были прерваны из-за ошибок сериализации и не были повторены впоследствии (ноль, если не указан параметр <code class="option">--failures-detailed</code>)</p></dd><dt><span class="term"><em class="replaceable"><code>сбои_взаимоблокировки</code></em></span></dt><dd><p>число транзакций, которые были прерваны из-за ошибок взаимоблокировки и не были повторены впоследствии (ноль, если не указан параметр <code class="option">--failures-detailed</code>)</p></dd></dl></div><p>Ниже представлен пример вывода с этим параметром: </p><pre class="screen"><strong class="userinput"><code>pgbench --aggregate-interval=10 --time=20 --client=10 --log --rate=1000 --latency-limit=10 --failures-detailed --max-tries=10 test</code></strong>
+
+1650260552 5178 26171317 177284491527 1136 44462 2647617 7321113867 0 9866 64 7564 28340 4148 0
+1650260562 4808 25573984 220121792172 1171 62083 3037380 9666800914 0 9998 598 7392 26621 4527 0
+</pre><p>Заметьте, что простой формат протокола (без агрегирования) показывает, какой скрипт использовался для каждой транзакции, в отличие от формата с агрегированием. Таким образом, если вам нужны подобные сведения, но в разрезе скриптов, вам придётся агрегировать данные самостоятельно.</p></div><div class="refsect2" id="id-1.9.4.11.9.8"><h3>Отчёт по операторам</h3><p>С параметром <code class="option">-r</code> программа <span class="application">pgbench</span> собирает следующую статистику по каждому оператору: </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">latency</code> — время выполнения для каждого оператора. <span class="application">pgbench</span> выводит среднее по всем успешным попыткам выполнения оператора.</p></li><li class="listitem"><p>Число отказов для данного оператора. За дополнительной информацией обратитесь к <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#FAILURES-AND-RETRIES" title="Повторы и отказы из-за ошибок сериализации/взаимоблокировки">Повторы и отказы из-за ошибок сериализации/взаимоблокировки</a>.</p></li><li class="listitem"><p>Число повторов после ошибок сериализации или взаимоблокировки в этом операторе. За дополнительными сведениями обратитесь к <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#FAILURES-AND-RETRIES" title="Повторы и отказы из-за ошибок сериализации/взаимоблокировки">Повторы и отказы из-за ошибок сериализации/взаимоблокировки</a>.</p></li></ul></div><p>В отчёте отображается статистика повторов, только если параметр <code class="option">--max-tries</code> не равен 1.</p><p>Все эти значения вычисляются для каждого оператора, выполняемого каждым клиентом, и выдаются после завершения теста.</p><p>Для скрипта по умолчанию вывод будет выглядеть примерно так: </p><pre class="screen">starting vacuum...end.
+transaction type: &lt;builtin: TPC-B (sort of)&gt;
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 1
+maximum number of tries: 1
+number of transactions per client: 1000
+number of transactions actually processed: 10000/10000
+number of failed transactions: 0 (0.000%)
+number of transactions above the 50.0 ms latency limit: 1311/10000 (13.110 %)
+latency average = 28.488 ms
+latency stddev = 21.009 ms
+initial connection time = 69.068 ms
+tps = 346.224794 (without initial connection time)
+statement latencies in milliseconds and failures:
+   0.012  0  \set aid random(1, 100000 * :scale)
+   0.002  0  \set bid random(1, 1 * :scale)
+   0.002  0  \set tid random(1, 10 * :scale)
+   0.002  0  \set delta random(-5000, 5000)
+   0.319  0  BEGIN;
+   0.834  0  UPDATE pgbench_accounts SET abalance = abalance + :delta WHERE aid = :aid;
+   0.641  0  SELECT abalance FROM pgbench_accounts WHERE aid = :aid;
+  11.126  0  UPDATE pgbench_tellers SET tbalance = tbalance + :delta WHERE tid = :tid;
+  12.961  0  UPDATE pgbench_branches SET bbalance = bbalance + :delta WHERE bid = :bid;
+   0.634  0  INSERT INTO pgbench_history (tid, bid, aid, delta, mtime) VALUES (:tid, :bid, :aid, :delta, CURRENT_TIMESTAMP);
+   1.957  0  END;
+</pre><p> Ещё один пример вывода для скрипта по умолчанию с выбором сериализуемого уровня изоляции (<code class="command">PGOPTIONS='-c default_transaction_isolation=serializable' pgbench ...</code>): </p><pre class="screen">starting vacuum...end.
+transaction type: &lt;builtin: TPC-B (sort of)&gt;
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 1
+maximum number of tries: 10
+number of transactions per client: 1000
+number of transactions actually processed: 6317/10000
+number of failed transactions: 3683 (36.830%)
+number of transactions retried: 7667 (76.670%)
+total number of retries: 45339
+number of transactions above the 50.0 ms latency limit: 106/6317 (1.678 %)
+latency average = 17.016 ms
+latency stddev = 13.283 ms
+initial connection time = 45.017 ms
+tps = 186.792667 (without initial connection time)
+statement latencies in milliseconds, failures and retries:
+  0.006     0      0  \set aid random(1, 100000 * :scale)
+  0.001     0      0  \set bid random(1, 1 * :scale)
+  0.001     0      0  \set tid random(1, 10 * :scale)
+  0.001     0      0  \set delta random(-5000, 5000)
+  0.385     0      0  BEGIN;
+  0.773     0      1  UPDATE pgbench_accounts SET abalance = abalance + :delta WHERE aid = :aid;
+  0.624     0      0  SELECT abalance FROM pgbench_accounts WHERE aid = :aid;
+  1.098   320   3762  UPDATE pgbench_tellers SET tbalance = tbalance + :delta WHERE tid = :tid;
+  0.582  3363  41576  UPDATE pgbench_branches SET bbalance = bbalance + :delta WHERE bid = :bid;
+  0.465     0      0  INSERT INTO pgbench_history (tid, bid, aid, delta, mtime) VALUES (:tid, :bid, :aid, :delta, CURRENT_TIMESTAMP);
+  1.933     0      0  END;
+</pre><p>Если задействуется несколько файлов скриптов, все статистические данные выводятся отдельно для каждого файла.</p><p>Учтите, что сбор дополнительных временных показателей влечёт некоторые издержки и приводит к снижению средней скорости и, как результат, падению TPS. На сколько именно снизится скорость, во многом зависит от платформы и оборудования. Хороший способ оценить, каковы эти издержки — сравнить средние значения TPS, получаемые с подсчётом времени операторов и без такого подсчёта.</p></div><div class="refsect2" id="FAILURES-AND-RETRIES"><h3>Повторы и отказы из-за ошибок сериализации/взаимоблокировки</h3><p>При выполнении <span class="application">pgbench</span> могут возникать ошибки трёх основных типов: </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Ошибки основной программы. Они являются наиболее серьёзными и всегда приводят к немедленному завершению <span class="application">pgbench</span> с соответствующим сообщением об ошибке. К ним относятся: </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>ошибки, возникшие при запуске <span class="application">pgbench</span> (например, из-за недопустимого значения параметра);</p></li><li class="listitem"><p>ошибки в режиме инициализации (например, запрос из встроенного скрипта не смог создать таблицу);</p></li><li class="listitem"><p>ошибки перед запуском потоков (например, не удалось подключиться к серверу базы данных, синтаксическая ошибка в метакоманде, сбой при создании потока);</p></li><li class="listitem"><p>непредвиденные внутренние ошибки <span class="application">pgbench</span>.</p></li></ul></div></li><li class="listitem"><p>Ошибки при обслуживании клиентов в потоке выполнения (например, клиент не смог установить соединение с сервером, сокет для подключения клиента к серверу стал недействительным). В таких случаях все клиенты этого потока останавливаются, а другие потоки продолжают работать.</p></li><li class="listitem"><p>Непосредственно клиентские ошибки. Они вызывают немедленное завершение <span class="application">pgbench</span> с соответствующим сообщением только в случае непредвиденной внутренней ошибки <span class="application">pgbench</span>. В других случаях они могут вызвать лишь прерывание работы проблемного клиента, другие клиенты продолжат работу (однако некоторые клиентские ошибки обрабатываются без прерывания работы клиента и информация о них выдаётся отдельно, см. ниже). Далее в этом разделе ошибками считаются только непосредственно клиентские ошибки, а не внутренние ошибки <span class="application">pgbench</span>.</p></li></ul></div><p>Работа клиента прерывается в случае серьёзной ошибки; например, если было потеряно соединение с сервером баз данных или достигнут конец скрипта, а последняя транзакция не завершена. Кроме того, работа клиента прерывается, если выполнение команды SQL или метакоманды завершается сбоем по причинам, отличным от ошибок сериализации или взаимоблокировки. Если же команда SQL завершается ошибкой сериализации или взаимоблокировки, работа клиента продолжается. В таких случаях текущая транзакция откатывается, при этом клиентские переменные получают значения, которые они имели до начала этой транзакции (предполагается, что один скрипт транзакции содержит только одну транзакцию; за подробностями обратитесь к <a class="xref" href="https://postgrespro.ru/docs/postgrespro/15/pgbench#TRANSACTIONS-AND-SCRIPTS" title="Каково содержание «транзакции», которую выполняет pgbench?">Каково содержание «транзакции», которую выполняет pgbench?</a>). Транзакции с ошибками сериализации или взаимоблокировки повторяются после отката до успешного завершения либо до максимального числа повторений (которое задаётся параметром <code class="option">--max-tries</code>), максимальной длительности повторений (которая задаётся параметром <code class="option">--latency-limit</code>) или до истечения времени теста (это время задаётся параметром <code class="option">--time</code>). Если последняя попытка завершается неудачей, транзакция считается неудачной, но работа клиента не прерывается.</p><div class="note"><h3 class="title">Примечание</h3><p>Если параметр <code class="option">--max-tries</code> не указан, транзакции никогда не повторяются после ошибок сериализации или взаимоблокировки, так как его значение по умолчанию равно 1. Чтобы ограничить только общую длительность попыток, задайте неограниченное количество попыток (<code class="literal">--max-tries=0</code>) и установите параметр <code class="option">--latency-limit</code>. Вы также можете ограничить общую продолжительность теста при неограниченном количестве попыток, используя параметр <code class="option">--time</code>.</p><p>Учтите особенность повторения скриптов, содержащих несколько транзакций: скрипт всегда будет повторяться целиком, так что успешные транзакции в нём могут выполняться многократно.</p><p>Также учтите особенность повторения транзакций, содержащих команды оболочки. В отличие от результатов команд SQL, результаты команд оболочки не отменяются, за исключением значения переменной команды <code class="command">\setshell</code>.</p></div><p>Длительность успешной транзакции включает общее время выполнения транзакции с учётом откатов и повторов. Измеряется длительность только для успешных транзакций и команд.</p><p>Количество неуспешных транзакций выводится в основном отчёте. Если параметр <code class="option">--max-tries</code> не равен 1, основной отчёт также содержит статистику повторов: общее число транзакций, которые повторялись, и общее число повторов всех транзакций. Отчёт по скриптам наследует все эти поля от основного отчёта. Если параметр <code class="option">--max-tries</code> не равен 1, статистика повторных попыток также отображается в отчёте по операторам.</p><p>Если вы хотите, чтобы в протоколе c агрегированием, а также в основном отчёте, отчёте по транзакциям и отчёте по скриптам сбои группировались по базовым типам, используйте параметр <code class="option">--failures-detailed</code>. Если же вы хотите видеть все отдельные ошибки и отказы (ошибки, после которых транзакция не повторяется), а также видеть, как ограничиваются повторения и насколько достигается ограничение, используйте параметр <code class="option">--verbose-errors</code>.</p></div><div class="refsect2" id="id-1.9.4.11.9.10"><h3>Полезные советы</h3><p>Используя <span class="application">pgbench</span>, можно без особого труда получить абсолютно бессмысленные числа. Последуйте приведённым советам, чтобы получить полезные результаты.</p><p>Во-первых, <span class="emphasis"><em>никогда</em></span> не доверяйте тестам, которые выполняются всего несколько секунд. Воспользуйтесь параметром <code class="option">-t</code> и <code class="option">-T</code> и установите время выполнения не меньше нескольких минут, чтобы избавиться от шума в средних значениях. В некоторых случаях для получения воспроизводимых результатов тестирование должно продолжаться несколько часов. Чтобы понять, были ли получены воспроизводимые значения, имеет смысл запустить тестирование несколько раз.</p><p>Для стандартного сценария по типу TPC-B начальный коэффициент масштаба (<code class="option">-s</code>) должен быть не меньше числа клиентов, с каким вы намерены проводить тестирование (<code class="option">-c</code>); в противном случае вы, по большому счёту, будете замерять время конкурентных изменений. Таблица <code class="structname">pgbench_branches</code> содержит всего <code class="option">-s</code> строк, а каждая транзакция хочет изменить одну из них, так что если значение <code class="option">-c</code> превышает <code class="option">-s</code>, это несомненно приведёт к тому, что многие транзакции будут блокироваться другими.</p><p>Стандартный сценарий тестирования также довольно сильно зависит от того, сколько времени прошло с момента инициализации таблиц: накопление неактуальных строк и «мёртвого» пространства в таблицах влияет на результаты. Чтобы правильно оценить результаты, необходимо учитывать, сколько всего изменений было произведено и когда выполнялась очистка. Если же включена автоочистка, это может быть чревато непредсказуемыми изменениями оценок производительности.</p><p>Полезность результатов <span class="application">pgbench</span> также может ограничиваться тем, что тестирование с большим числом клиентских сеансов само по себе нагружает систему. Этого можно избежать, запуская <span class="application">pgbench</span> на другом компьютере, не на сервере баз данных, хотя при этом большое значение имеет скорость сети. Иногда, оценивая производительность одного сервера, полезно запускать даже несколько экземпляров <span class="application">pgbench</span> параллельно, на отдельных клиентских компьютерах.</p></div><div class="refsect2" id="id-1.9.4.11.9.11"><h3>Безопасность</h3><p>Если к базе данных, которая не приведена в соответствие <a class="link" href="https://postgrespro.ru/docs/postgrespro/15/ddl-schemas#DDL-SCHEMAS-PATTERNS" title="5.9.6. Шаблоны использования">шаблону безопасного использования схем</a>, имеют доступ недоверенные пользователи, не запускайте <span class="application">pgbench</span> в этой базе. Программа <span class="application">pgbench</span> использует неполные имена и не настраивает для себя путь поиска.</p></div></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tbody><tr><td align="left" width="40%"><a accesskey="p" href="https://postgrespro.ru/docs/postgrespro/15/app-pgbasebackup" title="pg_basebackup">Пред.</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="https://postgrespro.ru/docs/postgrespro/15/reference-client" title="Клиентские приложения Postgres Pro">Наверх</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="https://postgrespro.ru/docs/postgrespro/15/app-pgconfig" title="pg_config">След.</a></td></tr><tr><td align="left" valign="top" width="40%"><span class="application">pg_basebackup</span>&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="https://postgrespro.ru/docs/postgrespro/15/index" title="Документация к Postgres Pro Standard 15.2.1">Начало</a></td><td align="right" valign="top" width="40%">&nbsp;<span class="application">pg_config</span></td></tr></tbody></table></div></div>
+		
+    </div>
+    <div class="col-md-12 d-none" id="divDocEn"></div>
+</div>
+</div>
+</section>
+
+
+	</div>
+    </main>
+
+	
+<div class="modal fade" id="feedback" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Есть&nbsp;вопросы? Напишите&nbsp;нам!</h5>
+      </div>
+      <div class="modal-body">
+			<input type="text" id="feedback-email" name="email" placeholder="E-mail" required="" msg-empty="Введите e-mail" min-length="3" msg-short="Слишком короткий e-mail" max-length="60" msg-long="Слишком длинный e-mail" regexp="\w+([\-+.&#39;]\w+)*@\w+([\-.]\w+)*\.\w+([\-.]\w+)*" msg-regexp="Некорректный адрес e-mail"><div class="input-error"></div>
+			
+			<input type="text" id="feedback-name" name="name" placeholder="Имя" required="" msg-empty="Введите имя" min-length="3" msg-short="Слишком короткое имя" max-length="60" msg-long="Слишком длинное имя"><div class="input-error"></div>
+			 
+			<textarea id="feedback-message" name="message" placeholder="Ваше сообщение" required="" msg-empty="Введите сообщение" max-length="6000" msg-long="Слишком длинное сообщение" min-length="10" msg-short="Слишком короткое сообщение"></textarea>
+			<div id="feedback-message-length" class="input-error"></div> 
+
+			<label style="  display: inline;cursor: pointer;">
+				<input type="checkbox" id="feedback-agree" name="feedback-agree" required="" msg-empty="Согласие необходимо"> 
+				<div id="feedback-agree-length" class="input-error"></div> 
+				Соглашаюсь с условиями обработки 
+			</label> <span class="dotted" onclick="loadAgreement();">персональных данных</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" style="width: 100%;" onclick="sendFeedback(&#39;feedback&#39;, &#39;message&#39;, &#39;&#39;, &#39;&#39;, &#39;production&#39;)">Отправить</button>
+      </div>
+      
+        
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="popup-message" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+      </div>
+      <div class="modal-body lead  text-center"></div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="popup-flash" tabindex="-1" role="dialog" aria-hidden="true" style="cursor:wait;">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+      </div>
+      <div class="modal-body text-center"></div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="popup-window" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+		<div class="pop-up-close" onclick="closePopupWindow(&#39;#popup-window&#39;);">✖</div>
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+      </div>
+      <div class="modal-body "></div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+
+
+	
+	<form action="https://postgrespro.ru/search/" method="get" role="form" name="search-window" id="search-window" onsubmit="document.body.style.cursor=&#39;progress&#39;;return true;">
+		<input id="qid" name="q">
+		
+			
+				<input type="hidden" id="area-version" name="area" value="version" checked="">
+				<input type="hidden" id="area-product" name="product" value="postgrespro">
+				<input type="hidden" id="area-version" name="version" value="15">
+			
+		
+	</form>
+
+
+<!-- FOOTER -->
+    <footer class="container-fluid">
+ 		<div class="container">
+ 		<div class="row">
+			<div class="about col-lg-3 row" style="margin-bottom:2em;">
+				<div class="col-sm-6 col-lg-12"> 
+					<a href="https://postgrespro.ru/"><img src="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/PostgresPro_logo_white.svg" class="logo" alt="Postgres Pro"></a> 
+	
+					<div class="sociallinks" style="margin-bottom:0.6em;margin-top:2em;"> 
+
+						<div class="sociallinks-item"> 
+							<a href="https://vk.com/public101507899" target="_blank"> 
+							<svg class="t-sociallinks__svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve"><desc>VK</desc><path style="fill:#ffffff;" d="M47.761,24c0,13.121-10.639,23.76-23.76,23.76C10.878,47.76,0.239,37.121,0.239,24c0-13.123,10.639-23.76,23.762-23.76C37.122,0.24,47.761,10.877,47.761,24 M35.259,28.999c-2.621-2.433-2.271-2.041,0.89-6.25c1.923-2.562,2.696-4.126,2.45-4.796c-0.227-0.639-1.64-0.469-1.64-0.469l-4.71,0.029c0,0-0.351-0.048-0.609,0.106c-0.249,0.151-0.414,0.505-0.414,0.505s-0.742,1.982-1.734,3.669c-2.094,3.559-2.935,3.747-3.277,3.524c-0.796-0.516-0.597-2.068-0.597-3.171c0-3.449,0.522-4.887-1.02-5.259c-0.511-0.124-0.887-0.205-2.195-0.219c-1.678-0.016-3.101,0.007-3.904,0.398c-0.536,0.263-0.949,0.847-0.697,0.88c0.31,0.041,1.016,0.192,1.388,0.699c0.484,0.656,0.464,2.131,0.464,2.131s0.282,4.056-0.646,4.561c-0.632,0.347-1.503-0.36-3.37-3.588c-0.958-1.652-1.68-3.481-1.68-3.481s-0.14-0.344-0.392-0.527c-0.299-0.222-0.722-0.298-0.722-0.298l-4.469,0.018c0,0-0.674-0.003-0.919,0.289c-0.219,0.259-0.018,0.752-0.018,0.752s3.499,8.104,7.573,12.23c3.638,3.784,7.764,3.36,7.764,3.36h1.867c0,0,0.566,0.113,0.854-0.189c0.265-0.288,0.256-0.646,0.256-0.646s-0.034-2.512,1.129-2.883c1.15-0.36,2.624,2.429,4.188,3.497c1.182,0.812,2.079,0.633,2.079,0.633l4.181-0.056c0,0,2.186-0.136,1.149-1.858C38.281,32.451,37.763,31.321,35.259,28.999"></path></svg> </a> </div> 
+				
+					</div>
+					<span class="copyright">©  Postgres Pro</span>
+				</div>
+				
+				<div class="col-sm-6 col-lg-12" style="margin-top:2em;">
+					<a href="https://postgrespro.ru/privacy">Политика конфиденциальности</a><br>
+					<a href="https://postgrespro.ru/useragreement">Пользовательское соглашение</a><br>
+					<a href="https://postgrespro.ru/products/postgrespro/eula">Лицензионное соглашение</a><br>
+					<a href="https://postgrespro.ru/media/RUS_EULA_for_cloud_Postgres_Pro_Standard_Postgres_Pro_Enterprise.pdf" target="_blank">Лицензионное соглашение (при использовании в составе облачных сервисов)</a><br>
+					<a href="https://postgrespro.ru/CoC">Кодекс поведения сообщества PostgreSQL</a>
+				</div>
+			</div>
+
+			<nav class="col-lg-9 bottom-menu"> 
+				
+<nav>
+<ul class="row">
+<li class="col-sm-4">
+	<h6>
+	
+		Продукты
+	
+	</h6>
+
+	
+		<ul><li>
+					
+						<a href="https://postgrespro.ru/products/postgrespro/standard">Postgres Pro Standard</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/products/postgrespro/certified">Postgres Pro Certified</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/products/postgrespro/enterprise">Postgres Pro Enterprise</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/products/postgrespro/enterprisecertified">Postgres Pro Enterprise Certified</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/products/1c">Postgres Pro для 1С</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/windows">PostgreSQL для Windows</a>
+					
+				</li></ul>
+	
+</li><li class="col-sm-4">
+	<h6>
+	
+		Образование
+	
+	</h6>
+
+	
+		<ul><li>
+					
+						<a href="https://postgrespro.ru/docs">Документация</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/education/courses">Учебные курсы</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/education/books">Книги</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/education/cert">Сертификация специалистов</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/education/university">Курсы для вузов</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/education">Обучение PostgreSQL</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/education/glossary">Глоссарий</a>
+					
+				</li></ul>
+	
+</li><li class="col-sm-4">
+	<h6>
+	
+		Услуги
+	
+	</h6>
+
+	
+		<ul><li>
+					
+						<a href="https://postgrespro.ru/services/support">Техподдержка СУБД</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/services/migration">Миграция СУБД</a>
+					
+				</li><li>
+					
+						<a href="https://postgrespro.ru/services/audit">Аудит СУБД</a>
+					
+				</li></ul>
+	
+</li></ul>
+</nav>
+
+
+			</nav>
+		</div> 
+    	</div>
+
+		<div id="bottom-bar">
+			<div id="to-top-button" class="float-left animation-opacity" onclick="$(&#39;html, body&#39;).animate({scrollTop: 0});return false;">
+				<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="50px" height="50px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve"> <path style="fill:#0aa7f5;" d="M43.006,47.529H4.964c-2.635,0-4.791-2.156-4.791-4.791V4.697c0-2.635,2.156-4.791,4.791-4.791h38.042 c2.635,0,4.791,2.156,4.791,4.791v38.042C47.797,45.373,45.641,47.529,43.006,47.529z M25.503,16.881l6.994,7.049 c0.583,0.588,1.532,0.592,2.121,0.008c0.588-0.583,0.592-1.533,0.008-2.122l-9.562-9.637c-0.281-0.283-0.664-0.443-1.063-0.443 c0,0,0,0-0.001,0c-0.399,0-0.782,0.159-1.063,0.442l-9.591,9.637c-0.584,0.587-0.583,1.537,0.005,2.121 c0.292,0.292,0.675,0.437,1.058,0.437c0.385,0,0.77-0.147,1.063-0.442L22.5,16.87v19.163c0,0.828,0.671,1.5,1.5,1.5 s1.5-0.672,1.5-1.5L25.503,16.881z"></path> </svg>
+			</div>
+	
+			<div class="pulsate float-right animation-opacity" id="bell">
+				<div class="pulsate-circle" id="bell-run" onclick="$(&#39;#feedback&#39;).modal(&#39;toggle&#39;); return false;"></div>
+				<svg class="icon" width="28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.6 17.5" id="tip" onclick="$(&#39;#feedback&#39;).modal(&#39;toggle&#39;); return false;"><desc>Write</desc><path d="M3.7 17.5v-4.8H2c-1.1 0-2-.9-2-2V2C0 .9.9 0 2 0h14.6c1.1 0 2 .9 2 2v8.8c0 1.1-.9 2-2 2H9l-5.3 4.7zM2 1c-.6 0-1 .4-1 1v8.8c0 .5.4 1 1 1h2.8v3.5l3.8-3.5h8c.5 0 1-.4 1-1V2c0-.5-.4-1-1-1H2z"></path></svg> 
+				<svg class="icon" width="16px" height="16px" viewBox="0 0 23 23" version="1.1" id="close" onclick="$(&#39;#feedback&#39;).modal(&#39;toggle&#39;); return false;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> <desc>Close</desc> <g stroke="none" stroke-width="1" fill="#000" fill-rule="evenodd"> <rect transform="translate(11.313708, 11.313708) rotate(-45.000000) translate(-11.313708, -11.313708) " x="10.3137085" y="-3.6862915" width="2" height="30"></rect> <rect transform="translate(11.313708, 11.313708) rotate(-315.000000) translate(-11.313708, -11.313708) " x="10.3137085" y="-3.6862915" width="2" height="30"></rect> </g> </svg> 
+			</div>
+
+		</div>
+    </footer>
+	
+<script>
+checkJQuery();
+
+$(document).ready( function(){
+	window.lang = 'ru';
+	
+	$(".toggler").click(function(){
+	    $(this).next().slideToggle(150);
+	});
+
+	$("#feedback").on('hide.bs.modal', function (e) {triggerBell(e);});
+	$("#feedback").on('show.bs.modal', function (e) {triggerBell(e);});
+
+	
+
+	whoIam();
+
+	$('ul.nav li.dropdown').hover(function() {
+	  $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeIn(300);
+	}, function() {
+	  $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeOut(300);
+	});
+
+	var input = $('#search-window input')
+	input.focusout(function(e){
+		if (!$.trim($(this).val()).length) {
+			$('#search-window').fadeOut();
+		}
+	});
+	input.keydown(function(eventObject){
+		if( eventObject.which == 27 ){
+			if ($.trim($(this).val()).length) {
+				$(this).val('');
+			} else {
+				$('#search-window').fadeOut();
+			}
+		};
+	});
+	$(document).scroll(function () {
+		if (!$.trim(input.val()).length) {
+			$('#search-window').fadeOut();
+		}
+	});
+	
+	setTimeout(function(){
+		$("#to-top-button").addClass("animation-opacity");
+		$("#bell").addClass("animation-opacity");
+	} , 2000);
+});
+
+function triggerBell(e) {
+	var bell = $('#bell');
+	var bell2 = $('#bell-run');
+
+	bell.toggleClass('active pulsate');
+	bell2.toggleClass('active pulsate-circle');
+	bell.find('#close').toggle();
+}
+
+var formatDate_month=["января","февраля","марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+var formatDate_weekday=["воскресенье","понедельник","вторник","среда","четверг", "пятница","суббота"];
+
+function formatTime(i) {
+	if (i<10) {	i="0" + i; }
+	return i;
+}
+
+function formatDate(s, format) {
+	var d = qwx.iso2time(s);
+	
+	return d.getDate() + " " + formatDate_month[d.getMonth()] + " " + d.getFullYear() + 
+		(format == 'date' ? "" : ", " + formatDate_weekday[d.getDay()] + ", " + 
+		formatTime(d.getHours()) + ":" + formatTime(d.getMinutes()));
+}
+	
+
+
+</script>	
+
+	
+
+	<script type="text/javascript">
+		var m500 = 'Произошла ошибка на сервере';
+		var incorrectFormMessage = 'Форма заполнена неправильно';
+	</script>
+	
+	
+
+
+
+
+<!-- Google tag (gtag.js) -->
+<script async="" src="./Postgres Pro Standard _ Документация_ 15_ pgbench _ Компания Postgres Professional_files/js"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N62NBGE0E2');
+</script>
+
+
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter32485545 = new Ya.Metrika({
+                    id:32485545,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/32485545" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body><script>document.documentElement.style.display = '' </script><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+  div.grammarly-desktop-integration {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+  }
+
+  div.grammarly-desktop-integration:before {
+    content: attr(data-content);
+  }
+</style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>

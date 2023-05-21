@@ -1,5 +1,5 @@
 
-\#PostgreSQL \#perfomance tools
+#PostgreSQL #perfomance tools #pgbench
 ## Pgbench
 
 *TPS – это показатель пропускной способности базы данных, который показывает количество транзакций, обработанных базой данных за одну секунду.*

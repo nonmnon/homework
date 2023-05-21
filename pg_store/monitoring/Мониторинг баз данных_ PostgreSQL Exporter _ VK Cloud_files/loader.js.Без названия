@@ -1,0 +1,30 @@
+(function () {
+    const callbacks = [];
+    const script = document.createElement('script');
+    const STATIC_ROOT = 'https://application.mcs.st/master/static/ac720cf3/';
+    script.src = `${
+        /__%%/.test(STATIC_ROOT) ? 'https://application.mcs.st/master/static/ac720cf3/' : STATIC_ROOT
+    }app/landings.js`;
+    script.crossOrigin = 'anonymous';
+    const promise = {
+        then(callback) {
+            callbacks.push(callback);
+            return promise;
+        },
+    };
+    window.__mcsApi__ = {
+        ready() {
+            return promise;
+        },
+    };
+    const onLoad = function () {
+        window.__mcsApi__.ready().then((api) => {
+            callbacks.forEach((callback) => {
+                callback(api);
+            });
+        });
+    };
+    script.onload = onLoad;
+    script.onerror = onLoad;
+    document.head.appendChild(script);
+})();

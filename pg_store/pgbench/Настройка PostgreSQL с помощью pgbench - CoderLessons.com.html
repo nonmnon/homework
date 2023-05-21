@@ -1,0 +1,2803 @@
+<!DOCTYPE html>
+<!-- saved from url=(0092)https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench -->
+<html lang="ru-RU"><script src="chrome-extension://mjnbclmflcpookeapghfhapeffmpodij/injected_content.js"></script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="yandex-verification" content="750005e4bd523454">
+<meta name="google-site-verification" content="lsKhcjLnJxidzZ9vTRsjc_2ec0wkJ2VTiWaemaBCPhw">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="https://coderlessons.com/xmlrpc.php">
+<link rel="preload" href="https://coderlessons.com/wp-content/themes/saxon/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" type="font/woff2" crossorigin="anonymous">
+
+<!-- This site is optimized with the Yoast SEO plugin v11.7 - https://yoast.com/wordpress/plugins/seo/ -->
+<meta name="description" content="Когда дело доходит до настройки производительности среды, часто первое, с чего начать, - это база данных. Причина этого в том, что большинство приложений">
+<link rel="canonical" href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Настройка PostgreSQL с помощью pgbench - CoderLessons.com">
+<meta property="og:description" content="Когда дело доходит до настройки производительности среды, часто первое, с чего начать, - это база данных. Причина этого в том, что большинство приложений">
+<meta property="og:url" content="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench">
+<meta property="og:site_name" content="CoderLessons.com">
+<meta property="article:section" content="Программирование">
+<meta property="article:published_time" content="2018-12-16T16:57:33+00:00">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:description" content="Когда дело доходит до настройки производительности среды, часто первое, с чего начать, - это база данных. Причина этого в том, что большинство приложений">
+<meta name="twitter:title" content="Настройка PostgreSQL с помощью pgbench - CoderLessons.com">
+<script type="application/ld+json" class="yoast-schema-graph yoast-schema-graph--main">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://coderlessons.com/#website","url":"https://coderlessons.com/","name":"CoderLessons.com","potentialAction":{"@type":"SearchAction","target":"https://coderlessons.com/?s={search_term_string}","query-input":"required name=search_term_string"}},{"@type":"WebPage","@id":"https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench#webpage","url":"https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench","inLanguage":"ru-RU","name":"\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430 PostgreSQL \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e pgbench - CoderLessons.com","isPartOf":{"@id":"https://coderlessons.com/#website"},"datePublished":"2018-12-16T16:57:33+00:00","dateModified":"2018-12-16T16:57:33+00:00","author":{"@id":"https://coderlessons.com/#/schema/person/1d7e9a3a133324f69a0a6d5428f214fe"},"description":"\u041a\u043e\u0433\u0434\u0430 \u0434\u0435\u043b\u043e \u0434\u043e\u0445\u043e\u0434\u0438\u0442 \u0434\u043e \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0441\u0440\u0435\u0434\u044b, \u0447\u0430\u0441\u0442\u043e \u043f\u0435\u0440\u0432\u043e\u0435, \u0441 \u0447\u0435\u0433\u043e \u043d\u0430\u0447\u0430\u0442\u044c, - \u044d\u0442\u043e \u0431\u0430\u0437\u0430 \u0434\u0430\u043d\u043d\u044b\u0445. \u041f\u0440\u0438\u0447\u0438\u043d\u0430 \u044d\u0442\u043e\u0433\u043e \u0432 \u0442\u043e\u043c, \u0447\u0442\u043e \u0431\u043e\u043b\u044c\u0448\u0438\u043d\u0441\u0442\u0432\u043e \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0439"},{"@type":["Person"],"@id":"https://coderlessons.com/#/schema/person/1d7e9a3a133324f69a0a6d5428f214fe","name":"admin","image":{"@type":"ImageObject","@id":"https://coderlessons.com/#authorlogo","url":"https://secure.gravatar.com/avatar/dd1a239715a939fff61b96f0d195677a?s=96&d=mm&r=g","caption":"admin"},"sameAs":[]}]}</script>
+<!-- / Yoast SEO plugin. -->
+
+ <!-- Yandex.RTB -->
+
+<script src="./Настройка PostgreSQL с помощью pgbench - CoderLessons.com_files/context.js.Без названия" async=""></script>  <!-- Yandex.RTB -->
+
+<script src="./Настройка PostgreSQL с помощью pgbench - CoderLessons.com_files/context.js.Без названия" async=""></script> <style id="kirki-css-vars">:root{}</style><title>Настройка PostgreSQL с помощью pgbench - CoderLessons.com</title><link rel="stylesheet" href="./Настройка PostgreSQL с помощью pgbench - CoderLessons.com_files/911fba3b9ba09a8cf07a113e4f0f6b6a.css" data-rocket-async="style" as="style" onload="this.onload=null;this.rel=&#39;stylesheet&#39;" media="all" data-minify="1">
+  <link href="https://fonts.gstatic.com/" crossorigin="" rel="preconnect">
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="WordPress 5.2.5">
+
+<style></style>
+    
+    
+<link rel="icon" href="https://coderlessons.com/wp-content/uploads/2020/07/cropped-android-chrome-512x512-32x32.png" sizes="32x32">
+<link rel="icon" href="https://coderlessons.com/wp-content/uploads/2020/07/cropped-android-chrome-512x512-192x192.png" sizes="192x192">
+<link rel="apple-touch-icon-precomposed" href="https://coderlessons.com/wp-content/uploads/2020/07/cropped-android-chrome-512x512-180x180.png">
+<meta name="msapplication-TileImage" content="https://coderlessons.com/wp-content/uploads/2020/07/cropped-android-chrome-512x512-270x270.png">
+
+
+<style>
+    .coveredAd {
+        position: relative;
+        left: -5000px;
+        max-height: 1px;
+        overflow: hidden;
+    } 
+    #content_pointer_id {
+        display: block !important;
+        width: 100% !important;
+    }
+    .rfwp_removedMarginTop {
+        margin-top: 0 !important;
+    }
+    .rfwp_removedMarginBottom {
+        margin-bottom: 0 !important;
+    }
+</style>
+            <noscript><style id="rocket-lazyload-nojs-css">.rll-youtube-player, [data-lazy-src]{display:none !important;}</style></noscript><script>
+/*! loadCSS rel=preload polyfill. [c]2017 Filament Group, Inc. MIT License */
+(function(w){"use strict";if(!w.loadCSS){w.loadCSS=function(){}}
+var rp=loadCSS.relpreload={};rp.support=(function(){var ret;try{ret=w.document.createElement("link").relList.supports("preload")}catch(e){ret=!1}
+return function(){return ret}})();rp.bindMediaToggle=function(link){var finalMedia=link.media||"all";function enableStylesheet(){link.media=finalMedia}
+if(link.addEventListener){link.addEventListener("load",enableStylesheet)}else if(link.attachEvent){link.attachEvent("onload",enableStylesheet)}
+setTimeout(function(){link.rel="stylesheet";link.media="only x"});setTimeout(enableStylesheet,3000)};rp.poly=function(){if(rp.support()){return}
+var links=w.document.getElementsByTagName("link");for(var i=0;i<links.length;i++){var link=links[i];if(link.rel==="preload"&&link.getAttribute("as")==="style"&&!link.getAttribute("data-loadcss")){link.setAttribute("data-loadcss",!0);rp.bindMediaToggle(link)}}};if(!rp.support()){rp.poly();var run=w.setInterval(rp.poly,500);if(w.addEventListener){w.addEventListener("load",function(){rp.poly();w.clearInterval(run)})}else if(w.attachEvent){w.attachEvent("onload",function(){rp.poly();w.clearInterval(run)})}}
+if(typeof exports!=="undefined"){exports.loadCSS=loadCSS}
+else{w.loadCSS=loadCSS}}(typeof global!=="undefined"?global:this))
+</script><!--
+<script data-ad-client="ca-pub-7172145060373645" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+-->
+<script async="" src="./Настройка PostgreSQL с помощью pgbench - CoderLessons.com_files/f.txt" crossorigin="anonymous"></script>
+<script async="" src="./Настройка PostgreSQL с помощью pgbench - CoderLessons.com_files/header-bidding.js.Без названия"></script>
+
+ 
+<script async="" src="./Настройка PostgreSQL с помощью pgbench - CoderLessons.com_files/context.js.Без названия"></script>
+<script async="" type="text/javascript" src="./Настройка PostgreSQL с помощью pgbench - CoderLessons.com_files/360_light.js.Без названия"></script>
+</head>
+
+<body class="post-template-default single single-post postid-143357 single-format-standard blog-post-transparent-header-disable blog-small-page-width blog-slider-disable blog-enable-images-animations blog-style-corners-rounded" data-new-gr-c-s-check-loaded="14.1110.0" data-gr-ext-installed="">
+
+
+    
+
+<header class="main-header clearfix sticky-header">
+<div class="blog-post-reading-progress"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="header-left">
+            <div class="mainmenu-mobile-toggle" aria-label="Toggle menu"><i class="fa fa-bars" aria-hidden="true"></i></div>
+                <div class="logo"><a class="logo-link logo-text" href="https://coderlessons.com/">CoderLessons.com</a>
+                </div>
+        
+          </div>
+
+      <div class="header-center">
+        
+        <div class="mainmenu mainmenu-none mainmenu-regularfont mainmenu-noarrow clearfix" role="navigation">
+
+        <div id="navbar" class="navbar navbar-default clearfix mgt-mega-menu">
+
+          <div class="navbar-inner">
+              <div class="container">
+
+                  <div class="navbar-toggle btn btn-grey" data-toggle="collapse" data-target=".collapse">
+                    Menu                  </div>
+
+                  <div class="navbar-center-wrapper">
+                  <div class="navbar-collapse collapse"><ul id="menu-main-2" class="nav"><li id="mgt-menu-item-72" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home"><a href="https://coderlessons.com/">Главная</a></li><li id="mgt-menu-item-70" class="menu-item menu-item-type-taxonomy menu-item-object-category"><a href="https://coderlessons.com/tutorials">Учебники</a></li><li id="mgt-menu-item-71" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor"><a href="https://coderlessons.com/articles">Статьи</a></li><li id="mgt-menu-item-159410" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children"><a href="https://coderlessons.com/courses">Курсы</a>
+<ul class="sub-menu  megamenu-column-1 level-0">
+	<li id="mgt-menu-item-159411" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://coderlessons.com/courses-skillbox">Онлайн-университет Skillbox</a></li>	<li id="mgt-menu-item-159477" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://coderlessons.com/courses-geekbrains">Образовательный портал GeekBrains</a></li>	<li id="mgt-menu-item-159412" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://coderlessons.com/courses-netology">Образовательная платформа Нетология</a></li>	<li id="mgt-menu-item-159425" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://coderlessons.com/courses-skillfactory">Онлайн-школа SkillFactory</a></li>	<li id="mgt-menu-item-159426" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://coderlessons.com/courses-contented">Онлайн-школа дизайна Contented</a></li></ul>
+</li></ul></div>                  </div>
+
+              </div>
+          </div>
+
+        </div>
+
+    </div>
+    
+    
+          </div>
+
+      <div class="header-right">
+        <div class="social-icons-wrapper"><a href="https://www.facebook.com/magniumthemescompany" target="_blank" class="a-facebook"><i class="fa fa-facebook"></i></a><a href="https://www.instagram.com/magniumthemes/" target="_blank" class="a-instagram"><i class="fa fa-instagram"></i></a><a href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench#" target="_blank" class="a-twitter"><i class="fa fa-twitter"></i></a><a href="https://medium.com/" target="_blank" class="a-medium"><i class="fa fa-medium"></i></a></div>    <div class="search-toggle-wrapper search-header">
+      <form method="get" role="search" id="searchform_p" class="searchform" action="https://coderlessons.com/">
+	<input type="search" aria-label="Search" class="field" name="s" value="" id="s_p" placeholder="Что ищем?">
+	<input type="submit" class="submit btn" id="searchsubmit_p" value="Search">
+</form>
+      <a class="search-toggle-btn" aria-label="Search toggle"><i class="fa fa-search" aria-hidden="true"></i></a>
+    </div>
+
+          </div>
+    </div>
+  </div>
+
+</div>
+</header>
+
+
+	
+<div class="content-block">
+<div class="container container-page-item-title" data-style="">
+	<div class="row">
+		<div class="col-md-12 col-overlay">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="page-item-title-single">
+														<div class="saxon-post-single saxon-post">
+								<div class="post-categories"><a href="https://coderlessons.com/articles" data-style="background-color: #81d742;">Статьи</a></div>
+								<div class="saxon-post-details">
+									<h1 class="post-title">Настройка PostgreSQL с помощью pgbench</h1>
+																		<div class="post-date">Декабрь 16, 2018</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="post-container container span-col-md-8">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="blog-post blog-post-single clearfix">
+				<article id="post-143357" class="post-143357 post type-post status-publish format-standard hentry category-programmirovanie" role="main">
+					<div class="post-content-wrapper">
+
+						<div class="post-content clearfix">
+																																			<div class="entry-content">
+
+							<span id="content_pointer_id" data-content-length="18921" data-accepted-blocks="137"></span><div class="entry">
+<p><span> Когда дело доходит до настройки производительности среды, часто первое, с чего начать, – это база данных.</span> <span> Причина этого в том, что большинство приложений очень сильно зависят от какой-либо базы данных.</span> </p>
+<p> <span> К сожалению, базы данных могут быть одной из самых сложных областей для настройки.</span> <span> Причина, по которой я это говорю, заключается в том, что для правильной настройки службы базы данных часто требуется настроить больше, чем сама служба базы данных;</span> <span> это часто требует внесения изменений в оборудование, ОС или даже приложения.</span> </p>
+<p><span> Помимо того, что требуется разнообразный набор навыков, одна из самых больших проблем при настройке базы данных – это создание достаточного количества имитируемого трафика базы данных для нагрузки на службу базы данных.</span> <span> Вот почему в сегодняшней статье будет рассмотрен <code>pgbench</code> , инструмент для тестирования производительности, используемый для измерения производительности экземпляра <strong>PostgreSQL</strong> .</span> </p>
+<p> <span> PostgreSQL – это очень популярная реляционная база данных с открытым исходным кодом.</span> <span> Одна из приятных особенностей PostgreSQL заключается в том, что было создано немало инструментов, помогающих управлять PostgreSQL;</span> <span> <code>pgbench</code> – один из таких инструментов.</span> </p>
+<p> <span> Исследуя <code>pgbench</code> , мы также будем использовать его для измерения прироста / потери производительности для обычной настраиваемой версии PostgreSQL.</span> </p>
+<h2> <span> Настройка экземпляра PostgreSQL</span> </h2>
+<p> <span> Прежде чем мы сможем использовать <code>pgbench</code> для настройки службы базы данных, мы должны сначала запустить эту службу базы данных.</span> <span> Ниже приведены шаги по настройке базового экземпляра PostgreSQL на сервере <strong>Ubuntu 16.04</strong> .</span> </p>
+<h3> <span> Установка с помощью <code>apt-get</code></span> </h3>
+<p> <span> Установить PostgreSQL в системе Ubuntu довольно просто.</span> <span> Большая часть работы выполняется простым запуском команды <code>apt-get</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_291107">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain"># apt-get install postgresql postgresql-contrib</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> Приведенная выше команда <code>apt-get</code> устанавливает оба пакета <code>postgresql</code> и <code>postgresql-contrib</code> .</span> <span> Пакет <code>postgresql</code> устанавливает базовый сервис PostgreSQL.</span> </p>
+<p> <span> Пакет <code>postgresql-contrib</code> устанавливает дополнительные материалы для PostgreSQL.</span> <span> Эти материалы еще не были добавлены в официальный пакет, но часто предоставляют довольно мало функциональности.</span> </p>
+<p> <span> С установленными пакетами у нас теперь есть работающий экземпляр PostgreSQL.</span> <span> Мы можем проверить это с помощью команды <code>systemctl</code> чтобы проверить состояние PostgreSQL.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_19931">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+<div class="line number5 index4 alt2">5</div>
+<div class="line number6 index5 alt1">6</div>
+<div class="line number7 index6 alt2">7</div>
+<div class="line number8 index7 alt1">8</div>
+<div class="line number9 index8 alt2">9</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain"># systemctl status postgresql</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">● postgresql.service - PostgreSQL RDBMS</code></div>
+<div class="line number3 index2 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;</code><code class="java plain">Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)</code></div>
+<div class="line number4 index3 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;</code><code class="java plain">Active: active (exited) since Mon </code><code class="java value">2017</code><code class="java plain">-</code><code class="java value">01</code><code class="java plain">-</code><code class="java value">02</code> <code class="java value">21</code><code class="java plain">:</code><code class="java value">14</code><code class="java plain">:</code><code class="java value">36</code> <code class="java plain">UTC; 7h ago</code></div>
+<div class="line number5 index4 alt2"><code class="java spaces">&nbsp;&nbsp;</code><code class="java plain">Process: </code><code class="java value">16075</code> <code class="java plain">ExecStart=/bin/</code><code class="java keyword">true</code> <code class="java plain">(code=exited, status=</code><code class="java value">0</code><code class="java plain">/SUCCESS)</code></div>
+<div class="line number6 index5 alt1"><code class="java spaces">&nbsp;</code><code class="java plain">Main PID: </code><code class="java value">16075</code> <code class="java plain">(code=exited, status=</code><code class="java value">0</code><code class="java plain">/SUCCESS)</code></div>
+<div class="line number7 index6 alt2">&nbsp;</div>
+<div class="line number8 index7 alt1"><code class="java plain">Jan </code><code class="java value">02</code> <code class="java value">21</code><code class="java plain">:</code><code class="java value">14</code><code class="java plain">:</code><code class="java value">36</code> <code class="java plain">ubuntu-xenial systemd[</code><code class="java value">1</code><code class="java plain">]: Starting PostgreSQL RDBMS...</code></div>
+<div class="line number9 index8 alt2"><code class="java plain">Jan </code><code class="java value">02</code> <code class="java value">21</code><code class="java plain">:</code><code class="java value">14</code><code class="java plain">:</code><code class="java value">36</code> <code class="java plain">ubuntu-xenial systemd[</code><code class="java value">1</code><code class="java plain">]: Started PostgreSQL RDBMS.</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> Выше указано, что наш экземпляр запущен без проблем.</span> <span> Теперь мы можем перейти к следующему шагу – созданию базы данных.</span> </p>
+<h3> <span> Создание базы данных</span> </h3>
+<p> <span> Когда мы установили пакет <code>postgresql</code> , этот пакет включал создание пользователя с именем <code>postgres</code> .</span> <span> Этот пользователь используется как владелец запущенного экземпляра.</span> <span> Он также служит администратором для службы PostgreSQL.</span> </p>
+<p> <span> Чтобы создать базу данных, нам нужно будет войти в систему этому пользователю, что достигается выполнением команды <code>su</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_28999">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain"># su - postgres</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> После переключения на пользователя <code>postgres</code> мы можем войти в работающий экземпляр с помощью клиента PostgreSQL, <code>psql</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_523602">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+<div class="line number5 index4 alt2">5</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">$ psql</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">psql (</code><code class="java value">9.5</code><code class="java plain">.</code><code class="java value">5</code><code class="java plain">)</code></div>
+<div class="line number3 index2 alt2"><code class="java plain">Type </code><code class="java string">"help"</code> <code class="java keyword">for</code> <code class="java plain">help.</code></div>
+<div class="line number4 index3 alt1">&nbsp;</div>
+<div class="line number5 index4 alt2"><code class="java plain">postgres=#</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> После выполнения команды <code>psql</code> мы оказались в среде командной строки PostgreSQL.</span> <span> Отсюда мы можем выдавать <strong>операторы SQL</strong> или использовать специальные клиентские команды для выполнения действий.</span> </p>
+<p> <span> Например, мы можем вывести список текущих баз данных, выполнив команду <code>\list</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_928742">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">01</div>
+<div class="line number2 index1 alt1">02</div>
+<div class="line number3 index2 alt2">03</div>
+<div class="line number4 index3 alt1">04</div>
+<div class="line number5 index4 alt2">05</div>
+<div class="line number6 index5 alt1">06</div>
+<div class="line number7 index6 alt2">07</div>
+<div class="line number8 index7 alt1">08</div>
+<div class="line number9 index8 alt2">09</div>
+<div class="line number10 index9 alt1">10</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">postgres-# \list</code></div>
+<div class="line number2 index1 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">List of databases</code></div>
+<div class="line number3 index2 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;</code><code class="java plain">Name&nbsp;&nbsp;&nbsp; |&nbsp; Owner&nbsp;&nbsp; | Encoding |&nbsp;&nbsp; Collate&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Ctype&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp; Access privileges&nbsp;&nbsp; </code></div>
+<div class="line number4 index3 alt1"><code class="java plain">-----------+----------+----------+-------------+-------------+-----------------------</code></div>
+<div class="line number5 index4 alt2"><code class="java spaces">&nbsp;</code><code class="java plain">postgres&nbsp; | postgres | UTF8&nbsp;&nbsp;&nbsp;&nbsp; | en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| en_US.UTF-</code><code class="java value">8</code> <code class="java plain">|</code></div>
+<div class="line number6 index5 alt1"><code class="java spaces">&nbsp;</code><code class="java plain">template0 | postgres | UTF8&nbsp;&nbsp;&nbsp;&nbsp; | en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| =c/postgres&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +</code></div>
+<div class="line number7 index6 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | postgres=CTc/postgres</code></div>
+<div class="line number8 index7 alt1"><code class="java spaces">&nbsp;</code><code class="java plain">template1 | postgres | UTF8&nbsp;&nbsp;&nbsp;&nbsp; | en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| =c/postgres&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +</code></div>
+<div class="line number9 index8 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | postgres=CTc/postgres</code></div>
+<div class="line number10 index9 alt1"><code class="java plain">(</code><code class="java value">3</code> <code class="java plain">rows)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> После выполнения команды <code>\list</code> были возвращены три базы данных.</span> <span> Это базы данных по умолчанию, которые были созданы в процессе первоначальной установки.</span> </p>
+<p> <span> Для нашего сегодняшнего тестирования мы будем создавать новую базу данных.</span> <span> Давайте продолжим и создадим эту базу данных, назвав ее <em>примером</em> .</span> <span> Мы можем сделать это, выполнив следующую инструкцию SQL:</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_638867">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">CREATE DATABASE example;</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> После выполнения мы можем проверить, что база данных была создана, снова выполнив команду <code>\list</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_94508">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">01</div>
+<div class="line number2 index1 alt1">02</div>
+<div class="line number3 index2 alt2">03</div>
+<div class="line number4 index3 alt1">04</div>
+<div class="line number5 index4 alt2">05</div>
+<div class="line number6 index5 alt1">06</div>
+<div class="line number7 index6 alt2">07</div>
+<div class="line number8 index7 alt1">08</div>
+<div class="line number9 index8 alt2">09</div>
+<div class="line number10 index9 alt1">10</div>
+<div class="line number11 index10 alt2">11</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">postgres=# \list</code></div>
+<div class="line number2 index1 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">List of databases</code></div>
+<div class="line number3 index2 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;</code><code class="java plain">Name&nbsp;&nbsp;&nbsp; |&nbsp; Owner&nbsp;&nbsp; | Encoding |&nbsp;&nbsp; Collate&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; Ctype&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp; Access privileges&nbsp;&nbsp; </code></div>
+<div class="line number4 index3 alt1"><code class="java plain">-----------+----------+----------+-------------+-------------+-----------------------</code></div>
+<div class="line number5 index4 alt2"><code class="java spaces">&nbsp;</code><code class="java plain">example&nbsp;&nbsp; | postgres | UTF8&nbsp;&nbsp;&nbsp;&nbsp; | en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| en_US.UTF-</code><code class="java value">8</code> <code class="java plain">|</code></div>
+<div class="line number6 index5 alt1"><code class="java spaces">&nbsp;</code><code class="java plain">postgres&nbsp; | postgres | UTF8&nbsp;&nbsp;&nbsp;&nbsp; | en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| en_US.UTF-</code><code class="java value">8</code> <code class="java plain">|</code></div>
+<div class="line number7 index6 alt2"><code class="java spaces">&nbsp;</code><code class="java plain">template0 | postgres | UTF8&nbsp;&nbsp;&nbsp;&nbsp; | en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| =c/postgres&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +</code></div>
+<div class="line number8 index7 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | postgres=CTc/postgres</code></div>
+<div class="line number9 index8 alt2"><code class="java spaces">&nbsp;</code><code class="java plain">template1 | postgres | UTF8&nbsp;&nbsp;&nbsp;&nbsp; | en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| en_US.UTF-</code><code class="java value">8</code> <code class="java plain">| =c/postgres&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +</code></div>
+<div class="line number10 index9 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | postgres=CTc/postgres</code></div>
+<div class="line number11 index10 alt2"><code class="java plain">(</code><code class="java value">4</code> <code class="java plain">rows)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> На данный момент у нас есть пустая база данных с именем <em>example</em> .</span> <span> С этого момента нам нужно вернуться в нашу оболочку <code>bash</code> для выполнения команд <code>pgbench</code> .</span> <span> Мы можем сделать это, введя команду <code>\q</code> (quit).</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_520287">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">postgres-# \q</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> Выйдя из среды командной строки PostgreSQL, мы можем начать использовать <code>pgbench</code> для оценки производительности нашего экземпляра базы данных.</span> </p>
+<h2> <span> Использование pgbench для измерения производительности</span> </h2>
+<p> <span> Одной из самых сложных вещей в измерении производительности базы данных является генерирование достаточной нагрузки.</span> <span> Популярный вариант – просто бомбардировать тестовые экземпляры целевого приложения или приложений тестовыми транзакциями.</span> <span> Хотя это полезный тест, который обеспечивает производительность БД по отношению к приложению, иногда он может быть проблематичным, поскольку узкие места приложения могут ограничивать тестирование базы данных.</span> </p>
+<p> <span> В таких ситуациях такие инструменты, как <code>pgbench</code> пригодятся.</span> <span> С помощью <code>pgbench</code> вы можете использовать пример базы данных, поставляемой с <code>pgbench</code> или сделать так, чтобы <code>pgbench</code> выполнял пользовательские запросы к базе данных приложения.</span> </p>
+<p> <span> В этой статье мы будем использовать пример базы данных, которая поставляется с <code>pgbench</code> .</span> </p>
+<h3> <span> Настройка примера базы данных <code>pgbench</code></span> </h3>
+<p> <span> Настройка примера базы данных довольно проста и довольно быстра.</span> <span> Мы можем запустить этот процесс, выполнив <code>pgbench</code> с опцией <code>-i</code> (initialize).</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_406787">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+<div class="line number5 index4 alt2">5</div>
+<div class="line number6 index5 alt1">6</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">$ pgbench -i -s </code><code class="java value">50</code> <code class="java plain">example</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">creating tables...</code></div>
+<div class="line number3 index2 alt2"><code class="java value">5000000</code> <code class="java plain">of </code><code class="java value">5000000</code> <code class="java plain">tuples (</code><code class="java value">100</code><code class="java plain">%) done (elapsed </code><code class="java value">5.33</code> <code class="java plain">s, remaining </code><code class="java value">0.00</code> <code class="java plain">s)</code></div>
+<div class="line number4 index3 alt1"><code class="java plain">vacuum...</code></div>
+<div class="line number5 index4 alt2"><code class="java plain">set primary keys...</code></div>
+<div class="line number6 index5 alt1"><code class="java plain">done.</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> В приведенной выше команде мы выполнили <code>pgbench</code> с параметром <code>-i</code> и параметром <code>-s</code> за которым следует имя базы данных ( <code>example</code> ).</span> </p>
+<p> <span> Опция <code>-i</code> (initialize) скажет <code>pgbench</code> инициализировать указанную базу данных.</span> <span> Это означает, что <code>pgbench</code> создаст следующие таблицы в базе данных <code>example</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_211151">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+<div class="line number5 index4 alt2">5</div>
+<div class="line number6 index5 alt1">6</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">table&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # of rows</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">---------------------------------</code></div>
+<div class="line number3 index2 alt2"><code class="java plain">pgbench_branches&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code><code class="java value">1</code></div>
+<div class="line number4 index3 alt1"><code class="java plain">pgbench_tellers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code><code class="java value">10</code></div>
+<div class="line number5 index4 alt2"><code class="java plain">pgbench_accounts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code><code class="java value">100000</code></div>
+<div class="line number6 index5 alt1"><code class="java plain">pgbench_history&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code><code class="java value">0</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> По умолчанию <code>pgbench</code> создаст таблицы выше с количеством строк, показанных выше.</span> <span> Это создает простую базу данных <code>16MB</code> .</span> </p>
+<p> <span> Поскольку мы будем использовать <code>pgbench</code> для измерения изменений в производительности, небольшой базы данных размером <code>16MB</code> будет недостаточно, чтобы подчеркнуть нашу ситуацию.</span> <span> Здесь вступает в игру опция <code>-s</code> (масштабирование).</span> </p>
+<p> <span> Опция <code>-s</code> используется для умножения количества строк, введенных в каждую таблицу.</span> <span> В приведенной выше команде мы ввели опцию «масштабирования», равную <code>50</code> .</span> <span> Это сказало <code>pgbench</code> создать базу данных в 50 раз больше размера по умолчанию.</span> </p>
+<p> <span> Это означает, что наша таблица <code>pgbench_accounts</code> теперь содержит <code>5,000,000</code> записей.</span> <span> Это также означает, что размер нашей базы данных теперь составляет <code>800MB</code> <code>50 x 16MB</code> ( <code>50 x 16MB</code> ).</span> </p>
+<p> <span> Чтобы убедиться, что наши таблицы были созданы успешно, давайте продолжим и снова запустим клиент <code>psql</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_863260">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+<div class="line number5 index4 alt2">5</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">$ psql -d example</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">psql (</code><code class="java value">9.5</code><code class="java plain">.</code><code class="java value">5</code><code class="java plain">)</code></div>
+<div class="line number3 index2 alt2"><code class="java plain">Type </code><code class="java string">"help"</code> <code class="java keyword">for</code> <code class="java plain">help.</code></div>
+<div class="line number4 index3 alt1">&nbsp;</div>
+<div class="line number5 index4 alt2"><code class="java plain">example=#</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> В приведенной выше команде мы использовали флаг <code>-d</code> (база данных), чтобы сообщить <code>psql</code> не только о подключении к службе PostgreSQL, но и о переключении на <em>пример</em> базы данных.</span> </p>
+<p> <span> Поскольку в настоящее время мы используем <em>пример</em> базы данных, мы можем выполнить команду <code>\dt</code> для просмотра списка таблиц, доступных в этой базе данных.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_651711">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+<div class="line number5 index4 alt2">5</div>
+<div class="line number6 index5 alt1">6</div>
+<div class="line number7 index6 alt2">7</div>
+<div class="line number8 index7 alt1">8</div>
+<div class="line number9 index8 alt2">9</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">example=# \dt</code></div>
+<div class="line number2 index1 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">List of relations</code></div>
+<div class="line number3 index2 alt2"><code class="java spaces">&nbsp;</code><code class="java plain">Schema |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Type&nbsp; |&nbsp; Owner&nbsp;&nbsp; </code></div>
+<div class="line number4 index3 alt1"><code class="java plain">--------+------------------+-------+----------</code></div>
+<div class="line number5 index4 alt2"><code class="java spaces">&nbsp;</code><code class="java keyword">public</code> <code class="java plain">| pgbench_accounts | table | postgres</code></div>
+<div class="line number6 index5 alt1"><code class="java spaces">&nbsp;</code><code class="java keyword">public</code> <code class="java plain">| pgbench_branches | table | postgres</code></div>
+<div class="line number7 index6 alt2"><code class="java spaces">&nbsp;</code><code class="java keyword">public</code> <code class="java plain">| pgbench_history&nbsp; | table | postgres</code></div>
+<div class="line number8 index7 alt1"><code class="java spaces">&nbsp;</code><code class="java keyword">public</code> <code class="java plain">| pgbench_tellers&nbsp; | table | postgres</code></div>
+<div class="line number9 index8 alt2"><code class="java plain">(</code><code class="java value">4</code> <code class="java plain">rows)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> Из таблицы выше видно, что <code>pgbench</code> создал четыре ожидаемые таблицы.</span> <span> Это означает, что наша база данных заполнена и готова к использованию для измерения производительности нашего экземпляра базы данных.</span> </p>
+<h3> <span> Установление базовой линии</span> </h3>
+<p> <span> При любой настройке производительности лучше всего сначала установить базовую производительность.</span> <span> Этот базовый уровень будет служить для измерения того, повлияли ли внесенные вами изменения на увеличение или снижение производительности.</span> </p>
+<p> <span> Давайте продолжим и вызовем <code>pgbench</code> чтобы установить базовый уровень для нашего «готового» экземпляра PostgreSQL.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_98785">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">01</div>
+<div class="line number2 index1 alt1">02</div>
+<div class="line number3 index2 alt2">03</div>
+<div class="line number4 index3 alt1">04</div>
+<div class="line number5 index4 alt2">05</div>
+<div class="line number6 index5 alt1">06</div>
+<div class="line number7 index6 alt2">07</div>
+<div class="line number8 index7 alt1">08</div>
+<div class="line number9 index8 alt2">09</div>
+<div class="line number10 index9 alt1">10</div>
+<div class="line number11 index10 alt2">11</div>
+<div class="line number12 index11 alt1">12</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">$ pgbench -c </code><code class="java value">10</code> <code class="java plain">-j </code><code class="java value">2</code> <code class="java plain">-t </code><code class="java value">10000</code> <code class="java plain">example</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">starting vacuum...end.</code></div>
+<div class="line number3 index2 alt2"><code class="java plain">transaction type: TPC-B (sort of)</code></div>
+<div class="line number4 index3 alt1"><code class="java plain">scaling factor: </code><code class="java value">50</code></div>
+<div class="line number5 index4 alt2"><code class="java plain">query mode: simple</code></div>
+<div class="line number6 index5 alt1"><code class="java plain">number of clients: </code><code class="java value">10</code></div>
+<div class="line number7 index6 alt2"><code class="java plain">number of threads: </code><code class="java value">2</code></div>
+<div class="line number8 index7 alt1"><code class="java plain">number of transactions per client: </code><code class="java value">10000</code></div>
+<div class="line number9 index8 alt2"><code class="java plain">number of transactions actually processed: </code><code class="java value">100000</code><code class="java plain">/</code><code class="java value">100000</code></div>
+<div class="line number10 index9 alt1"><code class="java plain">latency average: </code><code class="java value">4.176</code> <code class="java plain">ms</code></div>
+<div class="line number11 index10 alt2"><code class="java plain">tps = </code><code class="java value">2394.718707</code> <code class="java plain">(including connections establishing)</code></div>
+<div class="line number12 index11 alt1"><code class="java plain">tps = </code><code class="java value">2394.874350</code> <code class="java plain">(excluding connections establishing)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> При вызове <code>pgbench</code> мы добавляем в команду довольно много опций.</span> <span> Первым является <code>-c</code> (клиенты), который используется для определения количества клиентов, с которыми нужно соединиться.</span> <span> Для этого тестирования я использовал <code>10</code> чтобы указать <code>pgbench</code> выполнить с 10 клиентами.</span> </p>
+<p> <span> Это означает, что когда <code>pgbench</code> выполняет тесты, он открывает 10 разных сессий.</span> </p>
+<p> <span> Следующая опция – флаг <code>-j</code> (threads).</span> <span> Этот флаг используется для определения количества рабочих процессов для <code>pgbench</code> .</span> <span> В приведенной выше команде я указал значение <code>2</code> .</span> <span> Это скажет <code>pgbench</code> запустить два рабочих процесса во время бенчмаркинга.</span> </p>
+<p> <span> Третий параметр – <code>-t</code> (транзакции), который используется для указания количества транзакций, которые нужно выполнить.</span> <span> В приведенной выше команде я указал значение <code>10,000</code> .</span> <span> Однако это не означает, что с нашей службой базы данных будет выполнено только <code>10,000</code> транзакций.</span> <span> Это означает, что каждый клиентский сеанс будет выполнять <code>10,000</code> транзакций.</span> </p>
+<p> <span> Подводя итог, можно сказать, что базовый тестовый запуск состоял из двух рабочих процессов <code>pgbench</code> имитирующих <code>10,000</code> транзакций от <code>10</code> клиентов, в общей сложности <code>100,000</code> транзакций.</span> </p>
+<p> <span> С этим пониманием давайте посмотрим на результаты этого первого теста.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_938549">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">01</div>
+<div class="line number2 index1 alt1">02</div>
+<div class="line number3 index2 alt2">03</div>
+<div class="line number4 index3 alt1">04</div>
+<div class="line number5 index4 alt2">05</div>
+<div class="line number6 index5 alt1">06</div>
+<div class="line number7 index6 alt2">07</div>
+<div class="line number8 index7 alt1">08</div>
+<div class="line number9 index8 alt2">09</div>
+<div class="line number10 index9 alt1">10</div>
+<div class="line number11 index10 alt2">11</div>
+<div class="line number12 index11 alt1">12</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">$ pgbench -c </code><code class="java value">10</code> <code class="java plain">-j </code><code class="java value">2</code> <code class="java plain">-t </code><code class="java value">10000</code> <code class="java plain">example</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">starting vacuum...end.</code></div>
+<div class="line number3 index2 alt2"><code class="java plain">transaction type: TPC-B (sort of)</code></div>
+<div class="line number4 index3 alt1"><code class="java plain">scaling factor: </code><code class="java value">50</code></div>
+<div class="line number5 index4 alt2"><code class="java plain">query mode: simple</code></div>
+<div class="line number6 index5 alt1"><code class="java plain">number of clients: </code><code class="java value">10</code></div>
+<div class="line number7 index6 alt2"><code class="java plain">number of threads: </code><code class="java value">2</code></div>
+<div class="line number8 index7 alt1"><code class="java plain">number of transactions per client: </code><code class="java value">10000</code></div>
+<div class="line number9 index8 alt2"><code class="java plain">number of transactions actually processed: </code><code class="java value">100000</code><code class="java plain">/</code><code class="java value">100000</code></div>
+<div class="line number10 index9 alt1"><code class="java plain">latency average: </code><code class="java value">4.176</code> <code class="java plain">ms</code></div>
+<div class="line number11 index10 alt2"><code class="java plain">tps = </code><code class="java value">2394.718707</code> <code class="java plain">(including connections establishing)</code></div>
+<div class="line number12 index11 alt1"><code class="java plain">tps = </code><code class="java value">2394.874350</code> <code class="java plain">(excluding connections establishing)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> Вывод <code>pgbench</code> содержит довольно мало информации.</span> <span> Большинство из них описывает выполняемые тестовые сценарии.</span> <span> Больше всего нас интересует следующее:</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_492342">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">tps = </code><code class="java value">2394.718707</code> <code class="java plain">(including connections establishing)</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">tps = </code><code class="java value">2394.874350</code> <code class="java plain">(excluding connections establishing)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> Исходя из этих результатов, наша базовая линия составляет <code>2,394</code> транзакции базы данных в секунду.</span> <span> Давайте продолжим и посмотрим, сможем ли мы увеличить это число, изменив простой параметр конфигурации в PostgreSQL.</span> </p>
+<h2> <span> Добавляем больше кеша</span> </h2>
+<p> <span> Одним из параметров перехода для любого, кто настраивает PostgreSQL, является параметр <code>shared_buffers</code> .</span> <span> Этот параметр используется для указания объема памяти, который служба PostgreSQL может использовать для кэширования.</span> <span> Этот механизм кэширования используется для хранения содержимого таблиц и индексов в памяти.</span> </p>
+<p> <span> Чтобы показать, как мы можем использовать <code>pgbench</code> для настройки производительности, мы будем корректировать это значение для тестирования прироста / снижения производительности.</span> </p>
+<p> <span> По умолчанию значение <code>shared_buffers</code> установлено в <code>128MB</code> , что является довольно низким значением, учитывая объем доступной памяти на большинстве серверов сегодня.</span> <span> Мы можем убедиться в этом сами, посмотрев содержимое файла <code>/etc/postgresql/9.5/main/postgresql.conf</code> .</span> <span> В этом файле мы должны увидеть следующее.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_329995">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain"># - Memory -</code></div>
+<div class="line number2 index1 alt1">&nbsp;</div>
+<div class="line number3 index2 alt2"><code class="java plain">shared_buffers = 128MB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # min 128kB</code></div>
+<div class="line number4 index3 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain"># (change requires restart)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> Давайте продолжим и переключим это значение на <code>256MB</code> , фактически удвоив доступное пространство кеша.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_207462">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain"># - Memory -</code></div>
+<div class="line number2 index1 alt1">&nbsp;</div>
+<div class="line number3 index2 alt2"><code class="java plain">shared_buffers = 256MB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # min 128kB</code></div>
+<div class="line number4 index3 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain"># (change requires restart)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> После завершения нам нужно будет перезапустить сервис PostgreSQL.</span> <span> Мы можем сделать это, выполнив команду <code>systemctl</code> с параметром <code>restart</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_445307">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain"># systemctl restart postgresql</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> Как только сервис будет полностью запущен, мы можем снова использовать <code>pgbench</code> для измерения нашей производительности.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_471958">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">01</div>
+<div class="line number2 index1 alt1">02</div>
+<div class="line number3 index2 alt2">03</div>
+<div class="line number4 index3 alt1">04</div>
+<div class="line number5 index4 alt2">05</div>
+<div class="line number6 index5 alt1">06</div>
+<div class="line number7 index6 alt2">07</div>
+<div class="line number8 index7 alt1">08</div>
+<div class="line number9 index8 alt2">09</div>
+<div class="line number10 index9 alt1">10</div>
+<div class="line number11 index10 alt2">11</div>
+<div class="line number12 index11 alt1">12</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">$ pgbench -c </code><code class="java value">10</code> <code class="java plain">-j </code><code class="java value">2</code> <code class="java plain">-t </code><code class="java value">10000</code> <code class="java plain">example</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">starting vacuum...end.</code></div>
+<div class="line number3 index2 alt2"><code class="java plain">transaction type: TPC-B (sort of)</code></div>
+<div class="line number4 index3 alt1"><code class="java plain">scaling factor: </code><code class="java value">50</code></div>
+<div class="line number5 index4 alt2"><code class="java plain">query mode: simple</code></div>
+<div class="line number6 index5 alt1"><code class="java plain">number of clients: </code><code class="java value">10</code></div>
+<div class="line number7 index6 alt2"><code class="java plain">number of threads: </code><code class="java value">2</code></div>
+<div class="line number8 index7 alt1"><code class="java plain">number of transactions per client: </code><code class="java value">10000</code></div>
+<div class="line number9 index8 alt2"><code class="java plain">number of transactions actually processed: </code><code class="java value">100000</code><code class="java plain">/</code><code class="java value">100000</code></div>
+<div class="line number10 index9 alt1"><code class="java plain">latency average: </code><code class="java value">3.921</code> <code class="java plain">ms</code></div>
+<div class="line number11 index10 alt2"><code class="java plain">tps = </code><code class="java value">2550.313477</code> <code class="java plain">(including connections establishing)</code></div>
+<div class="line number12 index11 alt1"><code class="java plain">tps = </code><code class="java value">2550.480149</code> <code class="java plain">(excluding connections establishing)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> В нашем предыдущем базовом тесте мы смогли достичь скорости <code>2,394</code> транзакций в секунду.</span> <span> В этом последнем запуске после обновления параметра <code>shared_buffers</code> мы смогли выполнить <code>2,550</code> транзакций в секунду, увеличившись на <code>156</code> .</span> <span> Хотя это неплохое начало, мы все равно можем пойти дальше.</span> </p>
+<p> <span> Хотя параметр <code>shared_buffers</code> может начинаться с <code>128MB</code> , рекомендуемое значение этого параметра – одна четвертая системной памяти.</span> <span> Наша тестовая система имеет <code>2GB</code> системной памяти, значение, которое мы можем проверить с помощью команды <code>free</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_734453">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">$ free -m</code></div>
+<div class="line number2 index1 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; used&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; free&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; shared&nbsp; buff/cache&nbsp;&nbsp; available</code></div>
+<div class="line number3 index2 alt2"><code class="java plain">Mem:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code><code class="java value">2000</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code class="java value">54</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code class="java value">109</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code class="java value">548</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code class="java value">1836</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code class="java value">1223</code></div>
+<div class="line number4 index3 alt1"><code class="java plain">Swap:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code><code class="java value">0</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code class="java value">0</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code class="java value">0</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> В приведенном выше выводе мы видим, что в столбце <code>2000MB</code> в строке для памяти <code>2000MB</code> значение <code>2000MB</code> .</span> <span> В этом столбце отображается общий объем физической памяти, доступной для системы.</span> <span> Мы также можем видеть в <code>available</code> столбце, что <code>1223MB</code> показывает доступные.</span> <span> Это означает, что у нас есть до <code>1.2</code> ГБ свободной памяти, которую мы можем использовать в наших настройках.</span> </p>
+<p> <span> Если мы изменим наш параметр <code>shared_buffers</code> на рекомендуемое значение одной четвертой системной памяти, нам потребуется изменить его на <code>512MB</code> .</span> <span> Давайте сделаем это изменение и повторно <code>pgbench</code> наш тест <code>pgbench</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_273757">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain"># - Memory -</code></div>
+<div class="line number2 index1 alt1">&nbsp;</div>
+<div class="line number3 index2 alt2"><code class="java plain">shared_buffers = 512MB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # min 128kB</code></div>
+<div class="line number4 index3 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain"># (change requires restart)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> <code>shared_buffers</code> значение <code>shared_buffers</code> в <code>/etc/postgresql/9.5/main/postgresql.conf</code> , мы можем продолжить и перезапустить службу PostgreSQL.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_876013">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain"># systemctl restart postgresql</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> После перезапуска перезапустим наш тест.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_696941">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">01</div>
+<div class="line number2 index1 alt1">02</div>
+<div class="line number3 index2 alt2">03</div>
+<div class="line number4 index3 alt1">04</div>
+<div class="line number5 index4 alt2">05</div>
+<div class="line number6 index5 alt1">06</div>
+<div class="line number7 index6 alt2">07</div>
+<div class="line number8 index7 alt1">08</div>
+<div class="line number9 index8 alt2">09</div>
+<div class="line number10 index9 alt1">10</div>
+<div class="line number11 index10 alt2">11</div>
+<div class="line number12 index11 alt1">12</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">$ pgbench -c </code><code class="java value">10</code> <code class="java plain">-j </code><code class="java value">2</code> <code class="java plain">-t </code><code class="java value">10000</code> <code class="java plain">example</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">starting vacuum...end.</code></div>
+<div class="line number3 index2 alt2"><code class="java plain">transaction type: TPC-B (sort of)</code></div>
+<div class="line number4 index3 alt1"><code class="java plain">scaling factor: </code><code class="java value">50</code></div>
+<div class="line number5 index4 alt2"><code class="java plain">query mode: simple</code></div>
+<div class="line number6 index5 alt1"><code class="java plain">number of clients: </code><code class="java value">10</code></div>
+<div class="line number7 index6 alt2"><code class="java plain">number of threads: </code><code class="java value">2</code></div>
+<div class="line number8 index7 alt1"><code class="java plain">number of transactions per client: </code><code class="java value">10000</code></div>
+<div class="line number9 index8 alt2"><code class="java plain">number of transactions actually processed: </code><code class="java value">100000</code><code class="java plain">/</code><code class="java value">100000</code></div>
+<div class="line number10 index9 alt1"><code class="java plain">latency average: </code><code class="java value">3.756</code> <code class="java plain">ms</code></div>
+<div class="line number11 index10 alt2"><code class="java plain">tps = </code><code class="java value">2662.750932</code> <code class="java plain">(including connections establishing)</code></div>
+<div class="line number12 index11 alt1"><code class="java plain">tps = </code><code class="java value">2663.066421</code> <code class="java plain">(excluding connections establishing)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> На этот раз нашей системе удалось достичь <code>2,662</code> транзакций в секунду, что дополнительно увеличило <code>112</code> транзакций в секунду.</span> <span> Поскольку количество транзакций в секунду увеличилось как минимум в <code>100</code> раз, давайте сделаем еще один шаг и посмотрим, что произойдет, если изменить это значение на <code>1GB</code> .</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_129366">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+<div class="line number2 index1 alt1">2</div>
+<div class="line number3 index2 alt2">3</div>
+<div class="line number4 index3 alt1">4</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain"># - Memory -</code></div>
+<div class="line number2 index1 alt1">&nbsp;</div>
+<div class="line number3 index2 alt2"><code class="java plain">shared_buffers = 1024MB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # min 128kB</code></div>
+<div class="line number4 index3 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain"># (change requires restart)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> После обновления значения нам нужно будет еще раз перезапустить сервис PostgreSQL.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_1952">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">1</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain"># systemctl restart postgresql</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> После перезапуска службы мы можем перезапустить наш тест.</span> </p>
+<div>
+<div class="syntaxhighlighter java" id="highlighter_89490">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td class="gutter">
+<div class="line number1 index0 alt2">01</div>
+<div class="line number2 index1 alt1">02</div>
+<div class="line number3 index2 alt2">03</div>
+<div class="line number4 index3 alt1">04</div>
+<div class="line number5 index4 alt2">05</div>
+<div class="line number6 index5 alt1">06</div>
+<div class="line number7 index6 alt2">07</div>
+<div class="line number8 index7 alt1">08</div>
+<div class="line number9 index8 alt2">09</div>
+<div class="line number10 index9 alt1">10</div>
+<div class="line number11 index10 alt2">11</div>
+<div class="line number12 index11 alt1">12</div>
+</td>
+<td class="code">
+<div class="container">
+<div class="line number1 index0 alt2"><code class="java plain">$ pgbench -c </code><code class="java value">10</code> <code class="java plain">-j </code><code class="java value">2</code> <code class="java plain">-t </code><code class="java value">10000</code> <code class="java plain">example</code></div>
+<div class="line number2 index1 alt1"><code class="java plain">starting vacuum...end.</code></div>
+<div class="line number3 index2 alt2"><code class="java plain">transaction type: TPC-B (sort of)</code></div>
+<div class="line number4 index3 alt1"><code class="java plain">scaling factor: </code><code class="java value">50</code></div>
+<div class="line number5 index4 alt2"><code class="java plain">query mode: simple</code></div>
+<div class="line number6 index5 alt1"><code class="java plain">number of clients: </code><code class="java value">10</code></div>
+<div class="line number7 index6 alt2"><code class="java plain">number of threads: </code><code class="java value">2</code></div>
+<div class="line number8 index7 alt1"><code class="java plain">number of transactions per client: </code><code class="java value">10000</code></div>
+<div class="line number9 index8 alt2"><code class="java plain">number of transactions actually processed: </code><code class="java value">100000</code><code class="java plain">/</code><code class="java value">100000</code></div>
+<div class="line number10 index9 alt1"><code class="java plain">latency average: </code><code class="java value">3.744</code> <code class="java plain">ms</code></div>
+<div class="line number11 index10 alt2"><code class="java plain">tps = </code><code class="java value">2670.791865</code> <code class="java plain">(including connections establishing)</code></div>
+<div class="line number12 index11 alt1"><code class="java plain">tps = </code><code class="java value">2671.079076</code> <code class="java plain">(excluding connections establishing)</code></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p> <span> На этот раз количество транзакций в секунду увеличилось с <code>2,662</code> до <code>2,671</code> и число операций выросло на <code>9</code> в секунду.</span> <span> Это ситуация, когда мы получаем убывающую отдачу.</span> </p>
+<p> <span> Хотя во многих средах возможно увеличить значение <code>shared_buffers</code> за пределы одной четвертой рекомендации, это не возвращает те же результаты для этой тестовой базы данных.</span> </p>
+<h2> <span> Резюме</span> </h2>
+<p> <span> Исходя из результатов нашего тестирования, мы видим, что изменение значения <code>shared_buffers</code> со <code>128MB</code> до <code>512MB</code> в нашей тестовой системе привело к увеличению производительности на <code>268</code> транзакций в секунду.</span> <span> Исходя из наших базовых результатов, это <strong>увеличение</strong> производительности на <strong>10 процентов</strong> .</span> </p>
+<p> <span> Мы сделали все это на базовом экземпляре PostgreSQL, используя образец базы данных <code>pgbench</code> .</span> <span> Это значит, что нам не нужно было загружать наше приложение, чтобы получить базовый показатель эффективности работы PostgreSQL.</span> </p>
+<p> <span> Хотя мы смогли увеличить нашу пропускную способность, изменив параметр <code>shared_buffers</code> в PostgreSQL, доступно гораздо больше параметров настройки.</span> <span> Для тех, кто хочет настроить экземпляр PostgreSQL, я настоятельно рекомендую проверить <a href="https://translate.googleusercontent.com/translate_c?depth=1&amp;rurl=translate.google.ru&amp;sl=en&amp;sp=nmt4&amp;tl=ru&amp;u=https://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server&amp;usg=ALkJrhhLeBXGmX-ocO-gHelUNAI8cZwBwQ">вики</a> PostgreSQL.</span> </p>
+<div class="attribution">
+<table>
+<tbody>
+<tr>
+<td> <span> <span class="reference">Ссылка:</span></span> </td>
+<td> <span> <a href="https://translate.googleusercontent.com/translate_c?depth=1&amp;rurl=translate.google.ru&amp;sl=en&amp;sp=nmt4&amp;tl=ru&amp;u=https://blog.codeship.com/tuning-postgresql-with-pgbench/&amp;usg=ALkJrhj_Moi12CoMRpCgrgLF0I5pf_bQ1A">Настройка PostgreSQL с pgbench</a> от нашего <a href="https://translate.googleusercontent.com/translate_c?depth=1&amp;rurl=translate.google.ru&amp;sl=en&amp;sp=nmt4&amp;tl=ru&amp;u=https://www.javacodegeeks.com/join-us/jcg/&amp;usg=ALkJrhgw49BIpEX1tMk3Zt9UW5aEqaCpzQ">партнера</a> по <a href="https://translate.googleusercontent.com/translate_c?depth=1&amp;rurl=translate.google.ru&amp;sl=en&amp;sp=nmt4&amp;tl=ru&amp;u=https://blog.codeship.com/&amp;usg=ALkJrhjcN8U5LypIUiYimyFOWuvrvXN2Xg">JCG</a> Бена Кейна в блоге <a href="https://translate.googleusercontent.com/translate_c?depth=1&amp;rurl=translate.google.ru&amp;sl=en&amp;sp=nmt4&amp;tl=ru&amp;u=https://blog.codeship.com/&amp;usg=ALkJrhjcN8U5LypIUiYimyFOWuvrvXN2Xg">Codeship Blog</a> .</span> </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<style>
+    .coveredInsertings {
+/*        max-height: 1px;
+          max-width: 1px; */
+    }
+</style>
+														</div><!-- .entry-content -->
+
+														<div class="saxon-social-share-fixed sidebar-position-right">
+									<div class="post-social-wrapper">
+        <div class="post-social-title">Share:</div>
+		<div class="post-social">
+			<a title="Share with Facebook" href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench" data-type="facebook" data-title="Настройка PostgreSQL с помощью pgbench" class="facebook-share"> <i class="fa fa-facebook"></i></a><a title="Tweet this" href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench" data-type="twitter" data-title="Настройка PostgreSQL с помощью pgbench" class="twitter-share"> <i class="fa fa-twitter"></i></a><a title="Share with LinkedIn" href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench" data-type="linkedin" data-title="Настройка PostgreSQL с помощью pgbench" data-image="" class="linkedin-share"> <i class="fa fa-linkedin"></i></a><a title="Pin this" href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench" data-type="pinterest" data-title="Настройка PostgreSQL с помощью pgbench" data-image="" class="pinterest-share"> <i class="fa fa-pinterest"></i></a><a title="Share by Email" href="mailto:?subject=%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%E2%A0%80PostgreSQL%E2%A0%80%D1%81%E2%A0%80%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E%E2%A0%80pgbench&amp;body=https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench" data-type="link" class="email-share"> <i class="fa fa-envelope-o"></i></a>		</div>
+		<div class="clear"></div>
+	</div>
+								</div>
+							
+							
+														</div>
+
+					</div>
+				</article>
+
+								<div class="saxon-post saxon-post-bottom">
+					<div class="post-details-bottom">
+						<div class="post-info-tags">
+																											</div>
+						
+						<div class="post-info-wrapper">
+						
+												<div class="post-info-views"><i class="fa fa-eye" aria-hidden="true"></i>228</div>
+												
+
+						</div>
+
+												<div class="post-info-share">
+						  	<div class="post-social-wrapper">
+        <div class="post-social-title">Share:</div>
+		<div class="post-social">
+			<a title="Share with Facebook" href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench" data-type="facebook" data-title="Настройка PostgreSQL с помощью pgbench" class="facebook-share"> <i class="fa fa-facebook"></i></a><a title="Tweet this" href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench" data-type="twitter" data-title="Настройка PostgreSQL с помощью pgbench" class="twitter-share"> <i class="fa fa-twitter"></i></a><a title="Share with LinkedIn" href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench" data-type="linkedin" data-title="Настройка PostgreSQL с помощью pgbench" data-image="" class="linkedin-share"> <i class="fa fa-linkedin"></i></a><a title="Pin this" href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench" data-type="pinterest" data-title="Настройка PostgreSQL с помощью pgbench" data-image="" class="pinterest-share"> <i class="fa fa-pinterest"></i></a><a title="Share by Email" href="mailto:?subject=%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%E2%A0%80PostgreSQL%E2%A0%80%D1%81%E2%A0%80%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E%E2%A0%80pgbench&amp;body=https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench" data-type="link" class="email-share"> <i class="fa fa-envelope-o"></i></a>		</div>
+		<div class="clear"></div>
+	</div>
+							</div>
+											</div>
+				</div>
+							</div>
+
+													
+			  <nav id="nav-below" class="navigation-post">
+		
+  		
+    
+  <div class="container-fluid">
+  <div class="row">
+          <div class="col-md-6 nav-post-prev saxon-post no-image">
+                        <a href="https://coderlessons.com/articles/programmirovanie/primenenie-algoritma-tf-idf-na-praktike" class="nav-post-title-link"><div class="nav-post-title">Назад</div><div class="nav-post-name">Применение алгоритма TF-IDF на практике</div></a>
+        </div>
+        <div class="col-md-6 nav-post-next saxon-post no-image">
+        
+      <a href="https://coderlessons.com/articles/programmirovanie/vse-chto-vam-nuzhno-znat-o-rekursivnom-sql-2" class="nav-post-title-link"><div class="nav-post-title">Далее</div><div class="nav-post-name">Все, что вам нужно знать о рекурсивном SQL</div></a>
+
+              </div>
+
+  </div>
+  </div>  
+  
+  </nav>
+  
+			
+
+			
+			
+		</div>
+				<div class="col-md-4 post-sidebar sidebar sidebar-right" role="complementary">
+		<ul id="post-sidebar">
+				
+		  <li id="saxon-categories-3" class="widget widget_saxon_categories"><h2 class="widgettitle">Категории</h2>
+        <div class="post-categories">
+            <a href="https://coderlessons.com/articles/veb-razrabotka-articles" data-style="">Веб разработка<span class="post-categories-counter">11825</span></a><a href="https://coderlessons.com/articles/java" data-style="">Java<span class="post-categories-counter">7473</span></a><a href="https://coderlessons.com/articles/programmirovanie" data-style="">Программирование<span class="post-categories-counter">3465</span></a><a href="https://coderlessons.com/articles/mobilnaia-razrabotka-articles" data-style="">Мобильная разработка<span class="post-categories-counter">2983</span></a><a href="https://coderlessons.com/articles/predprinimatelstvo" data-style="">Предпринимательство<span class="post-categories-counter">2337</span></a><a href="https://coderlessons.com/articles/devops-articles" data-style="">DevOps<span class="post-categories-counter">1817</span></a><a href="https://coderlessons.com/articles/wordpress" data-style="">Wordpress<span class="post-categories-counter">1583</span></a><a href="https://coderlessons.com/articles/dizain" data-style="">Дизайн<span class="post-categories-counter">1256</span></a><a href="https://coderlessons.com/articles/php" data-style="">PHP<span class="post-categories-counter">1191</span></a><a href="https://coderlessons.com/articles/bazy-dannykh-articles" data-style="">Базы данных<span class="post-categories-counter">947</span></a><a href="https://coderlessons.com/articles/ruby" data-style="">Ruby<span class="post-categories-counter">692</span></a><a href="https://coderlessons.com/articles/upravlenie-proektami" data-style="">Управление проектами<span class="post-categories-counter">232</span></a><a href="https://coderlessons.com/articles/ai-ml" data-style="">AI/ML<span class="post-categories-counter">25</span></a><a href="https://coderlessons.com/articles/go" data-style="">Go<span class="post-categories-counter">10</span></a><a href="https://coderlessons.com/articles/node-js" data-style="">Node.js<span class="post-categories-counter">8</span></a><a href="https://coderlessons.com/articles/testirovanie" data-style="">Тестирование<span class="post-categories-counter">8</span></a><a href="https://coderlessons.com/articles/gamedev" data-style="">GameDev<span class="post-categories-counter">7</span></a>        </div>
+            </li>
+        <li id="saxon-list-posts-14" class="widget widget_saxon_list_entries">        <h2 class="widgettitle">Последние статьи</h2>
+        <ul>
+
+                <li class="template-postsmasonry1-2">
+            <div class="saxon-postsmasonry1-post saxon-postsmasonry1_2-post saxon-post saxon-post-no-image format-"><div class="post-categories"><a href="https://coderlessons.com/articles" data-style="background-color: #81d742;">Статьи</a></div><div class="saxon-post-details">
+
+     <h3 class="post-title"><a href="https://coderlessons.com/articles/programmirovanie/refaktoring-hudson-god-class">Рефакторинг Hudson God Class</a></h3><div class="post-date">Июнь 3, 2019</div></div></div>        </li>
+                <li class="template-postsmasonry1-2">
+            <div class="saxon-postsmasonry1-post saxon-postsmasonry1_2-post saxon-post saxon-post-no-image format-"><div class="post-categories"><a href="https://coderlessons.com/articles" data-style="background-color: #81d742;">Статьи</a></div><div class="saxon-post-details">
+
+     <h3 class="post-title"><a href="https://coderlessons.com/articles/java/alternativy-sintaksisa-java-liambda">Альтернативы синтаксиса Java лямбда</a></h3><div class="post-date">Июнь 2, 2019</div></div></div>        </li>
+                <li class="template-postsmasonry1-2">
+            <div class="saxon-postsmasonry1-post saxon-postsmasonry1_2-post saxon-post saxon-post-no-image format-"><div class="post-categories"><a href="https://coderlessons.com/articles" data-style="background-color: #81d742;">Статьи</a></div><div class="saxon-post-details">
+
+     <h3 class="post-title"><a href="https://coderlessons.com/articles/java/morphia-i-mongodb-razvivaiushchiesia-struktury-dokumentov">Morphia и MongoDB: развивающиеся структуры документов</a></h3><div class="post-date">Май 29, 2019</div></div></div>        </li>
+                <li class="template-postsmasonry1-2">
+            <div class="saxon-postsmasonry1-post saxon-postsmasonry1_2-post saxon-post saxon-post-no-image format-"><div class="post-categories"><a href="https://coderlessons.com/articles" data-style="background-color: #81d742;">Статьи</a></div><div class="saxon-post-details">
+
+     <h3 class="post-title"><a href="https://coderlessons.com/articles/java/openshift-express-razvertyvanie-prilozheniia-java-ee-s-podderzhkoi-as7">OpenShift Express: развертывание приложения Java EE (с поддержкой AS7)</a></h3><div class="post-date">Май 29, 2019</div></div></div>        </li>
+                <li class="template-postsmasonry1-2">
+            <div class="saxon-postsmasonry1-post saxon-postsmasonry1_2-post saxon-post saxon-post-no-image format-"><div class="post-categories"><a href="https://coderlessons.com/articles" data-style="background-color: #81d742;">Статьи</a></div><div class="saxon-post-details">
+
+     <h3 class="post-title"><a href="https://coderlessons.com/articles/java/integratsiia-jqgrid-rest-ajax-i-spring-mvc">Интеграция jqGrid, REST, AJAX и Spring MVC</a></h3><div class="post-date">Май 29, 2019</div></div></div>        </li>
+        
+        </ul>
+        </li>
+<li id="custom_html-8" class="widget_text widget widget_custom_html"><div class="textwidget custom-html-widget"><div class="rl_cnt_bg" data-id="289286"></div></div></li>
+<li id="custom_html-9" class="widget_text widget widget_custom_html"><div class="textwidget custom-html-widget"><div class="rl_cnt_bg" data-id="289288"></div></div></li>
+<li id="custom_html-10" class="widget_text widget widget_custom_html"><div class="textwidget custom-html-widget"><div class="rl_cnt_bg" data-id="289289"></div></div></li>
+		</ul>
+		</div>
+			</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+<a class="scroll-to-top btn alt" aria-label="Scroll to top" href="https://coderlessons.com/articles/programmirovanie/nastroika-postgresql-s-pomoshchiu-pgbench#top"></a>
+
+<div class="footer-wrapper">
+  <footer class="footer-black">
+      <div class="container">
+        <div class="row">
+            
+            
+                        <div class="col-md-12 footer-menu" role="navigation">
+                        </div>
+                        <div class="col-md-12 col-sm-12 footer-copyright">
+                <p>© Copyright 2022 <a href="https://coderlessons.com/">CoderLessons.com</a></p>            </div>
+
+        </div>
+      </div>
+    </footer>
+</div>
+
+
+<script>
+if (typeof rb_ajaxurl==='undefined') {var rb_ajaxurl = 'https://coderlessons.com/wp-admin/admin-ajax.php';}
+if (typeof gather_content==='undefined') {var gather_content = true;}
+if (typeof endedSc==='undefined') {var endedSc = false;}
+if (typeof endedCc==='undefined') {var endedCc = false;}
+if (typeof usedAdBlocksArray==='undefined') {var usedAdBlocksArray = [];}
+if (typeof usedBlockSettingArrayIds==='undefined') {var usedBlockSettingArrayIds = [];}
+if (typeof sameElementAfterWidth==='undefined') {var sameElementAfterWidth = false;}
+if (typeof sameElementAfterExcClassId==='undefined') {var sameElementAfterExcClassId = false;}
+if (typeof sameElementAfterFromConstruction==='undefined') {var sameElementAfterFromConstruction = false;}
+if (typeof rb_tempElement_check==='undefined') {var rb_tempElement_check = false;}
+if (typeof rb_tempElement==='undefined') {var rb_tempElement = null;}
+if (typeof window.jsInputerLaunch==='undefined') {window.jsInputerLaunch = -1;}
+
+function launchUpdateRbDisplays() {
+    if ((typeof updateRbDisplays !== 'undefined')&&(typeof updateRbDisplays === 'function')) {
+        updateRbDisplays();
+    } else {
+        setTimeout(function () {
+            launchUpdateRbDisplays();
+        }, 200);
+    }
+}
+
+/* "sc" in variables - mark for shortcode variable */
+function shortcodesInsert() {
+    let gatheredBlocks = document.querySelectorAll('.percentPointerClass.scMark'),
+        scBlockId = -1,
+        scAdId = -1,
+        blockStatus = '',
+        dataFull = -1,
+        gatheredBlockChild,
+        okStates = ['done','refresh-wait','no-block','fetched'],
+        scContainer,
+        sci,
+        i1 = 0,
+        skyscraperCheck = [],
+        skyscraperStatus = false,
+        splitedSkyscraper = [],
+        gatheredBlockChildSkyParts = [],
+        stickyStatus = false,
+        stickyCheck = [],
+        stickyFixedStatus = false,
+        stickyFixedCheck = [],
+        overflowCheck = [],
+        overflowStatus = false,
+        repeatableIdentifier = "",
+        dataCidIdentifier = null,
+        divCidElement = '';
+
+    if (typeof scArray !== 'undefined') {
+        if (scArray&&scArray.length > 0&&gatheredBlocks&&gatheredBlocks.length > 0&&typeof window.rulvW5gntb !== 'undefined') {
+            dataCidIdentifier = window.rulvW5gntb;
+            for (let i = 0; i < gatheredBlocks.length; i++) {
+                gatheredBlockChild = gatheredBlocks[i].children[0];
+                if (!gatheredBlockChild) {
+                    continue;
+                }
+                scAdId = -3;
+                blockStatus = null;
+                scContainer = null;
+                dataFull = -1;
+                skyscraperStatus = false;
+                splitedSkyscraper = [];
+                gatheredBlockChildSkyParts = [];
+                stickyStatus = false;
+                stickyCheck = [];
+                stickyFixedStatus = false;
+                stickyFixedCheck = [];
+                repeatableIdentifier = "";
+                divCidElement = null;
+
+                scAdId = gatheredBlockChild.getAttribute('data-aid');
+                scBlockId = gatheredBlockChild.getAttribute('data-id');
+                blockStatus = gatheredBlockChild.getAttribute('data-state');
+                dataFull = gatheredBlockChild.getAttribute('data-full');
+
+                if (scBlockId&&scAdId > 0) {
+                    sci = -1;
+                    for (i1 = 0; i1 < scArray.length; i1++) {
+                        if (scBlockId == scArray[i1]['blockId']&&scAdId == scArray[i1]['adId']) {
+                            sci = i1;
+                        }
+                    }
+
+                    if (sci > -1) {
+                        if (blockStatus&&okStates.includes(blockStatus)) {
+                            if (blockStatus=='no-block') {
+                                gatheredBlockChild.innerHTML = '';
+                            } else if ((blockStatus=='fetched'&&dataFull==1)||!['no-block','fetched'].includes(blockStatus)) {
+                                for (let cl1 = 0; cl1 < gatheredBlocks[i].classList.length; cl1++) {
+                                    if (gatheredBlocks[i].classList[cl1].includes("repeatable-mark")) {
+                                        repeatableIdentifier = gatheredBlocks[i].classList[cl1];
+                                    }
+                                }
+
+                                if (repeatableIdentifier) {
+                                    divCidElement = document.querySelectorAll(".percentPointerClass.scMark."+repeatableIdentifier+' div[data-cid="'+dataCidIdentifier+'"]');
+                                } else {
+                                    divCidElement = gatheredBlockChild.querySelectorAll('div[data-cid="'+dataCidIdentifier+'"]');
+                                }
+
+                                if (divCidElement&&divCidElement.length > 0) {
+                                    for (let i2 = 0; i2 < divCidElement.length; i2++) {
+                                        jQuery(divCidElement[i2]).html(scArray[sci]['text']);
+                                    }
+                                } else {
+                                    jQuery(gatheredBlockChild).html(scArray[sci]['text']);
+                                }
+                                launchUpdateRbDisplays();
+                            }
+                            if (blockStatus!='fetched'||(blockStatus=='fetched'&&dataFull==1)) {
+                                for (i1 = 0; i1 < scArray.length; i1++) {
+                                    if (scBlockId == scArray[i1]['blockId']) {
+                                        scArray.splice(i1, 1);
+                                        i1--;
+                                    }
+                                }
+                                gatheredBlocks[i].classList.remove('scMark');
+                            }
+                        }
+                    }
+                } else if (scBlockId&&scAdId < 1&&['no-block','fetched'].includes(blockStatus)) {
+                    for (i1 = 0; i1 < scArray.length; i1++) {
+                        if (scBlockId == scArray[i1]['blockId']) {
+                            scArray.splice(i1, 1);
+                            i1--;
+                        }
+                    }
+                    gatheredBlocks[i].classList.remove('scMark');
+                }
+            }
+        } else if (!scArray||(scArray&&scArray.length < 1)) {
+            endedSc = true;
+        }
+    } else {
+        endedSc = true;
+    }
+
+    if (!endedSc) {
+        setTimeout(function () {
+            shortcodesInsert();
+        }, 200);
+    }
+}
+
+function clearUnsuitableCache(cuc_cou) {
+    let scAdId = -1;
+    let ccRepeat = false;
+
+    let gatheredBlocks = document.querySelectorAll('.percentPointerClass .' + block_classes.join(', .percentPointerClass .'));
+
+    if (gatheredBlocks&&gatheredBlocks.length > 0) {
+        for (let i = 0; i < gatheredBlocks.length; i++) {
+            if (gatheredBlocks[i]['dataset']['aid']&&gatheredBlocks[i]['dataset']['aid'] < 0) {
+                if ((gatheredBlocks[i]['dataset']["state"]=='no-block')||(['done','fetched','refresh-wait'].includes(gatheredBlocks[i]['dataset']["state"]))) {
+                    gatheredBlocks[i]['innerHTML'] = '';
+                } else {
+                    ccRepeat = true;
+                }
+            } else if (!gatheredBlocks[i]['dataset']['aid']) {
+                ccRepeat = true;
+            }
+        }
+        if (cuc_cou < 50) {
+            if (ccRepeat) {
+                setTimeout(function () {
+                    clearUnsuitableCache(cuc_cou+1);
+                }, 100);
+            }
+        } else {
+            endedCc = true;
+        }
+    } else {
+        endedCc = true;
+    }
+}
+
+function blocksRepositionUse(containerString, blType, searchType, contentElement) {
+    let blocksInContainer;
+    let blLocal = blType;
+    let currentBlock;
+    let currentBlockId;
+    let currentBlockPosition;
+    let currentContainer;
+    let i = 0;
+    let j = 0;
+    let blockStrJs = ' .percentPointerClass.marked';
+    let blockStrPhp = ' .percentPointerClass:not(.marked)';
+    let blockStr = ' .percentPointerClass';
+    let checkPointer = null;
+    let blockRepeatEnd = false;
+
+    if (searchType) {
+        if (searchType == 'marked') {
+            while (!blockRepeatEnd) {
+                blLocal = blLocal.parentElement;
+                if (blLocal) {
+                    checkPointer = blLocal.querySelector("#content_pointer_id");
+                    if (!checkPointer) {
+                        blocksInContainer = jQuery(blLocal).parent(containerString);
+                        if (blocksInContainer && blocksInContainer.length > 0) {
+                            /* checkPointer = blocksInContainer.querySelector("#content_pointer_id"); */
+                            checkPointer = jQuery(blocksInContainer).find("#content_pointer_id");
+                            if (checkPointer && checkPointer.length > 0) {
+                                blocksInContainer = null;
+                            }
+                            blockRepeatEnd = true;
+                        }
+                    } else {
+                        blockRepeatEnd = true
+                    }
+                } else {
+                    blockRepeatEnd = true
+                }
+            }
+            /* blocksInContainer = jQuery(blType).parent(containerString); */
+            if (blocksInContainer&&blocksInContainer.length > 0) {
+                /* blocksInContainer.parentNode.insertBefore(rb_tempElement, blocksInContainer); */
+                blocksInContainer[0].parentNode.insertBefore(rb_tempElement, blocksInContainer[0]);
+
+                sameElementAfterExcClassId = false;
+                return blocksInContainer[0];
+            }
+            return blType;
+        } else if (searchType == 'non-marked') {
+            blocksInContainer = document.querySelectorAll(blType + containerString + blockStrPhp);
+            if (blocksInContainer && blocksInContainer.length > 0 && usedBlockSettingArray && usedBlockSettingArray.length > 0) {
+                for (i = 0; i < blocksInContainer.length; i++) {
+                    currentBlock = blocksInContainer[i];
+                    currentBlockId = currentBlock.querySelector('.' + block_classes.join(', .')).getAttribute('data-id');
+                    currentContainer = null;
+                    for (j = 0; j < usedBlockSettingArray.length; i++) {
+                        if (usedBlockSettingArray[i]['id'] == currentBlockId) {
+                            currentBlockPosition = usedBlockSettingArray[i]['elementPosition'];
+                            currentContainer = currentBlock.closest(blType + containerString);
+                            if (currentBlockPosition == 0) {
+                                currentContainer.parentNode.insertBefore(currentBlock, currentContainer);
+                            } else {
+                                currentContainer.parentNode.insertBefore(currentBlock, currentContainer.nextSibling);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+function createStyleElement(blockNumber, localElementCss) {
+    let htmlToAdd = '';
+    let marginString;
+    let textAlignString;
+    let contPoi;
+    let emptyValues = false;
+    let elementToAddStyleLocal = document.querySelector('#blocksAlignStyle');
+    if (!elementToAddStyleLocal) {
+        contPoi = document.querySelector('#content_pointer_id');
+        if (!contPoi) {
+            return false;
+        }
+
+        elementToAddStyleLocal = document.createElement('style');
+        elementToAddStyleLocal.setAttribute('id', 'blocksAlignStyle');
+        contPoi.parentNode.insertBefore(elementToAddStyleLocal, contPoi);
+    }
+
+    switch (localElementCss) {
+        case 'left':
+            emptyValues = false;
+            marginString = '0 auto 0 0';
+            textAlignString = 'left';
+            break;
+        case 'right':
+            emptyValues = false;
+            marginString = '0 0 0 auto';
+            textAlignString = 'right';
+            break;
+        case 'center':
+            emptyValues = false;
+            marginString = '0 auto';
+            textAlignString = 'center';
+            break;
+        case 'default':
+            emptyValues = true;
+            marginString = 'default';
+            textAlignString = 'default';
+            /** here will be css */
+            break;
+    }
+    if (!emptyValues) {
+        htmlToAdd = '.percentPointerClass  > *[data-id="'+blockNumber+'"] {\n' +
+            '    margin: '+marginString+';\n' +
+            '}\n';
+    }
+
+    elementToAddStyleLocal.innerHTML += htmlToAdd;
+    return textAlignString;
+}
+
+function initTargetToInsert(position, type, currentElement) {
+    let posCurrentElement;
+    let usedElement;
+    if (type == 'element') {
+        if (position == 0) {
+            posCurrentElement = currentElement;
+            if (!(typeof obligatoryMargin!=='undefined'&&obligatoryMargin===1)) {
+                currentElement.classList.add('rfwp_removedMarginTop');
+            }
+        } else {
+            posCurrentElement = currentElement.nextSibling;
+            if (!(typeof obligatoryMargin!=='undefined'&&obligatoryMargin===1)) {
+                currentElement.classList.add('rfwp_removedMarginBottom');
+            }
+        }
+        currentElement.style.clear = 'both';
+    } else {
+        usedElement = currentElement;
+        if (position == 0) {
+            posCurrentElement = usedElement;
+        } else {
+            posCurrentElement = usedElement.nextSibling;
+        }
+    }
+    return posCurrentElement;
+}
+
+function checkAdsWidth(content_pointer, posCurrentElement, currentElement) {
+    let widthChecker = document.querySelector('#widthChecker');
+    let widthCheckerStyle = null;
+    let content_pointerStyle = getComputedStyle(content_pointer);
+    /* let getPositionForTempElement = null;
+    let testImgDetected = false;
+    let testImg;
+    let testImageCompWidth;
+    let testImgCou = 0
+    let figureChilds;
+    let figureComWidth;
+    let fcCou = 0; */
+    let content = content_pointer.parentElement;
+
+    if (!widthChecker) {
+        widthChecker = document.createElement("div");
+        widthChecker.setAttribute('id','widthChecker');
+        widthChecker.style.display = 'flex';
+    }
+
+    if (content) {
+        posCurrentElement = initTargetToInsert(posCurrentElement, 'term', currentElement);
+        currentElement.parentNode.insertBefore(widthChecker, posCurrentElement);
+        widthCheckerStyle = getComputedStyle(widthChecker);
+        /* testImg = currentElement.previousSibling;
+        if (testImg) {
+            while (!testImgDetected&&testImgCou<4) {
+                if (testImg&&testImg.nodeName.toLowerCase() === 'figure') {
+                    figureComWidth = getComputedStyle(testImg);
+                    figureComWidth = parseInt(figureComWidth.width);
+                    figureChilds = testImg.childNodes;
+                    if (figureChilds&&figureChilds.length > 0) {
+                        while (!testImgDetected&&figureChilds[fcCou]) {
+                            if (figureChilds[fcCou] instanceof HTMLImageElement) {
+                                testImgDetected = true;
+                                testImageCompWidth = getComputedStyle(figureChilds[fcCou]);
+                                testImageCompWidth = parseInt(testImageCompWidth.width);
+                                console.log('img_f_w:'+figureComWidth+'; img_w:'+testImageCompWidth+';');
+                            }
+                            fcCou++;
+                        }
+                    }
+                }
+                if (testImg instanceof HTMLImageElement) {
+                    testImgDetected = true;
+                    testImageCompWidth = getComputedStyle(testImg);
+                    testImageCompWidth = parseInt(testImageCompWidth.width);
+                    console.log('img_w:'+testImageCompWidth+';');
+                }
+                if (!testImg.previousSibling) {
+                    break;
+                }
+                testImg = testImg.previousSibling;
+                testImgCou++;
+            }
+        }
+        console.log('cp_w:'+parseInt(content_pointerStyle.width)+'; wc_w:'+parseInt(widthCheckerStyle.width)+';'); */
+        if (parseInt(widthCheckerStyle.width) >= (parseInt(content_pointerStyle.width) - 50)) {
+            return true;
+        }
+    }
+    currentElement.parentNode.insertBefore(rb_tempElement, currentElement.nextSibling);
+    rb_tempElement_check = true;
+    return false;
+}
+
+/* function currentElementReceiver(revert, curSum, elList, currentElement) {
+    let origCurrentElement = currentElement;
+    let content_pointer = document.querySelector("#content_pointer_id");
+    let sameElementAfterWidth = false;
+    let testCou = 0;
+    while (elList[curSum]&&sameElementAfterWidth==false&&testCou < 5) {
+        currentElement = elList[curSum];
+        try {
+            sameElementAfterWidth=true;
+            sameElementAfterWidth = checkAdsWidth(content_pointer, 0, currentElement);
+        } catch (ex) {
+            console.log(ex.message);
+        }
+        revert? curSum--: curSum++;
+        testCou++;
+    }
+    return currentElement?currentElement:origCurrentElement;
+} */
+
+function currentElementReceiverSpec(revert, curSum, elList, currentElement) {
+    let origCurrentElement = currentElement;
+    let content_pointer = document.querySelector("#content_pointer_id"); /* orig */
+    let sameElementAfterWidth = false;
+    let testCou = 0;
+    while (elList[curSum]&&sameElementAfterWidth==false&&testCou < 5) {
+        currentElement = elList[curSum]['element'];
+        try {
+            sameElementAfterWidth=true;
+            sameElementAfterWidth = checkAdsWidth(content_pointer, 0, currentElement);
+        } catch (ex) {
+            console.log(ex.message);
+        }
+        revert? curSum--: curSum++;
+        testCou++;
+    }
+    return currentElement?currentElement:origCurrentElement;
+}
+
+function excIdClUnpacker() {
+    let excArr = [],
+        cou = 0,
+        currExcStr = '',
+        curExcFirst = '';
+    excArr['id'] = [];
+    excArr['class'] = [];
+    excArr['tag'] = [];
+    if (excIdClass&&excIdClass.length > 0) {
+        while (excIdClass[cou]) {
+            currExcStr = excIdClass[cou];
+            if (currExcStr.length > 0) {
+                curExcFirst = currExcStr.substring(0,1);
+                switch (curExcFirst) {
+                    case '#':
+                        if (currExcStr.length > 1) {
+                            currExcStr = currExcStr.substring(1);
+                            excArr['id'].push(currExcStr);
+                        }
+                        break;
+                    case '.':
+                        if (currExcStr.length > 1) {
+                            currExcStr = currExcStr.substring(1);
+                            excArr['class'].push(currExcStr);
+                        }
+                        break;
+                    default:
+                        excArr['tag'].push(currExcStr);
+                        break;
+                }
+                cou++;
+            }
+        }
+    }
+    return excArr;
+}
+
+function asyncBlocksInsertingFunction(blockSettingArray) {
+    try {
+        var content_pointer = document.querySelector("#content_pointer_id"); /* orig */
+        var parent_with_content = content_pointer.parentElement;
+        var lordOfElements = parent_with_content;
+        parent_with_content = parent_with_content.parentElement;
+        var newElement = document.createElement("div");
+        var elementToAdd;
+        var elementToAddStyle;
+        var poolbackI = 0;
+        var counter = 0;
+        var currentElement;
+        var repeatableCurrentElement;
+        var repeatableSuccess;
+        var reCou;
+        var curFirstPlace;
+        var curElementCount;
+        var curElementStep;
+        var backElement = 0;
+        var sumResult = 0;
+        var curSumResult = 0;
+        var repeat = false;
+        var currentElementChecker = false;
+        let containerFor6th = [];
+        let containerFor7th = [];
+        var posCurrentElement;
+        var block_number;
+        let contentLength = content_pointer.getAttribute('data-content-length');
+        let rejectedBlocks = content_pointer.getAttribute('data-rejected-blocks');
+        if (rejectedBlocks&&rejectedBlocks.length > 0) {
+            rejectedBlocks = rejectedBlocks.split(',');
+        }
+        let widthCheck = false;
+        let currentElementList;
+        var testElement1 = null;
+        var termorarity_parent_with_content = parent_with_content;
+        var termorarity_parent_with_content_length = 0;
+        var headersList = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+        for (var hc1 = 0; hc1 < headersList.length; hc1++) {
+            termorarity_parent_with_content_length += termorarity_parent_with_content.getElementsByTagName(headersList[hc1]).length;
+        }
+
+        let detailedElementList;
+        let ExcStrCou = 1;
+        let detailedQueryString;
+        let usedElement;
+        let tagList = [];
+        let localSumResult;
+        let binderName;
+
+        var removeClearing;
+        var repeatableBlockIdentifier = 0;
+
+        var i;
+
+        if (contentLength < 1) {
+            contentLength = parent_with_content.innerText.length
+        }
+
+        rb_tempElement = document.querySelector('#rb_tempElement');
+        if (!rb_tempElement) {
+            rb_tempElement = document.createElement('span');
+            rb_tempElement.setAttribute('id', 'rb_tempElement');
+        }
+
+        function getFromConstructions(currentElement) {
+            if (currentElement.parentElement.tagName.toLowerCase() == "blockquote") {
+                currentElement = currentElement.parentElement;
+                /* initTargetToInsert(blockSettingArray, 'element', currentElement); */
+                currentElement.parentNode.insertBefore(rb_tempElement, currentElement);
+                rb_tempElement_check = true;
+                sameElementAfterFromConstruction=false;
+            } else if (["tr","td","th","thead","tbody","table"].includes(currentElement.parentElement.tagName.toLowerCase())) {
+                currentElement = currentElement.parentElement;
+                while (["tr","td","th","thead","tbody","table"].includes(currentElement.parentElement.tagName.toLowerCase())) {
+                    currentElement = currentElement.parentElement;
+                }
+                currentElement.parentNode.insertBefore(rb_tempElement, currentElement);
+                rb_tempElement_check = true;
+                sameElementAfterFromConstruction=false;
+            }
+            return currentElement;
+        }
+
+        function directClassElementDetecting(blockSettingArray, directElement) {
+            let findQuery = 0;
+            let directClassElementResult = [];
+
+            currentElement = document.querySelectorAll(directElement);
+            if (currentElement.length > 0) {
+                if (blockSettingArray[i]['elementPlace'] > 1) {
+                    if (currentElement.length >= blockSettingArray[i]['elementPlace']) {
+                        currentElement = currentElement[blockSettingArray[i]['elementPlace']-1];
+                    } else if (currentElement.length < blockSettingArray[i]['elementPlace']) {
+                        currentElement = currentElement[currentElement.length - 1];
+                    } else {
+                        findQuery = 1;
+                    }
+                } else if (blockSettingArray[i]['elementPlace'] < 0) {
+                    if ((currentElement.length + blockSettingArray[i]['elementPlace'] + 1) > 0) {
+                        currentElement = currentElement[currentElement.length + blockSettingArray[i]['elementPlace']];
+                    } else {
+                        findQuery = 1;
+                    }
+                } else {
+                    findQuery = 1;
+                }
+            } else {
+                findQuery = 1;
+            }
+
+            directClassElementResult['findQuery'] = findQuery;
+            directClassElementResult['currentElement'] = currentElement;
+
+            return directClassElementResult;
+        }
+
+        function placingToH1(usedElement, elementTagToFind) {
+            let uselessLet;
+            currentElement = usedElement.querySelectorAll(elementTagToFind);
+
+            if (currentElement.length < 1) {
+                if (usedElement.parentElement) {
+                    uselessLet = placingToH1(usedElement.parentElement, elementTagToFind);
+                }
+            }
+            return currentElement;
+        }
+
+        function elementsCleaning(excArr, elList, pwcLocal, gatherString) {
+            let markedClass = 'rb_m_inc';
+            let markedClassBad = 'rb_m_exc';
+            let cou = 0;
+            let cou1 = 0;
+            let finalArr = [];
+            let finalArrClear = [];
+            let checkNearest;
+            let outOfRangeCheck;
+            let gatherRejected;
+            let allower;
+
+            try {
+                while (elList[cou]) {
+                    allower = true;
+                    if (!elList[cou].classList.contains(markedClassBad)) {
+                        if (excArr&&excArr.length > 0) {
+                            cou1 = 0;
+                            while (excArr[cou1]) {
+                                checkNearest = elList[cou].parentElement.closest(excArr[cou1]);
+                                if (checkNearest) {
+                                    checkNearest.classList.add('currClosest');
+                                    outOfRangeCheck = pwcLocal.querySelector('.currClosest');
+                                    if (outOfRangeCheck) {
+                                        allower = false;
+                                        checkNearest.classList.add(markedClass);
+                                        gatherRejected = checkNearest.querySelectorAll(gatherString);
+                                        if (gatherRejected.length > 0) {
+                                            for (let i1 = 0; i1 < gatherRejected.length; i1++) {
+                                                gatherRejected[i1].classList.add(markedClassBad);
+                                            }
+                                        }
+                                    }
+                                    checkNearest.classList.remove('currClosest');
+                                }
+                                cou1++;
+                            }
+                        }
+                        if (allower===true) {
+                            elList[cou].classList.add(markedClass);
+                            /* finalArr.push(elList[cou]); */
+                        }
+                    }
+                    cou++;
+                }
+                finalArr = pwcLocal.querySelectorAll('.'+markedClass+':not('+markedClassBad+')');
+                finalArrClear = pwcLocal.querySelectorAll('.'+markedClass+',.'+markedClassBad);
+                if (finalArrClear&&finalArrClear.length > 0) {
+                    for (let i1 = 0; i1 < finalArrClear.length; i1++) {
+                        finalArrClear[i1].classList.remove(markedClass,markedClassBad);
+                    }
+                }
+            } catch (er) {
+                console.log(er.message);
+            }
+            return finalArr;
+        }
+
+        function cureentElementsGather(usedElement, loopLimit = 2, localPwc = parent_with_content) {
+            let curElementSearchRepeater = true;
+            let curElementSearchCounter = 0;
+            let currentElementLoc = null;
+            let ExcludedStringBegin = '';
+            let ExcludedString = '';
+            let ExcludedStringEnd = '';
+            let tagListString = '';
+            let tagListStringExc = '';
+            let cou = 0;
+            /* let excArr = excIdClUnpacker(); */
+            let tagListCou = 0;
+
+            if (usedElement=='h1') {
+                currentElementLoc = placingToH1(localPwc, usedElement);
+            } else {
+                if (usedElement=='h2-4') {tagList = ['h2','h3','h3'];}
+                else                     {tagList = [usedElement];   }
+                while (tagList[tagListCou]) {
+                    tagListString += ((cou++>0)?',':'')+tagList[tagListCou];
+                    tagListStringExc += ':not('+tagList[tagListCou]+')';
+                    tagListCou++;
+                }
+
+                ExcludedString = '';
+                if (excIdClass&&excIdClass.length > 0) {
+                    for (let i2 = 0; i2 < excIdClass.length; i2++) {
+                        if (excIdClass[i2].length > 0) {
+                            ExcludedString += (i2>0?',':'')+excIdClass[i2]+tagListStringExc;
+                        }
+                    }
+                }
+                detailedQueryString += tagListString+','+ExcludedString;
+
+                /* console.log(detailedQueryString); */
+                while (curElementSearchRepeater&&curElementSearchCounter < loopLimit) {
+                    try {
+                        currentElementLoc = localPwc.querySelectorAll(tagListString);
+                    } catch (e1) {console.log(e1.message);}
+                    if (!currentElementLoc) {
+                        if (localPwc.parentElement) {
+                            localPwc = localPwc.parentElement;
+                        } else {
+                            break;
+                        }
+                    } else {
+                        currentElementLoc = elementsCleaning(excIdClass, currentElementLoc, localPwc, detailedQueryString);
+                        curElementSearchRepeater = false;
+                    }
+                    curElementSearchCounter++;
+                }
+            }
+            return currentElementLoc;
+        }
+
+        function currentElementReceiver(revert, localCurEl = currentElement) {
+            let origCurEl = localCurEl;
+            curSumResult = sumResult;
+            detailedElementList = localCurEl;
+            sameElementAfterWidth = false;
+            let testCou = 0;
+            while (detailedElementList[curSumResult]&&sameElementAfterWidth==false&&testCou < 8) {
+                localCurEl = detailedElementList[curSumResult];
+                try {
+                    sameElementAfterWidth=true;
+                    sameElementAfterWidth = checkAdsWidth(content_pointer, blockSettingArray[i]["elementPosition"], localCurEl);
+                } catch (ex) {
+                    console.log(ex.message);
+                }
+                revert? curSumResult--: curSumResult++;
+                testCou++;
+            }
+            if (localCurEl) {
+                currentElementChecker = true;
+            }
+            return localCurEl?localCurEl:origCurEl;
+        }
+        
+        function endingActions(block_number) {
+            usedBlockSettingArrayIds.push(block_number);
+            blockSettingArray.splice(i--, 1);
+            poolbackI = 1;
+        }
+
+        for (i = 0; i < blockSettingArray.length; i++) {
+            currentElement = null;
+            currentElementChecker = false;
+            sameElementAfterWidth = false;
+            sameElementAfterExcClassId = false;
+            sameElementAfterFromConstruction = false;
+            tagListCou = 0;
+            poolbackI = 0;
+            detailedQueryString = '';
+            binderName = elementBinderNameGenerator();
+
+            try {
+                if (!blockSettingArray[i]["text"]
+                    ||(blockSettingArray[i]["text"]&&blockSettingArray[i]["text"].length < 1)
+                    ||(rejectedBlocks&&rejectedBlocks.includes(blockSettingArray[i]["id"]))
+                    ||((blockSettingArray[i]["maxHeaders"] > 0)&&(blockSettingArray[i]["maxHeaders"] < parseInt(termorarity_parent_with_content_length)))
+                    ||((blockSettingArray[i]["maxSymbols"] > 0)&&(blockSettingArray[i]["maxSymbols"] < parseInt(contentLength)))
+                    ||(content_pointer.classList.contains("hard-content")&&blockSettingArray[i]["setting_type"]!=3)
+                ) {
+                    blockSettingArray.splice(i--, 1);
+                    poolbackI = 1;
+                    continue;
+                }
+
+                block_number = 0;
+
+                elementToAdd = document.createElement("div");
+                elementToAdd.classList.add("percentPointerClass");
+                elementToAdd.classList.add("marked");
+                if (blockSettingArray[i]["sc"]==1) {
+                    elementToAdd.classList.add("scMark");
+                }
+                elementToAdd.innerHTML = blockSettingArray[i]["text"];
+                elementToAdd.dataset.rbinder = binderName;
+                block_number = elementToAdd.children[0].attributes['data-id'].value;
+
+                if (blockDuplicate == 'no') {
+                    if (usedBlockSettingArrayIds.length > 0) {
+                        for (let i1 = 0; i1 < usedBlockSettingArrayIds.length; i1++) {
+                            if (block_number==usedBlockSettingArrayIds[i1]) {
+                                blockSettingArray.splice(i--, 1);
+                                poolbackI = 1;
+                                break;
+                            }
+                        }
+                        if (poolbackI == 1) {
+                            continue;
+                        }
+                    }
+                }
+
+                elementToAddStyle = createStyleElement(block_number, blockSettingArray[i]["elementCss"]);
+
+                if (elementToAddStyle&&elementToAddStyle!='default') {
+                    elementToAdd.style.textAlign = elementToAddStyle;
+                }
+
+                if ((blockSettingArray[i]["minHeaders"] > 0)&&(blockSettingArray[i]["minHeaders"] > termorarity_parent_with_content_length)) {continue;}
+                if (blockSettingArray[i]["minSymbols"] > contentLength) {continue;}
+
+                if (blockSettingArray[i]["setting_type"] == 1) {
+                    currentElement = cureentElementsGather(blockSettingArray[i]["element"].toLowerCase());
+                    if (currentElement) {
+                        if (blockSettingArray[i]["elementPlace"] < 0) {
+                            sumResult = currentElement.length + blockSettingArray[i]["elementPlace"];
+                            if (sumResult >= 0 && sumResult < currentElement.length) {
+                                currentElement = currentElementReceiver(true);
+                            }
+                        } else {
+                            sumResult = blockSettingArray[i]["elementPlace"] - 1;
+                            if (sumResult < currentElement.length) {
+                                currentElement = currentElementReceiver(false);
+                            }
+                        }
+                    }
+                    if (currentElement != undefined && currentElement != null && currentElementChecker) {
+                        posCurrentElement = initTargetToInsert(blockSettingArray[i]["elementPosition"], 'element', currentElement);
+                        currentElement.parentNode.insertBefore(elementToAdd, posCurrentElement);
+                        currentElement.classList.add('rbinder-'+binderName);
+                        elementToAdd.classList.remove('coveredAd');
+                        usedBlockSettingArrayIds.push(block_number);
+                        blockSettingArray.splice(i--, 1);
+                        poolbackI = 1;
+                        rb_tempElement_check = false;
+                    } else {
+                        repeat = true;
+                    }
+                }
+                else if (blockSettingArray[i]["setting_type"] == 2) {
+                    if (blockDuplicate == 'no') {
+                        blockSettingArray[i]["elementCount"] = 1;
+                    }
+                    repeatableCurrentElement = [];
+                    reCou = 0;
+                    curFirstPlace = blockSettingArray[i]["firstPlace"];
+                    curElementCount = blockSettingArray[i]["elementCount"];
+                    curElementStep = blockSettingArray[i]["elementStep"];
+                    repeatableSuccess = false;
+
+                    elementToAddStyle = createStyleElement(block_number, blockSettingArray[i]["elementCss"]);
+
+                    repeatableCurrentElement = cureentElementsGather(blockSettingArray[i]["element"].toLowerCase());
+                    if (repeatableCurrentElement) {
+                        for (let i1 = 0; i1 < blockSettingArray[i]["elementCount"]; i1++) {
+                            currentElementChecker = false;
+                            let repElementToAdd = document.createElement("div");
+                            repElementToAdd.classList.add("percentPointerClass");
+                            repElementToAdd.classList.add("marked");
+                            if (blockSettingArray[i]["sc"]==1) {
+                                repElementToAdd.classList.add("scMark");
+                            }
+                            repElementToAdd.classList.add("repeatable-mark-"+repeatableBlockIdentifier);
+                            repElementToAdd.innerHTML = blockSettingArray[i]["text"];
+
+                            if (elementToAddStyle&&elementToAddStyle!='default') {
+                                repElementToAdd.style.textAlign = elementToAddStyle;
+                            }
+
+                            sumResult = Math.round(parseInt(blockSettingArray[i]["firstPlace"]) + (i1*parseInt(blockSettingArray[i]["elementStep"])) - 1);
+                            if (sumResult < repeatableCurrentElement.length) {
+                                currentElement = currentElementReceiver(false, repeatableCurrentElement);
+                            }
+
+                            if (currentElement != undefined && currentElement != null && currentElementChecker) {
+                                posCurrentElement = initTargetToInsert(blockSettingArray[i]["elementPosition"], 'element', currentElement);
+                                currentElement.parentNode.insertBefore(repElementToAdd, posCurrentElement);
+                                currentElement.classList.add('rbinder-'+binderName);
+                                repElementToAdd.classList.remove('coveredAd');
+                                curFirstPlace = sumResult + parseInt(blockSettingArray[i]["elementStep"]) + 1;
+                                curElementCount--;
+                                repeatableSuccess = true;
+                            } else {
+                                repeatableSuccess = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (repeatableSuccess==true) {
+                        usedBlockSettingArrayIds.push(block_number);
+                        blockSettingArray.splice(i--, 1);
+                        poolbackI = 1;
+                        repeatableBlockIdentifier++;
+                    } else {
+                        if (!blockSettingArray[i]["unsuccess"]) {
+                            blockSettingArray[i]["unsuccess"] = 1;
+                        } else {
+                            blockSettingArray[i]["unsuccess"] = Math.round(blockSettingArray[i]["unsuccess"] + 1);
+                        }
+                        if (blockSettingArray[i]["unsuccess"] > 10) {
+                            usedBlockSettingArrayIds.push(block_number);
+                            blockSettingArray.splice(i--, 1);
+                            poolbackI = 1;
+                        } else {
+                            blockSettingArray[i]["firstPlace"] = curFirstPlace;
+                            blockSettingArray[i]["elementCount"] = curElementCount;
+                            blockSettingArray[i]["elementStep"] = curElementStep;
+                            repeat = true;
+                        }
+                    }
+                }
+                else if (blockSettingArray[i]["setting_type"] == 3) {
+                    let elementTypeSymbol = '';
+                    let elementSpaceSymbol = '';
+                    let elementName = '';
+                    let elementType = '';
+                    let elementTag  = '';
+                    let findQuery = 0;
+                    let directClassResult = [];
+                    let directElement = blockSettingArray[i]["directElement"].trim();
+
+                    if (directElement.search('#') > -1) {
+                        findQuery = 1;
+                    } else if ((directElement.search('#') < 0)&&(directElement.search('.') > -1)) {
+                        directClassResult = directClassElementDetecting(blockSettingArray, directElement);
+                        findQuery = directClassResult['findQuery'];
+                        currentElement = directClassResult['currentElement'];
+                    }
+                    if (findQuery == 1) {
+                        currentElement = document.querySelector(directElement);
+                    }
+                    if (currentElement) {
+                        currentElementChecker = true;
+                    }
+
+                    if (currentElement != undefined && currentElement != null && currentElementChecker) {
+                        posCurrentElement = initTargetToInsert(blockSettingArray[i]["elementPosition"], 'element', currentElement);
+                        currentElement.parentNode.insertBefore(elementToAdd, posCurrentElement);
+                        elementToAdd.classList.remove('coveredAd');
+                        currentElement.classList.add('rbinder-'+binderName);
+                        usedBlockSettingArrayIds.push(block_number);
+                        blockSettingArray.splice(i--, 1);
+                        poolbackI = 1;
+                    } else {
+                        repeat = true;
+                    }
+                }
+                else if (blockSettingArray[i]["setting_type"] == 4) {
+                    document.querySelector("#content_pointer_id").parentElement.append(elementToAdd);
+                    usedBlockSettingArrayIds.push(block_number);
+                    blockSettingArray.splice(i--, 1);
+                    poolbackI = 1;
+                }
+                else if (blockSettingArray[i]["setting_type"] == 5) {
+                    let currentElementList = cureentElementsGather('p', 1, content_pointer.parentElement);
+                    if (currentElementList&&currentElementList.length > 0) {
+                        let pCount = currentElementList.length;
+                        let elementNumber = Math.round(pCount/2);
+                        if (pCount > 1) {
+                            currentElement = currentElementList[elementNumber+1];
+                        }
+                        if (currentElement != undefined && currentElement != null) {
+                            if (pCount > 1) {
+                                currentElement.parentNode.insertBefore(elementToAdd, currentElement);
+                            } else {
+                                currentElement.parentNode.insertBefore(elementToAdd, currentElement.nextSibling);
+                            }
+                            elementToAdd.classList.remove('coveredAd');
+                            currentElement.classList.add('rbinder-'+binderName);
+                            usedBlockSettingArrayIds.push(block_number);
+                            blockSettingArray.splice(i--, 1);
+                            poolbackI = 1;
+                        } else {
+                            repeat = true;
+                        }
+                    } else {
+                        repeat = true;
+                    }
+                }
+                else if (blockSettingArray[i]["setting_type"] == 6) {
+                    if (containerFor6th.length > 0) {
+                        for (let j = 0; j < containerFor6th.length; j++) {
+                            if (containerFor6th[j]["elementPlace"]<blockSettingArray[i]["elementPlace"]) {
+                                /* continue; */
+                                if (j == containerFor6th.length-1) {
+                                    containerFor6th.push(blockSettingArray[i]);
+                                    /* usedAdBlocksArray.push(checkIfBlockUsed); */
+                                    usedBlockSettingArrayIds.push(block_number);
+                                    blockSettingArray.splice(i--, 1);
+                                    poolbackI = 1;
+                                    break;
+                                }
+                            } else {
+                                for (let k = containerFor6th.length-1; k > j-1; k--) {
+                                    containerFor6th[k + 1] = containerFor6th[k];
+                                }
+                                containerFor6th[j] = blockSettingArray[i];
+                                /* usedAdBlocksArray.push(checkIfBlockUsed); */
+                                usedBlockSettingArrayIds.push(block_number);
+                                blockSettingArray.splice(i--, 1);
+                                poolbackI = 1;
+                                break;
+                            }
+                        }
+                    } else {
+                        containerFor6th.push(blockSettingArray[i]);
+                        usedBlockSettingArrayIds.push(block_number);
+                        blockSettingArray.splice(i--, 1);
+                        poolbackI = 1;
+                    }
+                /* vidpravutu v vidstiinuk dlya 6ho tipa */
+                }
+                else if (blockSettingArray[i]["setting_type"] == 7) {
+                    if (containerFor7th.length > 0) {
+                        for (let j = 0; j < containerFor7th.length; j++) {
+                            if (containerFor7th[j]["elementPlace"]<blockSettingArray[i]["elementPlace"]) {
+                                /* continue; */
+                                if (j == containerFor7th.length-1) {
+                                    containerFor7th.push(blockSettingArray[i]);
+                                    usedBlockSettingArrayIds.push(block_number);
+                                    blockSettingArray.splice(i--, 1);
+                                    poolbackI = 1;
+                                    break;
+                                }
+                            } else {
+                                for (let k = containerFor7th.length-1; k > j-1; k--) {
+                                    containerFor7th[k + 1] = containerFor7th[k];
+                                }
+                                containerFor7th[j] = blockSettingArray[i];
+                                usedBlockSettingArrayIds.push(block_number);
+                                blockSettingArray.splice(i--, 1);
+                                poolbackI = 1;
+                                break;
+                            }
+                        }
+                    } else {
+                        containerFor7th.push(blockSettingArray[i]);
+                        usedBlockSettingArrayIds.push(block_number);
+                        blockSettingArray.splice(i--, 1);
+                        poolbackI = 1;
+                    }
+                /* vidpravutu v vidstiinuk dlya 7ho tipa */
+                }
+            } catch (e) {
+                console.log(e.message);
+            }
+        }
+
+        var array = textLengthGatherer(lordOfElements),
+            tlArray = array.array,
+            length = array.length;
+
+        if (containerFor6th.length > 0) {
+            percentInserter(lordOfElements, containerFor6th, tlArray, length);
+        }
+        if (containerFor7th.length > 0) {
+            symbolInserter(lordOfElements, containerFor7th, tlArray);
+        }
+        shortcodesInsert();
+        let stopper = 0;
+
+        window.addEventListener('load', function () {
+            if (repeat = true) {
+                setTimeout(function () {
+                    /* asyncBlocksInsertingFunction(blockSettingArray, contentLength) */
+                    asyncBlocksInsertingFunction(blockSettingArray);
+                }, 100);
+            }
+        });
+    } catch (e) {
+        console.log(e.message);
+    }
+}
+
+function possibleTagsInCheckConfirmer(possibleTagsArray, possibleTagsInCheck) {
+    if (possibleTagsArray.includes("LI")) {
+        if (possibleTagsArray.includes("UL")) {
+            possibleTagsInCheck.push("UL");
+        }
+        if (possibleTagsArray.includes("OL")) {
+            possibleTagsInCheck.push("OL");
+        }
+    }
+
+    return false;
+}
+
+function textLengthGatherer(lordOfElementsLoc) {
+    var possibleTagsArray;
+    if (typeof tagsListForTextLength!=="undefined") {
+        possibleTagsArray = tagsListForTextLength;
+    } else {
+        possibleTagsArray = ["P", "H1", "H2", "H3", "H4", "H5", "H6", "DIV", "BLOCKQUOTE", "INDEX", "ARTICLE", "SECTION"];
+    }
+    let possibleTagsInCheck = ["DIV", "INDEX", "SECTION"];
+
+    possibleTagsInCheckConfirmer(possibleTagsArray, possibleTagsInCheck);
+    let excArr = excIdClUnpacker(),
+        textLength = 0,
+        tlArray = [];
+
+    function textLengthGathererRec(lordOfElementsLoc) {
+        let allowed;
+        let cou1;
+        let classesArray;
+        let countSuccess = 0;
+        try {
+            for (let i = 0; i < lordOfElementsLoc.children.length; i++) {
+                if (possibleTagsArray.includes(lordOfElementsLoc.children[i].tagName)
+                    &&!lordOfElementsLoc.children[i].classList.contains("percentPointerClass")
+                    &&lordOfElementsLoc.children[i].id!="toc_container"
+                ) {
+                    if (possibleTagsInCheck.includes(lordOfElementsLoc.children[i].tagName)
+                        &&(lordOfElementsLoc.children[i].children.length > 0)
+                    ) {
+                        allowed = true;
+                        if (lordOfElementsLoc.children[i].id&&excArr['id'].length > 0) {
+                            cou1 = 0;
+                            while (excArr['id'][cou1]) {
+                                if (lordOfElementsLoc.children[i].id.toLowerCase()==excArr['id'][cou1].toLowerCase()) {
+                                    allowed = false;
+                                    break;
+                                }
+                                cou1++;
+                            }
+                        }
+
+                        if (lordOfElementsLoc.children[i].classList.length > 0&&excArr['class'].length > 0) {
+                            cou1 = 0;
+                            while (excArr['class'][cou1]) {
+                                classesArray = excArr['class'][cou1].split('.');
+                                if (classesArray.every(className => lordOfElementsLoc.children[i].classList.contains(className))) {
+                                    allowed = false;
+                                    break;
+                                }
+                                cou1++;
+                            }
+                        }
+
+                        if (excArr['tag'].length > 0) {
+                            cou1 = 0;
+                            while (excArr['tag'][cou1]) {
+                                if (lordOfElementsLoc.children[i].tagName.toLowerCase()==excArr['tag'][cou1].toLowerCase()) {
+                                    allowed = false;
+                                    break;
+                                }
+                                cou1++;
+                            }
+                        }
+
+                        if (allowed) {
+                            if (textLengthGathererRec(lordOfElementsLoc.children[i], excArr, possibleTagsArray, possibleTagsInCheck)) {
+                                countSuccess++;
+                                continue;
+                            }
+                        }
+                    }
+                    textLength = textLength + lordOfElementsLoc.children[i].innerText.length;
+                    tlArray.push({
+                        tag: lordOfElementsLoc.children[i].tagName,
+                        length: lordOfElementsLoc.children[i].innerText.length,
+                        lengthSum: textLength,
+                        element: lordOfElementsLoc.children[i]
+                    });
+                    countSuccess++;
+                }
+            }
+        } catch (er) {
+            console.log(er.message);
+        }
+        return countSuccess > 0;
+    }
+
+    textLengthGathererRec(lordOfElementsLoc);
+
+    return {array: tlArray, length: textLength};
+}
+
+window.asyncFunctionLauncher = function() {
+    if (window.jsInputerLaunch !== undefined
+        &&[15, 10].includes(window.jsInputerLaunch)
+        &&(typeof asyncBlocksInsertingFunction !== 'undefined' )
+        &&(typeof asyncBlocksInsertingFunction === 'function')
+        &&typeof endedSc!=='undefined'&&
+        typeof endedCc!=='undefined'&&
+        typeof usedAdBlocksArray!=='undefined'&&
+        typeof usedBlockSettingArrayIds!=='undefined'&&
+        typeof sameElementAfterWidth!=='undefined'&&
+        typeof sameElementAfterExcClassId!=='undefined'&&
+        typeof sameElementAfterFromConstruction!=='undefined'&&
+        typeof rb_tempElement_check!=='undefined'&&
+        typeof rb_tempElement!=='undefined'&&
+        typeof window.jsInputerLaunch!=='undefined') {
+        /* asyncBlocksInsertingFunction(blockSettingArray, contentLength); */
+        asyncBlocksInsertingFunction(blockSettingArray);
+        if (!endedSc) {
+            shortcodesInsert();
+        }
+        if (!endedCc) {
+            /* clearUnsuitableCache(0); */
+        }
+        /* blocksReposition();
+        cachePlacing();
+        symbolMarkersPlaced(); */
+    } else {
+        setTimeout(function () {
+            asyncFunctionLauncher();
+        }, 50);
+    }
+};
+/* asyncFunctionLauncher(); */
+
+function asyncInsertingsInsertingFunction(insertingsArray) {
+    let currentElementForInserting = 0;
+    let currentElementToMove = 0;
+    let positionElement = 0;
+    let position = 0;
+    let insertToAdd = 0;
+    let postId = 0;
+    let repeatSearch = 0;
+    if (insertingsArray&&insertingsArray.length > 0) {
+        for (let i = 0; i < insertingsArray.length; i++) {
+            if (!insertingsArray[i]['used']||(insertingsArray[i]['used']&&insertingsArray[i]['used']==0)) {
+                positionElement = insertingsArray[i]['position_element'];
+                position = insertingsArray[i]['position'];
+                insertToAdd = insertingsArray[i]['content'];
+                postId = insertingsArray[i]['postId'];
+
+                currentElementForInserting = document.querySelector(positionElement);
+
+                currentElementToMove = document.querySelector('.coveredInsertings[data-id="'+postId+'"]');
+                if (currentElementForInserting) {
+                    if (position==0) {
+                        currentElementForInserting.parentNode.insertBefore(currentElementToMove, currentElementForInserting);
+                        currentElementToMove.classList.remove('coveredInsertings');
+                        insertingsArray[i]['used'] = 1;
+                    } else {
+                        currentElementForInserting.parentNode.insertBefore(currentElementToMove, currentElementForInserting.nextSibling);
+                        currentElementToMove.classList.remove('coveredInsertings');
+                        insertingsArray[i]['used'] = 1;
+                    }
+                } else {
+                    repeatSearch = 1;
+                }
+            }
+        }
+    }
+    if (repeatSearch == 1) {
+        setTimeout(function () {
+            asyncInsertingsInsertingFunction(insertingsArray);
+        }, 100)
+    }
+}
+
+function insertingsFunctionLaunch() {
+    if (window.jsInsertingsLaunch !== undefined&&jsInsertingsLaunch == 25) {
+        asyncInsertingsInsertingFunction(insertingsArray);
+    } else {
+        setTimeout(function () {
+            insertingsFunctionLaunch();
+        }, 100)
+    }
+}
+
+function setLongCache() {
+    let xhttp = new XMLHttpRequest();
+    let sendData = 'action=setLongCache&type=longCatching';
+    xhttp.onreadystatechange = function(redata) {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log('long cache deployed');
+        }
+    };
+    xhttp.open("POST", rb_ajaxurl, true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(sendData);
+}
+
+function cachePlacing(alert_type, errorInfo=null) {
+    let adBlocks = document.querySelectorAll('.percentPointerClass .' + block_classes.join(', .percentPointerClass .'));
+    let curAdBlock;
+    let okStates = ['done','refresh-wait','no-block','fetched'];
+    /* let adId = -1; */
+    let blockAid = null;
+    let blockId;
+
+    if (typeof cachedBlocksArray !== 'undefined'&&cachedBlocksArray&&cachedBlocksArray.length > 0&&adBlocks&&adBlocks.length > 0) {
+        for (let i = 0; i < adBlocks.length; i++) {
+            blockAid = adBlocks[i]['dataset']['aid'];
+
+            if (!blockAid) {
+                blockId = adBlocks[i]['dataset']['id'];
+                if (cachedBlocksArray[blockId]) {
+                    jQuery(adBlocks[i]).html(cachedBlocksArray[blockId]);
+                }
+            }
+        }
+    }
+
+    if (alert_type&&alert_type=='high') {
+        setLongCache();
+    }
+}
+
+function symbolInserter(lordOfElements, containerFor7th, tlArray) {
+    try {
+        var currentChildrenLength = 0;
+        let previousBreak = 0;
+        let needleLength;
+        let currentSumLength;
+        let elementToAdd;
+        let elementToBind;
+        let elementToAddStyle;
+        let block_number;
+        let binderName;
+
+        if (!document.getElementById("markedSpan1")) {
+            for (let i = 0; i < containerFor7th.length; i++) {
+                previousBreak = 0;
+                currentChildrenLength = 0;
+                currentSumLength = 0;
+                needleLength = Math.abs(containerFor7th[i]['elementPlace']);
+                binderName = elementBinderNameGenerator();
+
+                elementToAdd = document.createElement("div");
+                elementToAdd.classList.add("percentPointerClass");
+                elementToAdd.classList.add("marked");
+                if (containerFor7th[i]["sc"]==1) {
+                    elementToAdd.classList.add("scMark");
+                }
+                elementToAdd.dataset.rbinder = binderName;
+                elementToAdd.innerHTML = containerFor7th[i]["text"];
+                block_number = elementToAdd.children[0].attributes['data-id'].value;
+                if (!elementToAdd) {
+                    continue;
+                }
+
+                elementToAddStyle = createStyleElement(block_number, containerFor7th[i]["elementCss"]);
+
+                if (elementToAddStyle&&elementToAddStyle!='default') {
+                    elementToAdd.style.textAlign = elementToAddStyle;
+                }
+
+                if (containerFor7th[i]['elementPlace'] < 0) {
+                    for (let j = tlArray.length-1; j > -1; j--) {
+                        currentSumLength = currentSumLength + tlArray[j]['length'];
+                        if (needleLength < currentSumLength) {
+                            elementToBind = tlArray[j]['element'];
+                            elementToBind = currentElementReceiverSpec(true, j, tlArray, elementToBind);
+                            elementToBind.parentNode.insertBefore(elementToAdd, elementToBind);
+                            elementToBind.classList.add('rbinder-'+binderName);
+                            elementToAdd.classList.remove('coveredAd');
+                            break;
+                        }
+                    }
+                } else if (containerFor7th[i]['elementPlace'] == 0) {
+                    elementToBind = tlArray[0]['element'];
+                    elementToBind.parentNode.insertBefore(elementToAdd, elementToBind);
+                    elementToBind.classList.add('rbinder-'+binderName);
+                    elementToAdd.classList.remove('coveredAd');
+                } else {
+                    for (let j = 0; j < tlArray.length; j++) {
+                        currentSumLength = currentSumLength + tlArray[j]['length'];
+                        if (needleLength < currentSumLength) {
+                            elementToBind = tlArray[j]['element'];
+                            elementToBind = currentElementReceiverSpec(false, j, tlArray, elementToBind);
+                            elementToBind.parentNode.insertBefore(elementToAdd, elementToBind.nextSibling);
+                            elementToBind.classList.add('rbinder-'+binderName);
+                            elementToAdd.classList.remove('coveredAd');
+                            break;
+                        }
+                    }
+                }
+            }
+
+            var spanMarker = document.createElement("span");
+            spanMarker.setAttribute("id", "markedSpan1");
+            lordOfElements.prepend(spanMarker);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+function percentInserter(lordOfElements, containerFor6th, tlArray, textLength) {
+    try {
+        var textNeedyLength = 0;
+        let elementToAdd;
+        var elementToBind;
+        let elementToAddStyle;
+        let block_number;
+        var binderName;
+        /* var checkIfBlockUsed = 0; */
+
+        function insertByPercents(textLength) {
+            let localMiddleValue = 0;
+
+            for (let j = 0; j < containerFor6th.length; j++) {
+                textNeedyLength = Math.round(textLength * (containerFor6th[j]["elementPlace"]/100));
+                for (let i = 0; i < tlArray.length; i++) {
+                    if (tlArray[i]['lengthSum'] >= textNeedyLength) {
+                        binderName = elementBinderNameGenerator();
+
+                        elementToAdd = document.createElement("div");
+                        elementToAdd.classList.add("percentPointerClass");
+                        elementToAdd.classList.add("marked");
+                        if (containerFor6th[j]["sc"]==1) {
+                            elementToAdd.classList.add("scMark");
+                        }
+                        elementToAdd.dataset.rbinder = binderName;
+                        elementToAdd.innerHTML = containerFor6th[j]["text"];
+                        if (!elementToAdd) {
+                            break;
+                        }
+                        block_number = elementToAdd.children[0].attributes['data-id'].value;
+                        elementToAddStyle = createStyleElement(block_number, containerFor6th[j]["elementCss"]);
+                        if (elementToAddStyle&&elementToAddStyle!='default') {
+                            elementToAdd.style.textAlign = elementToAddStyle;
+                        }
+
+                        localMiddleValue = tlArray[i]['lengthSum'] - Math.round(tlArray[i]['length']/2);
+                        elementToBind = tlArray[i]['element'];
+                        currentElementReceiverSpec(false, i, tlArray, elementToBind);
+                        if (textNeedyLength < localMiddleValue) {
+                            elementToBind.parentNode.insertBefore(elementToAdd, elementToBind);
+                        } else {
+                            elementToBind.parentNode.insertBefore(elementToAdd, elementToBind.nextSibling);
+                        }
+                        elementToBind.classList.add('rbinder-'+binderName);
+                        elementToAdd.classList.remove('coveredAd');
+                        break;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function clearTlMarks() {
+            let marksForDeleting = document.querySelectorAll('.textLengthMarker');
+
+            if (marksForDeleting.length > 0) {
+                for (let i = 0; i < marksForDeleting.length; i++) {
+                    marksForDeleting[i].remove();
+                }
+            }
+        }
+
+        if (!document.getElementById("markedSpan")) {
+            insertByPercents(textLength);
+            clearTlMarks();
+            var spanMarker = document.createElement("span");
+            spanMarker.setAttribute("id", "markedSpan");
+            lordOfElements.prepend(spanMarker);
+        }
+    } catch (e) {
+        console.log(e.message);
+    }
+}
+
+function saveContentBlock(contentContainer) {
+    try {
+        if (!gather_content) {
+            console.log('content gather save function entered');
+            let xhttp = new XMLHttpRequest();
+            let sendData = 'action=RFWP_saveContentContainer&type=gatherContentBlock&data='+contentContainer;
+            xhttp.onreadystatechange = function(redata) {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log('content gather succeed');
+                } else {
+                    console.log('content gather gone wrong');
+                }
+            };
+            xhttp.open("POST", rb_ajaxurl, true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(sendData);
+        }
+    } catch (er) {
+        console.log('content gather error: '+er+';');
+    }
+}
+
+window.gatherContentBlock = function() {
+    let cPointer = null,
+        cPointerParent = null,
+        cPointerParentString = null,
+        classWords = ['content','entry','post','wrap','description','taxonomy'],
+        classChoosed = false;
+
+    cPointer =  document.querySelector('#content_pointer_id');
+    if (cPointer) {
+        if (window.jsInputerLaunch!==15) {
+            return false;
+        }
+        cPointerParent = cPointer.parentElement;
+        if (cPointerParent) {
+            if (cPointerParent.id) {
+                cPointerParentString = '#'+cPointerParent.id;
+            } else {
+                if (cPointerParent.classList.length > 0) {
+                    cPointerParentString = '.'+cPointerParent.classList[0];
+                    for (let j = 0; j < classWords.length; j++) {
+                        for (let i = 0; i < cPointerParent.classList.length; i++) {
+                            if (cPointerParent.classList[i].includes(classWords[j])) {
+                                cPointerParentString = '.'+cPointerParent.classList[i];
+                                classChoosed = true;
+                                break;
+                            }
+                        }
+                        if (classChoosed===true) {
+                            break;
+                        }
+                    }
+                }
+            }
+            if (cPointerParentString) {
+                console.log('content gather content block detected');
+                /* cPointerParentString = JSON.stringify(cPointerParentString); */
+                saveContentBlock(cPointerParentString);
+            }
+        }
+    } else {
+        console.log('content gather delayed');
+        setTimeout(function () {
+            gatherContentBlock();
+        }, 500);
+    }
+};
+
+window.removeMarginClass = function(blockObject) {
+    if (blockObject && typeof window.jsInputerLaunch !== 'undefined' && [15, 10].includes(window.jsInputerLaunch)) {
+        let binderName,
+            neededElement,
+            currentDirection,
+            seekerIterationCount,
+            currentSubling;
+
+        binderName = blockObject.dataset.rbinder;
+        if (binderName) {
+            seekerIterationCount = 0;
+            currentDirection = 'before';
+            do {
+                seekerIterationCount++;
+                currentSubling = blockObject.nextElementSibling;
+                if (currentSubling&&currentSubling.classList.contains('rbinder-'+binderName)) {
+                    neededElement = currentSubling;
+                }
+            } while (currentSubling&&!neededElement&&seekerIterationCount < 5);
+
+            if (!neededElement) {
+                seekerIterationCount = 0;
+                currentDirection = 'after';
+                do {
+                    seekerIterationCount++;
+                    currentSubling = blockObject.previousElementSibling;
+                    if (currentSubling&&currentSubling.classList.contains('rbinder-'+binderName)) {
+                        neededElement = currentSubling;
+                    }
+                } while (currentSubling&&!neededElement&&seekerIterationCount < 5);
+            }
+            if (neededElement) {
+                if (currentDirection === 'before') {
+                    neededElement.classList.remove('rfwp_removedMarginTop');
+                } else {
+                    neededElement.classList.remove('rfwp_removedMarginBottom');
+                }
+            }
+        }
+    }
+
+    return false;
+};
+
+function elementBinderNameGenerator() {
+    let binderName = '',
+        checkedElements,
+        passed = false;
+
+    while (passed===false) {
+        binderName = Math.floor(Math.random()*100000);
+        checkedElements = document.querySelectorAll('[data-rbinder="'+binderName+'"]');
+        if (checkedElements.length < 1) {
+            passed = true;
+        }
+    }
+
+    return binderName;
+}
+</script>
+
+
+
+<script type="text/javascript">
+"use strict";var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||!1,descriptor.configurable=!0,"value"in descriptor&&(descriptor.writable=!0),Object.defineProperty(target,descriptor.key,descriptor)}}return function(Constructor,protoProps,staticProps){return protoProps&&defineProperties(Constructor.prototype,protoProps),staticProps&&defineProperties(Constructor,staticProps),Constructor}}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor))throw new TypeError("Cannot call a class as a function")}var RocketBrowserCompatibilityChecker=function(){function RocketBrowserCompatibilityChecker(options){_classCallCheck(this,RocketBrowserCompatibilityChecker),this.passiveSupported=!1,this._checkPassiveOption(this),this.options=!!this.passiveSupported&&options}return _createClass(RocketBrowserCompatibilityChecker,[{key:"_checkPassiveOption",value:function(self){try{var options={get passive(){return!(self.passiveSupported=!0)}};window.addEventListener("test",null,options),window.removeEventListener("test",null,options)}catch(err){self.passiveSupported=!1}}},{key:"initRequestIdleCallback",value:function(){!1 in window&&(window.requestIdleCallback=function(cb){var start=Date.now();return setTimeout(function(){cb({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-start))}})},1)}),!1 in window&&(window.cancelIdleCallback=function(id){return clearTimeout(id)})}},{key:"isDataSaverModeOn",value:function(){return"connection"in navigator&&!0===navigator.connection.saveData}},{key:"supportsLinkPrefetch",value:function(){var elem=document.createElement("link");return elem.relList&&elem.relList.supports&&elem.relList.supports("prefetch")&&window.IntersectionObserver&&"isIntersecting"in IntersectionObserverEntry.prototype}},{key:"isSlowConnection",value:function(){return"connection"in navigator&&"effectiveType"in navigator.connection&&("2g"===navigator.connection.effectiveType||"slow-2g"===navigator.connection.effectiveType)}}]),RocketBrowserCompatibilityChecker}();
+</script>
+<script type="text/javascript">
+class RocketLazyLoadScripts{constructor(t,e){this.attrName="data-rocketlazyloadscript",this.browser=e,this.options=this.browser.options,this.triggerEvents=t,this.userEventListener=this.triggerListener.bind(this),window.addEventListener("touchstart",function(){})}init(){this._addEventListener(this)}reset(){this._removeEventListener(this)}_addEventListener(t){this.triggerEvents.forEach(e=>window.addEventListener(e,t.userEventListener,t.options))}_removeEventListener(t){this.triggerEvents.forEach(e=>window.removeEventListener(e,t.userEventListener,t.options))}_loadScriptSrc(){const t=document.querySelectorAll(`script[${this.attrName}]`);0!==t.length?(Array.prototype.slice.call(t).forEach(t=>{const e=t.getAttribute(this.attrName);t.setAttribute("src",e),t.removeAttribute(this.attrName)}),this.reset()):this.reset()}triggerListener(t){if(t&&t.target){if("A"==t.target.tagName)return;if("I"==t.target.tagName&&"fa fa-bars"==t.target.className)return}this._loadScriptSrc(),this._removeEventListener(this)}static run(){if(!RocketBrowserCompatibilityChecker)return;const t=new RocketBrowserCompatibilityChecker({passive:!0});new RocketLazyLoadScripts(["keydown","mouseover","touchmove","touchstart"],t).init()}}RocketLazyLoadScripts.run();
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var RocketPreloadLinksConfig = {"excludeUris":"\/(.+\/)?feed\/?.+\/?|\/(?:.+\/)?embed\/|\/(index\\.php\/)?wp\\-json(\/.*|$)|\/wp-admin|\/logout|\/wp-login.php","usesTrailingSlash":"","imageExt":"jpg|jpeg|gif|png|tiff|bmp|webp|avif","fileExt":"jpg|jpeg|gif|png|tiff|bmp|webp|avif|php|pdf|html|htm","siteUrl":"https:\/\/coderlessons.com","onHoverDelay":"100","rateThrottle":"3"};
+/* ]]> */
+</script>
+<script type="text/javascript">
+(function() {
+"use strict";var r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},e=function(){function i(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(e,t,n){return t&&i(e.prototype,t),n&&i(e,n),e}}();function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var t=function(){function n(e,t){i(this,n),this.browser=e,this.config=t,this.options=this.browser.options,this.prefetched=new Set,this.eventTime=null,this.threshold=1111,this.numOnHover=0}return e(n,[{key:"init",value:function(){!this.browser.supportsLinkPrefetch()||this.browser.isDataSaverModeOn()||this.browser.isSlowConnection()||(this.regex={excludeUris:RegExp(this.config.excludeUris,"i"),images:RegExp(".("+this.config.imageExt+")$","i"),fileExt:RegExp(".("+this.config.fileExt+")$","i")},this._initListeners(this))}},{key:"_initListeners",value:function(e){-1<this.config.onHoverDelay&&document.addEventListener("mouseover",e.listener.bind(e),e.listenerOptions),document.addEventListener("mousedown",e.listener.bind(e),e.listenerOptions),document.addEventListener("touchstart",e.listener.bind(e),e.listenerOptions)}},{key:"listener",value:function(e){var t=e.target.closest("a"),n=this._prepareUrl(t);if(null!==n)switch(e.type){case"mousedown":case"touchstart":this._addPrefetchLink(n);break;case"mouseover":this._earlyPrefetch(t,n,"mouseout")}}},{key:"_earlyPrefetch",value:function(t,e,n){var i=this,r=setTimeout(function(){if(r=null,0===i.numOnHover)setTimeout(function(){return i.numOnHover=0},1e3);else if(i.numOnHover>i.config.rateThrottle)return;i.numOnHover++,i._addPrefetchLink(e)},this.config.onHoverDelay);t.addEventListener(n,function e(){t.removeEventListener(n,e,{passive:!0}),null!==r&&(clearTimeout(r),r=null)},{passive:!0})}},{key:"_addPrefetchLink",value:function(i){return this.prefetched.add(i.href),new Promise(function(e,t){var n=document.createElement("link");n.rel="prefetch",n.href=i.href,n.onload=e,n.onerror=t,document.head.appendChild(n)}).catch(function(){})}},{key:"_prepareUrl",value:function(e){if(null===e||"object"!==(void 0===e?"undefined":r(e))||!1 in e||-1===["http:","https:"].indexOf(e.protocol))return null;var t=e.href.substring(0,this.config.siteUrl.length),n=this._getPathname(e.href,t),i={original:e.href,protocol:e.protocol,origin:t,pathname:n,href:t+n};return this._isLinkOk(i)?i:null}},{key:"_getPathname",value:function(e,t){var n=t?e.substring(this.config.siteUrl.length):e;return n.startsWith("/")||(n="/"+n),this._shouldAddTrailingSlash(n)?n+"/":n}},{key:"_shouldAddTrailingSlash",value:function(e){return this.config.usesTrailingSlash&&!e.endsWith("/")&&!this.regex.fileExt.test(e)}},{key:"_isLinkOk",value:function(e){return null!==e&&"object"===(void 0===e?"undefined":r(e))&&(!this.prefetched.has(e.href)&&e.origin===this.config.siteUrl&&-1===e.href.indexOf("?")&&-1===e.href.indexOf("#")&&!this.regex.excludeUris.test(e.href)&&!this.regex.images.test(e.href))}}],[{key:"run",value:function(){"undefined"!=typeof RocketPreloadLinksConfig&&new n(new RocketBrowserCompatibilityChecker({capture:!0,passive:!0}),RocketPreloadLinksConfig).init()}}]),n}();t.run();
+}());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<script>window.lazyLoadOptions={elements_selector:"img[data-lazy-src],.rocket-lazyload",data_src:"lazy-src",data_srcset:"lazy-srcset",data_sizes:"lazy-sizes",class_loading:"lazyloading",class_loaded:"lazyloaded",threshold:300,callback_loaded:function(element){if(element.tagName==="IFRAME"&&element.dataset.rocketLazyload=="fitvidscompatible"){if(element.classList.contains("lazyloaded")){if(typeof window.jQuery!="undefined"){if(jQuery.fn.fitVids){jQuery(element).parent().fitVids()}}}}}};window.addEventListener('LazyLoad::Initialized',function(e){var lazyLoadInstance=e.detail.instance;if(window.MutationObserver){var observer=new MutationObserver(function(mutations){var image_count=0;var iframe_count=0;var rocketlazy_count=0;mutations.forEach(function(mutation){for(i=0;i<mutation.addedNodes.length;i++){if(typeof mutation.addedNodes[i].getElementsByTagName!=='function'){continue}
+if(typeof mutation.addedNodes[i].getElementsByClassName!=='function'){continue}
+images=mutation.addedNodes[i].getElementsByTagName('img');is_image=mutation.addedNodes[i].tagName=="IMG";iframes=mutation.addedNodes[i].getElementsByTagName('iframe');is_iframe=mutation.addedNodes[i].tagName=="IFRAME";rocket_lazy=mutation.addedNodes[i].getElementsByClassName('rocket-lazyload');image_count+=images.length;iframe_count+=iframes.length;rocketlazy_count+=rocket_lazy.length;if(is_image){image_count+=1}
+if(is_iframe){iframe_count+=1}}});if(image_count>0||iframe_count>0||rocketlazy_count>0){lazyLoadInstance.update()}});var b=document.getElementsByTagName("body")[0];var config={childList:!0,subtree:!0};observer.observe(b,config)}},!1)</script><script data-no-minify="1" async="" src="./Настройка PostgreSQL с помощью pgbench - CoderLessons.com_files/lazyload.min.js.Без названия"></script><!-- Yandex.Metrika counter -->
+
+<noscript><div><img src="https://mc.yandex.ru/watch/54595627" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<script>"use strict";var wprRemoveCPCSS=function wprRemoveCPCSS(){var elem;document.querySelector('link[data-rocket-async="style"][rel="preload"]')?setTimeout(wprRemoveCPCSS,200):(elem=document.getElementById("rocket-critical-css"))&&"remove"in elem&&elem.remove()};window.addEventListener?window.addEventListener("load",wprRemoveCPCSS):window.attachEvent&&window.attachEvent("onload",wprRemoveCPCSS);</script><script src="./Настройка PostgreSQL с помощью pgbench - CoderLessons.com_files/de0eda55e135074cee6e0a5012dba6dd.js.Без названия" data-minify="1" defer=""></script><noscript><link rel="stylesheet" href="https://coderlessons.com/wp-content/cache/min/1/911fba3b9ba09a8cf07a113e4f0f6b6a.css" media="all" data-minify="1" /></noscript>
+
+
+</body><script>document.documentElement.style.display = '' </script><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+  div.grammarly-desktop-integration {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+  }
+
+  div.grammarly-desktop-integration:before {
+    content: attr(data-content);
+  }
+</style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>

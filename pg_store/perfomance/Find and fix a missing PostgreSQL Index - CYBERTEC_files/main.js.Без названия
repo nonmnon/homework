@@ -1,0 +1,109 @@
+jQuery(document).ready(function($) {
+
+    courseSwiper = new Swiper('.course-carousel', {
+        slidesPerView: 'auto',
+        centeredSlides: true,
+        initialSlide: 1,
+        paginationClickable: true,
+        nextButton: $('.course-carousel').find('.next'),
+        prevButton: $('.course-carousel').find('.prev'),
+        pagination: $('.course-carousel').find('.pager'),
+        onSetTranslate: function(swiper, translate) {
+            swiper.container.find('.swiper-wrapper').css('transform', 'translate(' + translate + 'px, 0)');
+        }
+    });
+    quoteSwiper = new Swiper('.quote-swiper', {
+        slidesPerView: '1',
+        paginationClickable: true,
+        pagination: $('.quote-swiper').find('.pager'),
+        onSetTranslate: function(swiper, translate) {
+            swiper.container.find('.swiper-wrapper').css('transform', 'translate(' + translate + 'px, 0)');
+        }
+    });
+
+    $('.menu-toggle').click(function(e) {
+        e.preventDefault();
+        $('.site-header').toggleClass('nav-is-visible');
+    })
+
+    //SyntaxHighlighter.all();
+/**
+    $.SyntaxHighlighter.init({
+        stripEmptyStartFinishLines: true,
+        stripInitialWhitespace: true,
+    });
+/**/
+    $(window).scroll(function() {
+        if($(window).scrollTop() > 100) {
+            $('body').addClass('is-scrolled');
+        } else {
+            $('body').removeClass('is-scrolled');
+        }
+    }).scroll();
+
+    $('#download-item').each(function() {
+       $(this).attr('value', $(this).closest('.block-download').attr('data-file'));
+    });
+
+    $('.search-trigger').click(function(e) {
+        e.preventDefault();
+        $('.search-form').toggleClass('is-visible').find('input').focus();
+    })
+    $('.search-form .close').click(function() {
+        $('.search-form').toggleClass('is-visible');
+    });
+
+
+    $('#main .block').find('table').each(function(){
+        $(this).wrap('<div class="tbl-wrap"></div>');
+    });
+
+    $('body').on('click', '.notification--cookie .notification__toggle', function(event) {
+        var that = event.currentTarget;
+        var thatParent = that.parentNode;
+        var date = new Date();
+        date.setTime(date.getTime() + (365*24*60*60*1000));
+        document.cookie = 'MMC_COOKIE=1; expires=' + date.toUTCString() + '; path=/';
+        thatParent.classList.add('notification--fade-out');
+        setTimeout(function(){
+            thatParent.remove();
+        }, 250);
+    });
+
+    var getCookie = function(name) {
+        var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) {
+            return match[2];
+        }
+        return null;
+    };
+
+    if (getCookie('MMC_COOKIE') == 1) {
+        $('.notification--cookie').remove();
+    } else {
+        $('.notification--cookie').addClass('notification--fade-in');
+    }
+
+	document.addEventListener( 'wpcf7mailsent', function( event ) {
+		//console.log('wpcf7mailsent: '+ event.detail.contactFormId);
+		if ( event.detail.contactFormId == 1268 ) {
+			window.location.href = 'https://cybertec-postgresql.com/de/kontakt/vielen-dank-fuer-ihre-anfrage/';
+  	}
+		if ( event.detail.contactFormId == 139 ) {
+			window.location.href = 'https://cybertec-postgresql.com/en/contact/thank-you-for-your-request/';
+  	}
+		if ( event.detail.contactFormId == 5723 ) {
+			window.location.href = 'https://cybertec-postgresql.com/es/contact/gracias-por-su-consulta/';
+  	}
+		if ( event.detail.contactFormId == 13261 ) {
+			window.location.href = 'https://cybertec-postgresql.com/et/kontakt-et/thank-you-for-your-request/';
+  	}
+		if ( event.detail.contactFormId == 12882 ) {
+			window.location.href = 'https://cybertec-postgresql.com/pl/kontakt/thank-you-for-your-request/';
+  	}
+    if ( event.detail.contactFormId == 28088 ) {
+  		window.location.href = 'https://cybertec-postgresql.com/sv/kontakt/tack-for-din-forfragan//';
+    }
+	}, false );
+
+});

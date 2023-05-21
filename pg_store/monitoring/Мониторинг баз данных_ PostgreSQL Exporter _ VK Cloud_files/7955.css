@@ -1,0 +1,330 @@
+:root {
+    --border: 1px solid #E9ECF3
+}
+:root {
+    --sidebarBlue: #0077FF
+}
+:root {
+    --warning: #FFA930
+}
+:root {
+    --warningLight: #FFEACC
+}
+:root {
+    --success: #28C75D
+}
+:root {
+    --successLight: #DFFFEA
+}
+:root {
+    --error: #FC2C38
+}
+:root {
+    --errorLight: #FFE2E1
+}
+:root {
+    --promoHeaderGpn: #146BAF
+}
+:root {
+    --textColorGpn: #333333
+}
+:root {
+    --bgAccentGpn: #F0F0F0
+}
+:root {
+    --bgGpn: #FFFFFF
+}
+:root {
+    --bgAccentGpnIcod: #0070BA
+}
+:root {
+    --bgGpnIcod: #2FB4E9
+}
+:root {
+    --bgAccentN1Devzone: #0070BA
+}
+:root {
+    --bgN1Devzone: #2FB4E9
+}
+:root {
+    --promoHeaderLinxdatacenter: #001F73
+}
+:root {
+    --linkBlueLinxdatacenter: #2a73d5
+}
+:root {
+    --bgAccentLinxdatacenterHover: #009BFF
+}
+:root {
+    --bgAccentLinxdatacenter: #FF006E
+}
+:root {
+    --bgLinxdatacenter: #001F73
+}
+:root {
+    --promoHeaderGoznak: #3D4D69
+}
+:root {
+    --bgAccentGoznak: #3D4D69
+}
+:root {
+    --bgGoznak: #0D2043
+}
+:root {
+    --promoHeaderSoftline: #2B66AD
+}
+:root {
+    --bgAccentSoftline: #E2E9F0
+}
+:root {
+    --bgSoftline: #F3F7FB
+}
+:root {
+    --bgAccentActiveCloud: #E3E9F2
+}
+:root {
+    --bgActiveCloud: #F0F3F7
+}
+:root {
+    --bgCorpLight: #6652D9
+}
+:root {
+    --bgCorp: #3520a3
+}
+:root {
+    --atomdataWhite: #FFFFFF
+}
+:root {
+    --atomdataBlue: #005eb8
+}
+:root {
+    --bgAccentAtomdata: #CBD6E1
+}
+:root {
+    --bgAtomdata: #DBE2E9
+}
+:root {
+    --megafonWhite: #FFFFFF
+}
+:root {
+    --megafonPurple: #731982
+}
+:root {
+    --bgAccentMegafon: #7ACA86
+}
+:root {
+    --bgMegafon: #57B565
+}
+:root {
+    --rcloudWhite: #FFFFFF
+}
+:root {
+    --rcloudBlue: #41a1f3
+}
+:root {
+    --bgAccentRCloud: #74B8FF
+}
+:root {
+    --bgRCloud: #3D92EB
+}
+:root {
+    --siteLinks1c: #9F8F44
+}
+:root {
+    --bgAccent1c: #F5D94C
+}
+:root {
+    --bg1c: #FBEEB1
+}
+:root {
+    --textColorX5: #ffffff
+}
+:root {
+    --bgAccentX5: #7d7d7f
+}
+:root {
+    --bgX5: #58585B
+}
+:root {
+    --bgAccentGreenatom: #6C6C6C
+}
+:root {
+    --bgGreenatom: #515050
+}
+:root {
+    --greyActive: #646C77
+}
+:root {
+    --greyHover: #727C87
+}
+:root {
+    --greyDefault: #818C99
+}
+:root {
+    --blueBgTextColor: #bfb3ff
+}
+:root {
+    --buttonBgGrey: #ecf1f8
+}
+:root {
+    --basicTextColor: #333333
+}
+:root {
+    --landingPrimary: #0077FF
+}
+:root {
+    --textCorp: #C0B4FF
+}
+:root {
+    --textAccentGrey: #999999
+}
+:root {
+    --textGrey: #939FAE
+}
+:root {
+    --quotaYellow: #FDCF50
+}
+:root {
+    --quotaRed: #FC2C38
+}
+:root {
+    --quotaBlue: #5F71FE
+}
+:root {
+    --notificationRed: #ff002f
+}
+:root {
+    --linkBlueHover: #00357a
+}
+:root {
+    --linkBlue: #005BD1
+}
+:root {
+    --iconMark: #00EAFF
+}
+:root {
+    --darkGrey: #313131
+}
+:root {
+    --lightGrey: #E1E1E1
+}
+:root {
+    --lighterGrey: #E8EAED
+}
+:root {
+    --iconGrey: #939FAE
+}
+:root {
+    --dividerGrey: #F1F1F1
+}
+:root {
+    --dividerDarkerGrey: #d8d8d8
+}
+:root {
+    --controlBorderHover: #D7D9DF
+}
+:root {
+    --controlBorderFocus: #5F94FF
+}
+:root {
+    --controlBorder: #E0E2E8
+}
+:root {
+    --defaultBorder: #E9ECF3
+}
+:root {
+    --turquoise: #00EAFF
+}
+:root {
+    --peach: #FFF5ED
+}
+:root {
+    --red: #f44e4e
+}
+:root {
+    --lightBlack: #19191A
+}
+:root {
+    --totalBlack: #000000
+}
+:root {
+    --black: #333333
+}
+:root {
+    --lightestGrey: #F2F1F1
+}
+:root {
+    --white: #ffffff
+}
+:root {
+    --backgroundGreyStrongAccent: #939FAE
+}
+:root {
+    --backgroundGreyAccent: #E2E3E4
+}
+:root {
+    --backgroundGrey: #F1F1F1
+}
+:root {
+    --backgroundLightGrey: #f8f9fb
+}
+:root {
+    --backgroundBlue: #0077FF
+}
+:root {
+    --activityBlue: #5F71FE
+}
+:root {
+    --activityRed: #f9303f
+}
+:root {
+    --activityOrange: #ff8e2d
+}
+:root {
+    --activityGrey: #c7c7c7
+}
+:root {
+    --activityGreenLight: #EAFFF1
+}
+:root {
+    --activityGreen: #28c75d
+}
+:root {
+    --primaryTurquoise: #01EAFF
+}
+:root {
+    --acidBlue: #1B61F9
+}
+:root {
+    --primary: #2469F5
+}
+:root {
+    --blue: #2469f5
+}
+:root {
+    --fieldWidth: 500px
+}
+:root {
+    --layoutGap: 8px
+}
+:root {
+    --col2MaxWidth: 1450px
+}
+:root {
+    --col1Width: 260px
+}
+:root {
+    --headerHeight: 70px
+}
+:root {
+    --standardCheckboxColWidth: 36px
+}
+/*
+    need to import file with name landingsStyles.css besides it is empty,
+    because postcss-css-variables plugin adds root rule to every file
+    and for performance issues we remove it using postcss-remove-root-plugin
+    from every file, excluding files with names styles.css and landingsStyles.css
+ */
+
+
+/*# sourceMappingURL=7955.css.map*/

@@ -1,0 +1,47 @@
+jQuery(function($){
+    $('.posts-list, .course-list').not($(".home *")).append( '<span class="load-more"></span>' );
+    var button = $('.posts-list .load-more, .course-list .load-more');
+    var page = 2;
+    var loading = false;
+    var scrollHandling = {
+        allow: true,
+        reallow: function() {
+            scrollHandling.allow = true;
+        },
+        delay: 400
+    };
+
+    $(window).scroll(function() {
+        if( ! loading && scrollHandling.allow ) {
+            scrollHandling.allow = false;
+            setTimeout(scrollHandling.reallow, scrollHandling.delay);
+            var windowHeight = $(window).height();
+            var offset = $(button).offset().top;
+            var rect = button[0].getBoundingClientRect();
+            if(rect.top < windowHeight) {
+                loading = true;
+                var data = {
+                    action: 'be_ajax_load_more',
+                    page: page,
+                    post_type: beloadmore.post_type,
+                    lang: beloadmore.lang
+                };
+                //console.log('load…', beloadmore, data);
+                $.post(beloadmore.url, data, function(res) {
+                    if( res.success) {
+                        $('.posts-list, .course-list').append( res.data );
+                        $('.posts-list, .course-list').append( button );
+                        if (res.data != '') {
+                            page = page + 1;
+                        }
+                        loading = false;
+                    }
+                    //console.log(res);
+                }).fail(function(xhr, textStatus, e) {
+                    //console.log(xhr.responseText);
+                });
+
+            }
+        }
+    });
+});

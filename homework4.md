@@ -1,4 +1,4 @@
-## Home work #4
+## Homework #4
 
 - **Развернуть Постгрес на ВМ**
   ##### *Создаем VM*
@@ -839,3 +839,52 @@ initial connection time = 642.951 ms
 tps = 1025.237162 (without initial connection time)
 
 ### Conclusion: Изменение значений папрметров  synchronous_commit,checkpoint_timeout, checkpoint_completion_target,autovacuum в тестовой БД привело к увеличению производительности на `85` транзакций в секунду при тесте TPC-B like. Что соответствует увеличение производительности на 9 процентов. Но одновременно с этим поставило под угрозу сохранность данных при сбоях электропитания, привело к распуханию обьема БД за счет мертвых tuples в строках таблиц и может привести к останову БД в будущем по причине достижения переисользования мах номера транзакции без операций заморозки.
+
+## P.S.
+22.05.2023
+### Повтор тестирование с целью проверки результатов при отключенном synchronous_commit
+
+--Текущие значения парамтеров в БД
+
+gmfcbkaccnt@vmex4:~$ `sudo -u postgres psql
+
+psql (15.3 (Debian 15.3-1.pgdg110+1))
+
+Type "help" for help.
+
+postgres=# `show synchronous_commit;`
+
+ synchronous_commit 
+
+--------------------
+
+ off
+
+(1 row)
+
+postgres=# `show checkpoint_completion_target ;`
+
+ checkpoint_completion_target 
+
+------------------------------
+
+ 0.5
+
+(1 row)
+
+postgres=# `show checkpoint_timeout;`
+
+ checkpoint_timeout 
+
+--------------------
+
+ 20min
+
+(1 row)
+
+postgres=# `\! date`
+
+Mon May 22 09:51:15 UTC 2023
+
+Результат запуска теста
+![pgbench](/img/pgbench_test1.png)

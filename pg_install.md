@@ -5,7 +5,7 @@
 -------------------
 Ссылка на страничку загрузки ПО Postgresql
 
-#Note https://www.postgresql.org/download/linux/ubuntu/ Lnux downloads (Ubuntu)
+\#Note https://www.postgresql.org/download/linux/ubuntu/ Lnux downloads (Ubuntu)
 
 
 To use the apt repository, follow these steps:
@@ -23,11 +23,11 @@ To use the apt repository, follow these steps:
 `sudo apt-get update`
 
 Example:
-
-$ `sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list`
+\$ `sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list`
 
 $ `wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo tee /etc/apt/trusted.gpg.d/pgdg.asc &>/dev/null`
 
+$ `sudo apt-get update`
 
 ## Install the latest version of PostgreSQL.
 ------------------------------------------------
